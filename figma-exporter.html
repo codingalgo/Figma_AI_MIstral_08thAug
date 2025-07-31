@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Figma Frame Exporter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #7f8c8d;
+            font-size: 16px;
+        }
+
+        .credentials {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .credential-item {
+            margin-bottom: 15px;
+        }
+
+        .credential-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .credential-item label {
+            display: block;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .credential-item input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: 'Courier New', monospace;
+            background: white;
+            transition: border-color 0.2s;
+        }
+
+        .credential-item input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .export-button {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 16px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-bottom: 20px;
+        }
+
+        .export-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .export-button:active {
+            transform: translateY(0);
+        }
+
+        .export-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .status {
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .progress {
+            margin-top: 20px;
+            display: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+            color: #6c757d;
+        }
+
+        .frame-list {
+            margin-top: 20px;
+            display: none;
+        }
+
+        .frame-item {
+            background: #f8f9fa;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .frame-name {
+            font-weight: 500;
+            color: #2c3e50;
+        }
+
+        .frame-status {
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            background: #e9ecef;
+            color: #6c757d;
+        }
+
+        .frame-status.downloading {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .frame-status.completed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .frame-status.failed {
+            background: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Figma Frame Exporter</h1>
+            <p>Export all frames from your Figma design as PNG files</p>
+        </div>
+
+        <div class="credentials">
+            <div class="credential-item">
+                <label for="apiToken">Figma API Token</label>
+                <input type="password" id="apiToken" value="figd_2nGk49M9ujxccf01lNpgv3gGfqKaRQ74Q0jBhzn1" readonly>
+            </div>
+            <div class="credential-item">
+                <label for="fileId">Figma File ID</label>
+                <input type="text" id="fileId" value="2k2t7ZfG09nLyjM4viAGHP" readonly>
+            </div>
+        </div>
+
+        <button class="export-button" id="exportButton">Export All Frames</button>
+
+        <div class="status" id="status"></div>
+
+        <div class="progress" id="progress">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text" id="progressText">Preparing export...</div>
+        </div>
+
+        <div class="frame-list" id="frameList"></div>
+    </div>
+
+    <script>
+        class FigmaExporter {
+            constructor() {
+                this.apiToken = document.getElementById('apiToken').value;
+                this.fileId = document.getElementById('fileId').value;
+                this.baseUrl = 'https://api.figma.com/v1';
+                this.frames = [];
+                this.exportedCount = 0;
+                
+                this.initializeEventListeners();
+            }
+
+            initializeEventListeners() {
+                document.getElementById('exportButton').addEventListener('click', () => {
+                    this.exportAllFrames();
+                });
+            }
+
+            showStatus(message, type = 'info') {
+                const statusEl = document.getElementById('status');
+                statusEl.textContent = message;
+                statusEl.className = `status ${type}`;
+                statusEl.style.display = 'block';
+            }
+
+            hideStatus() {
+                document.getElementById('status').style.display = 'none';
+            }
+
+            showProgress() {
+                document.getElementById('progress').style.display = 'block';
+            }
+
+            hideProgress() {
+                document.getElementById('progress').style.display = 'none';
+            }
+
+            updateProgress(percentage, text) {
+                document.getElementById('progressFill').style.width = `${percentage}%`;
+                document.getElementById('progressText').textContent = text;
+            }
+
+            showFrameList() {
+                document.getElementById('frameList').style.display = 'block';
+            }
+
+            addFrameToList(frame) {
+                const frameList = document.getElementById('frameList');
+                const frameItem = document.createElement('div');
+                frameItem.className = 'frame-item';
+                frameItem.id = `frame-${frame.id}`;
+                frameItem.innerHTML = `
+                    <span class="frame-name">${frame.name}</span>
+                    <span class="frame-status" id="status-${frame.id}">Pending</span>
+                `;
+                frameList.appendChild(frameItem);
+            }
+
+            updateFrameStatus(frameId, status, text) {
+                const statusEl = document.getElementById(`status-${frameId}`);
+                if (statusEl) {
+                    statusEl.textContent = text;
+                    statusEl.className = `frame-status ${status}`;
+                }
+            }
+
+            async makeApiRequest(endpoint) {
+                const response = await fetch(`${this.baseUrl}${endpoint}`, {
+                    headers: {
+                        'X-Figma-Token': this.apiToken
+                    }
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(`API Error ${response.status}: ${errorData.message || response.statusText}`);
+                }
+
+                return await response.json();
+            }
+
+            async getFrames() {
+                this.showStatus('Fetching file structure...', 'info');
+                this.updateProgress(10, 'Loading file data...');
+
+                try {
+                    const fileData = await this.makeApiRequest(`/files/${this.fileId}`);
+                    const frames = [];
+
+                    // Traverse the document tree to find all frames
+                    const traverseNode = (node, pageName = '') => {
+                        if (node.type === 'CANVAS') {
+                            pageName = node.name;
+                        }
+                        
+                        if (node.type === 'FRAME') {
+                            frames.push({
+                                id: node.id,
+                                name: node.name,
+                                page: pageName
+                            });
+                        }
+
+                        if (node.children) {
+                            node.children.forEach(child => traverseNode(child, pageName));
+                        }
+                    };
+
+                    fileData.document.children.forEach(page => traverseNode(page));
+
+                    if (frames.length === 0) {
+                        throw new Error('No frames found in the Figma file');
+                    }
+
+                    this.frames = frames;
+                    this.showStatus(`Found ${frames.length} frames`, 'success');
+                    this.updateProgress(25, `Found ${frames.length} frames`);
+                    
+                    return frames;
+                } catch (error) {
+                    this.showStatus(`Error fetching frames: ${error.message}`, 'error');
+                    throw error;
+                }
+            }
+
+            async exportFrames(frameIds) {
+                this.updateProgress(30, 'Requesting frame exports...');
+
+                try {
+                    const params = new URLSearchParams({
+                        ids: frameIds.join(','),
+                        format: 'png',
+                        scale: '2'
+                    });
+
+                    const exportData = await this.makeApiRequest(`/images/${this.fileId}?${params}`);
+                    
+                    if (!exportData.images || Object.keys(exportData.images).length === 0) {
+                        throw new Error('No export URLs received from Figma API');
+                    }
+
+                    this.updateProgress(50, 'Export URLs generated');
+                    return exportData.images;
+                } catch (error) {
+                    this.showStatus(`Error exporting frames: ${error.message}`, 'error');
+                    throw error;
+                }
+            }
+
+            async downloadImage(frameId, imageUrl, frameName) {
+                this.updateFrameStatus(frameId, 'downloading', 'Downloading...');
+                
+                try {
+                    const response = await fetch(imageUrl);
+                    if (!response.ok) {
+                        throw new Error(`Download failed: ${response.statusText}`);
+                    }
+
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    
+                    // Create download link
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `${frameName.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.png`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    
+                    // Clean up the blob URL
+                    window.URL.revokeObjectURL(url);
+                    
+                    this.updateFrameStatus(frameId, 'completed', 'Downloaded');
+                    this.exportedCount++;
+                    
+                } catch (error) {
+                    this.updateFrameStatus(frameId, 'failed', 'Failed');
+                    console.error(`Failed to download frame ${frameName}:`, error);
+                }
+            }
+
+            async exportAllFrames() {
+                const exportButton = document.getElementById('exportButton');
+                exportButton.disabled = true;
+                exportButton.textContent = 'Exporting...';
+                
+                this.hideStatus();
+                this.showProgress();
+                this.exportedCount = 0;
+
+                try {
+                    // Step 1: Get all frames
+                    const frames = await this.getFrames();
+                    
+                    // Step 2: Show frame list
+                    this.showFrameList();
+                    frames.forEach(frame => this.addFrameToList(frame));
+                    
+                    // Step 3: Export frames (batch process in chunks of 50)
+                    const chunkSize = 50;
+                    const chunks = [];
+                    for (let i = 0; i < frames.length; i += chunkSize) {
+                        chunks.push(frames.slice(i, i + chunkSize));
+                    }
+
+                    for (let chunkIndex = 0; chunkIndex < chunks.length; chunkIndex++) {
+                        const chunk = chunks[chunkIndex];
+                        const frameIds = chunk.map(f => f.id);
+                        
+                        this.updateProgress(
+                            50 + (chunkIndex / chunks.length) * 30, 
+                            `Processing batch ${chunkIndex + 1} of ${chunks.length}...`
+                        );
+                        
+                        const imageUrls = await this.exportFrames(frameIds);
+                        
+                        // Step 4: Download all images
+                        const downloadPromises = chunk.map(frame => {
+                            const imageUrl = imageUrls[frame.id];
+                            if (imageUrl) {
+                                return this.downloadImage(frame.id, imageUrl, frame.name);
+                            } else {
+                                this.updateFrameStatus(frame.id, 'failed', 'No URL');
+                                return Promise.resolve();
+                            }
+                        });
+                        
+                        await Promise.all(downloadPromises);
+                        
+                        // Rate limiting between batches
+                        if (chunkIndex < chunks.length - 1) {
+                            await new Promise(resolve => setTimeout(resolve, 1000));
+                        }
+                    }
+
+                    this.updateProgress(100, 'Export completed!');
+                    this.showStatus(`Successfully exported ${this.exportedCount} of ${frames.length} frames`, 'success');
+                    
+                } catch (error) {
+                    console.error('Export failed:', error);
+                    this.showStatus(`Export failed: ${error.message}`, 'error');
+                } finally {
+                    exportButton.disabled = false;
+                    exportButton.textContent = 'Export All Frames';
+                    
+                    // Hide progress after 3 seconds
+                    setTimeout(() => {
+                        this.hideProgress();
+                    }, 3000);
+                }
+            }
+        }
+
+        // Initialize the exporter when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new FigmaExporter();
+        });
+    </script>
+</body>
+</html>
