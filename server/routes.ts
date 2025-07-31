@@ -130,43 +130,50 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const prototypeData = extractPrototypeData(figmaData);
 
       // Prepare the prompt for Mistral AI
-      const prompt = `The uploaded data contains Figma design information with prototype interactions. Your task is to:
+      const prompt = `You are analyzing Figma design data to generate automated test cases for prototype interactions.
 
-Objective:
-- Parse this data and extract all prototype interactions between frames or components.
-- For each interaction, generate a test case in the required format.
-- The goal is to validate the user flow from source node to destination node using Figma's prototype definitions.
+CRITICAL REQUIREMENTS:
+1. Each test case MUST include ALL 6 components in this exact order:
+   <Test Case Name>,CLICK/CLICK_COORDS,coordinates/text,SLEEP,duration,CHECK,expected_text
 
-Test Case Requirements:
+2. Test Case Format Examples:
+   Navigate from Splash to Home,CLICK_COORDS,540,960,SLEEP,2,CHECK,POPULAR RECIPES
+   Navigate from Home to Menu,CLICK_COORDS,74,83,SLEEP,2,CHECK,FAVORITE RECIPES
+   Navigate from Menu to Favorite,CLICK,FAVORITE RECIPES,SLEEP,2,CHECK,FAVORITE RECIPES
 
-1. Test Case Format (1 line per test case):
-Each test case line should include:
-<Test Case Name>, CLICK or CLICK_COORDS, SLEEP, <duration>, CHECK, <expected_text>
+3. Command Rules:
+   - CLICK_COORDS: Use for clickable areas without text. Format: CLICK_COORDS,x,y
+   - CLICK: Use for buttons/text elements. Format: CLICK,TEXT_TO_CLICK
+   - SLEEP: Always use SLEEP,2 (2 seconds wait)
+   - CHECK: Verify destination screen text in UPPER CASE
 
-2. Commands Supported:
-- CLICK: Clicks on elements with visible text. Example: CLICK, OK
-- CLICK_COORDS: Clicks on specific screen coordinates if text is not present.
-- SLEEP: Waits for a few seconds. Example: SLEEP, 2
-- CHECK: Verifies that specific text appears after interaction.
+4. Coordinate Guidelines:
+   - Screen size: 1080 x 1920 pixels
+   - Top-left corner is 0,0
+   - Center coordinates: 540,960
+   - Use actual element coordinates from absoluteBoundingBox when available
 
-3. Rules:
-- For elements without visible text, use CLICK_COORDS, x, y.
-- The coordinates should be according to the page of size 1080 X 1920 and top left of the page is 0,0
-- For screens navigated via prototype links, verify the destination screen using CHECK.
-- The text after CHECK and CLICK commands should be in upper case.
-- Spellings of the text should exactly match the text in data.
-- Make these test cases in sequence like navigate from source page to destination then start from destination page to some other page etc.
-- Avoid extra spaces after commands.
-- There should be no comment only the test cases should be in the file
+5. Navigation Flow Rules:
+   - Create sequential navigation paths
+   - Navigate FROM source TO destination
+   - Then continue FROM that destination to next screen
+   - Include back navigation using menu buttons at coordinates like 74,83
 
-Expected output format:
-Navigate from Splash to Home,CLICK_COORDS,540,960,SLEEP,2,CHECK,POPULAR RECIPES
-Navigate from Home to Menu,CLICK_COORDS,74,83,SLEEP,2,CHECK,POPULAR RECIPES
+6. Text Formatting:
+   - ALL text in CLICK and CHECK commands must be UPPER CASE
+   - Match exact spelling from Figma data
+   - No extra spaces around commas
+
+7. Required Output:
+   - Generate test cases that follow complete user journeys
+   - Include forward and backward navigation
+   - Each line must be a complete test case with all 6 components
+   - NO comments, explanations, or additional text
 
 Figma Prototype Data:
 ${JSON.stringify(prototypeData, null, 2)}
 
-Generate only the test cases in the specified format, no additional text or comments.`;
+Generate complete test cases following the exact format above:`;
 
       // Make request to Mistral AI
       const mistralResponse = await fetch('https://api.mistral.ai/v1/chat/completions', {
