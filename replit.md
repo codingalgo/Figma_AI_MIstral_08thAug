@@ -8,13 +8,16 @@ Preferred communication style: Simple, everyday language.
 
 ## Recent Changes
 
-### January 31, 2025 - AI Test Case Generation Feature Added
-- Added Mistral AI integration for automated test case generation from Figma prototypes
-- New AI Test Case Generator section in the UI with "Generate Test Cases from Figma" button
-- Backend API endpoint `/api/generate-test-cases` that processes Figma JSON data through Mistral AI
-- Automatic parsing of prototype interactions and generation of formatted test cases
-- Download functionality for test cases in both web and desktop versions
-- Test cases generated in the exact format: `<Test Case Name>,CLICK/CLICK_COORDS,SLEEP,<duration>,CHECK,<expected_text>`
+### January 31, 2025 - Complete DA Auto Test Generator Implementation
+- **Rebranded**: Changed from "Figma Frame Exporter" to "DA Auto Test Generator from Figma"
+- **Updated tagline**: "Generate and validate test case & auto execute on real device"
+- **Unified Operation**: New main button "🚀 Generate Everything - Export Frames + AI Test Cases"
+- **Single-click automation**: Exports all frames, generates AI test cases, and downloads everything automatically
+- **Enhanced AI prompt**: Improved Mistral AI integration with detailed formatting requirements
+- **Payload optimization**: Increased server limits to 50MB and optimized data processing
+- **Sequential workflow**: Unified process runs frames export → AI test generation → automatic downloads
+- **Individual operations**: Maintained separate buttons for frame-only or test-case-only operations
+- **Auto-download**: Test cases automatically download as testcases.txt after generation
 
 ## System Architecture
 

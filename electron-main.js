@@ -15,7 +15,7 @@ function createWindow() {
       preload: path.join(__dirname, 'electron-preload.js')
     },
     icon: path.join(__dirname, 'assets/icon.png'), // Optional icon
-    title: 'Figma Frame Exporter Desktop'
+    title: 'DA Auto Test Generator from Figma'
   });
 
   // Load the HTML file

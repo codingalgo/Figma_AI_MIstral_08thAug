@@ -215,8 +215,8 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>Figma Frame Exporter</h1>
-            <p>Export all frames from your Figma design as PNG files</p>
+            <h1>DA Auto Test Generator from Figma</h1>
+            <p>Generate and validate test case & auto execute on real device</p>
         </div>
 
         <div class="credentials">
@@ -230,12 +230,14 @@
             </div>
         </div>
 
-        <button class="export-button" id="exportButton">Export All Frames</button>
+        <button class="export-button unified-button" id="unifiedButton" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); font-size: 18px; font-weight: bold; padding: 20px 24px;">🚀 Generate Everything - Export Frames + AI Test Cases</button>
         
-        <div class="ai-section" style="margin-top: 20px; padding: 20px; background: #e8f4fd; border-radius: 8px;">
-            <h3 style="margin-bottom: 15px; color: #2c3e50;">AI Test Case Generator</h3>
-            <p style="margin-bottom: 15px; color: #6c757d; font-size: 14px;">Generate automated test cases from Figma prototype interactions using Mistral AI</p>
-            <button class="ai-button" id="generateTestCasesButton" style="width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer; margin-bottom: 10px;">Generate Test Cases from Figma</button>
+        <div class="individual-sections" style="margin-top: 20px; padding: 20px; background: #f8f9fa; border-radius: 8px;">
+            <h3 style="margin-bottom: 15px; color: #2c3e50;">Individual Operations</h3>
+            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                <button class="export-button" id="exportButton" style="flex: 1; padding: 12px; font-size: 14px;">Export Frames Only</button>
+                <button class="ai-button" id="generateTestCasesButton" style="flex: 1; padding: 12px; background: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px;">Generate Test Cases Only</button>
+            </div>
             <div id="testCaseOutput" style="display: none; margin-top: 15px;">
                 <h4 style="color: #2c3e50; margin-bottom: 10px;">Generated Test Cases:</h4>
                 <textarea id="testCaseText" readonly style="width: 100%; height: 200px; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-family: 'Courier New', monospace; font-size: 12px; background: #f8f9fa;"></textarea>
@@ -298,6 +300,109 @@
                 document.getElementById('downloadTestCases').addEventListener('click', () => {
                     this.downloadTestCases();
                 });
+
+                // Unified button event listener
+                document.getElementById('unifiedButton').addEventListener('click', () => {
+                    this.runUnifiedProcess();
+                });
+            }
+
+            // Unified process that runs everything in sequence
+            async runUnifiedProcess() {
+                const unifiedButton = document.getElementById('unifiedButton');
+                const originalText = unifiedButton.textContent;
+                unifiedButton.disabled = true;
+                unifiedButton.textContent = '🔄 Processing Everything...';
+                
+                this.hideStatus();
+                this.showProgress();
+                
+                try {
+                    this.showStatus('Starting unified process: Frames + Test Cases', 'info');
+                    
+                    // Step 1: Export all frames
+                    this.updateProgress(10, 'Step 1/3: Fetching frames...');
+                    const frames = await this.getFrames();
+                    
+                    // Step 2: Generate test cases
+                    this.updateProgress(40, 'Step 2/3: Generating AI test cases...');
+                    const fileData = await this.makeApiRequest(`/files/${this.fileId}?geometry=paths`);
+                    
+                    const response = await fetch('/api/generate-test-cases', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ figmaData: fileData })
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json().catch(() => ({}));
+                        throw new Error(`AI Error ${response.status}: ${errorData.message || response.statusText}`);
+                    }
+
+                    const testResult = await response.json();
+                    if (!testResult.success || !testResult.testCases) {
+                        throw new Error(testResult.message || 'Failed to generate test cases');
+                    }
+
+                    // Step 3: Export frames and download test cases
+                    this.updateProgress(70, 'Step 3/3: Downloading frames and test cases...');
+                    
+                    // Process frames in chunks and download
+                    this.showFrameList();
+                    frames.forEach(frame => this.addFrameToList(frame));
+                    
+                    const chunkSize = 50;
+                    const chunks = [];
+                    for (let i = 0; i < frames.length; i += chunkSize) {
+                        chunks.push(frames.slice(i, i + chunkSize));
+                    }
+
+                    for (let chunkIndex = 0; chunkIndex < chunks.length; chunkIndex++) {
+                        const chunk = chunks[chunkIndex];
+                        const frameIds = chunk.map(f => f.id);
+                        
+                        const imageUrls = await this.exportFrames(frameIds);
+                        
+                        const downloadPromises = chunk.map(frame => {
+                            const imageUrl = imageUrls[frame.id];
+                            if (imageUrl) {
+                                return this.downloadImage(frame.id, imageUrl, frame.name);
+                            } else {
+                                this.updateFrameStatus(frame.id, 'failed', 'No URL');
+                                return Promise.resolve();
+                            }
+                        });
+                        
+                        await Promise.all(downloadPromises);
+                        
+                        if (chunkIndex < chunks.length - 1) {
+                            await new Promise(resolve => setTimeout(resolve, 1000));
+                        }
+                    }
+
+                    // Display and download test cases
+                    this.displayTestCases(testResult.testCases);
+                    
+                    // Auto-download test cases
+                    if (window.electronAPI) {
+                        await this.saveTestCasesDesktop();
+                    } else {
+                        this.saveTestCasesWeb();
+                    }
+
+                    this.updateProgress(100, 'Complete! All frames and test cases downloaded');
+                    this.showStatus(`✅ Success! Downloaded ${frames.length} frames and generated ${testResult.testCases.split('\n').filter(line => line.trim()).length} test cases`, 'success');
+
+                } catch (error) {
+                    this.showStatus(`Error in unified process: ${error.message}`, 'error');
+                    console.error('Unified process error:', error);
+                } finally {
+                    this.hideProgress();
+                    unifiedButton.disabled = false;
+                    unifiedButton.textContent = originalText;
+                }
             }
 
             // AI Test Case Generator methods
