@@ -232,6 +232,17 @@
 
         <button class="export-button" id="exportButton">Export All Frames</button>
         
+        <div class="ai-section" style="margin-top: 20px; padding: 20px; background: #e8f4fd; border-radius: 8px;">
+            <h3 style="margin-bottom: 15px; color: #2c3e50;">AI Test Case Generator</h3>
+            <p style="margin-bottom: 15px; color: #6c757d; font-size: 14px;">Generate automated test cases from Figma prototype interactions using Mistral AI</p>
+            <button class="ai-button" id="generateTestCasesButton" style="width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer; margin-bottom: 10px;">Generate Test Cases from Figma</button>
+            <div id="testCaseOutput" style="display: none; margin-top: 15px;">
+                <h4 style="color: #2c3e50; margin-bottom: 10px;">Generated Test Cases:</h4>
+                <textarea id="testCaseText" readonly style="width: 100%; height: 200px; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-family: 'Courier New', monospace; font-size: 12px; background: #f8f9fa;"></textarea>
+                <button id="downloadTestCases" style="margin-top: 10px; padding: 8px 16px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer;">Download testcases.txt</button>
+            </div>
+        </div>
+
         <div class="exe-section" style="margin-top: 20px; padding: 20px; background: #f8f9fa; border-radius: 8px;">
             <h3 style="margin-bottom: 15px; color: #2c3e50;">Local Executable Runner</h3>
             <div style="display: flex; gap: 10px; margin-bottom: 10px;">
@@ -278,6 +289,125 @@
                 document.getElementById('runExeButton').addEventListener('click', () => {
                     this.runSelectedExe();
                 });
+
+                // AI test case generator event listeners
+                document.getElementById('generateTestCasesButton').addEventListener('click', () => {
+                    this.generateTestCases();
+                });
+
+                document.getElementById('downloadTestCases').addEventListener('click', () => {
+                    this.downloadTestCases();
+                });
+            }
+
+            // AI Test Case Generator methods
+            async generateTestCases() {
+                const generateButton = document.getElementById('generateTestCasesButton');
+                generateButton.disabled = true;
+                generateButton.textContent = 'Generating Test Cases...';
+                
+                this.showStatus('Fetching Figma file data for AI analysis...', 'info');
+                this.showProgress();
+                this.updateProgress(10, 'Loading Figma file data...');
+
+                try {
+                    // Step 1: Get the full Figma file data including prototypes
+                    const fileData = await this.makeApiRequest(`/files/${this.fileId}?geometry=paths`);
+                    this.updateProgress(30, 'Analyzing prototype interactions...');
+
+                    // Step 2: Send to Mistral AI for test case generation
+                    const response = await fetch('/api/generate-test-cases', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ figmaData: fileData })
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json().catch(() => ({}));
+                        throw new Error(`AI Error ${response.status}: ${errorData.message || response.statusText}`);
+                    }
+
+                    this.updateProgress(80, 'Processing AI response...');
+                    const result = await response.json();
+                    
+                    if (result.success && result.testCases) {
+                        this.updateProgress(100, 'Test cases generated successfully!');
+                        this.displayTestCases(result.testCases);
+                        this.showStatus(`Generated ${result.testCases.split('\n').filter(line => line.trim()).length} test cases`, 'success');
+                    } else {
+                        throw new Error(result.message || 'Failed to generate test cases');
+                    }
+
+                } catch (error) {
+                    this.showStatus(`Error generating test cases: ${error.message}`, 'error');
+                    console.error('Test case generation error:', error);
+                } finally {
+                    this.hideProgress();
+                    generateButton.disabled = false;
+                    generateButton.textContent = 'Generate Test Cases from Figma';
+                }
+            }
+
+            displayTestCases(testCases) {
+                const outputDiv = document.getElementById('testCaseOutput');
+                const textArea = document.getElementById('testCaseText');
+                
+                textArea.value = testCases;
+                outputDiv.style.display = 'block';
+                this.generatedTestCases = testCases;
+            }
+
+            downloadTestCases() {
+                if (!this.generatedTestCases) {
+                    this.showStatus('No test cases to download', 'error');
+                    return;
+                }
+
+                try {
+                    if (window.electronAPI) {
+                        // Desktop version - use Electron's file save dialog
+                        this.saveTestCasesDesktop();
+                    } else {
+                        // Web version - use browser download
+                        this.saveTestCasesWeb();
+                    }
+                } catch (error) {
+                    this.showStatus(`Error downloading test cases: ${error.message}`, 'error');
+                }
+            }
+
+            saveTestCasesWeb() {
+                const blob = new Blob([this.generatedTestCases], { type: 'text/plain' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'testcases.txt';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+                this.showStatus('Test cases downloaded as testcases.txt', 'success');
+            }
+
+            async saveTestCasesDesktop() {
+                try {
+                    const savePath = await window.electronAPI.selectDirectory();
+                    if (savePath) {
+                        const filePath = `${savePath}/testcases.txt`;
+                        const buffer = new TextEncoder().encode(this.generatedTestCases);
+                        const result = await window.electronAPI.saveFile(filePath, Array.from(buffer));
+                        
+                        if (result.success) {
+                            this.showStatus(`Test cases saved to: ${filePath}`, 'success');
+                        } else {
+                            this.showStatus(`Error saving file: ${result.message}`, 'error');
+                        }
+                    }
+                } catch (error) {
+                    this.showStatus(`Error saving test cases: ${error.message}`, 'error');
+                }
             }
 
             // Exe runner methods
