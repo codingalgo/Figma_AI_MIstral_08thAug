@@ -231,6 +231,15 @@
         </div>
 
         <button class="export-button" id="exportButton">Export All Frames</button>
+        
+        <div class="exe-section" style="margin-top: 20px; padding: 20px; background: #f8f9fa; border-radius: 8px;">
+            <h3 style="margin-bottom: 15px; color: #2c3e50;">Local Executable Runner</h3>
+            <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                <button class="exe-button" id="selectExeButton" style="flex: 1; padding: 12px; background: #28a745; color: white; border: none; border-radius: 6px; cursor: pointer;">Select .exe File</button>
+                <button class="exe-button" id="runExeButton" style="flex: 1; padding: 12px; background: #dc3545; color: white; border: none; border-radius: 6px; cursor: pointer;" disabled>Run Selected Exe</button>
+            </div>
+            <div id="selectedExePath" style="font-size: 12px; color: #6c757d; word-break: break-all;"></div>
+        </div>
 
         <div class="status" id="status"></div>
 
@@ -260,6 +269,54 @@
                 document.getElementById('exportButton').addEventListener('click', () => {
                     this.exportAllFrames();
                 });
+
+                // Exe runner event listeners
+                document.getElementById('selectExeButton').addEventListener('click', () => {
+                    this.selectExeFile();
+                });
+
+                document.getElementById('runExeButton').addEventListener('click', () => {
+                    this.runSelectedExe();
+                });
+            }
+
+            // Exe runner methods
+            async selectExeFile() {
+                try {
+                    if (window.electronAPI) {
+                        const exePath = await window.electronAPI.selectExeFile();
+                        if (exePath) {
+                            this.selectedExePath = exePath;
+                            document.getElementById('selectedExePath').textContent = `Selected: ${exePath}`;
+                            document.getElementById('runExeButton').disabled = false;
+                            this.showStatus('Executable file selected successfully', 'success');
+                        }
+                    } else {
+                        this.showStatus('This feature only works in the desktop app. Please run with Electron.', 'error');
+                    }
+                } catch (error) {
+                    this.showStatus(`Error selecting file: ${error.message}`, 'error');
+                }
+            }
+
+            async runSelectedExe() {
+                if (!this.selectedExePath) {
+                    this.showStatus('Please select an executable file first', 'error');
+                    return;
+                }
+
+                try {
+                    this.showStatus('Starting executable...', 'info');
+                    const result = await window.electronAPI.executeExe(this.selectedExePath);
+                    
+                    if (result.success) {
+                        this.showStatus(`Executable started successfully (PID: ${result.pid})`, 'success');
+                    } else {
+                        this.showStatus(`Failed to start executable: ${result.message}`, 'error');
+                    }
+                } catch (error) {
+                    this.showStatus(`Error running executable: ${error.message}`, 'error');
+                }
             }
 
             showStatus(message, type = 'info') {
