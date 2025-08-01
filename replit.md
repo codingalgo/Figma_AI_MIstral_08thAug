@@ -8,6 +8,14 @@ Preferred communication style: Simple, everyday language.
 
 ## Recent Changes
 
+### August 1, 2025 - Electron Desktop App Implementation
+- **Desktop App Support**: Added full Electron desktop application functionality
+- **Executable Runner**: Desktop app can select and run .exe files for automated testing
+- **File System Access**: Desktop version supports native file selection and directory saving
+- **Dual Mode Operation**: Both web browser and desktop app modes available
+- **Startup Scripts**: Created `start-desktop.bat` for easy desktop app launching
+- **Documentation**: Added README.md with clear instructions for both modes
+
 ### January 31, 2025 - Complete DA Auto Test Generator Implementation
 - **Rebranded**: Changed from "Figma Frame Exporter" to "DA Auto Test Generator from Figma"
 - **Updated tagline**: "Generate and validate test case & auto execute on real device"
