@@ -1,0 +1,17 @@
+{
+  "name": "da-auto-test-generator",
+  "version": "1.0.0",
+  "description": "DA Auto Test Generator from Figma - Desktop App",
+  "main": "electron-main.js",
+  "type": "commonjs",
+  "scripts": {
+    "electron": "electron .",
+    "electron-dev": "NODE_ENV=development electron .",
+    "check": "node check-setup.js"
+  },
+  "dependencies": {
+    "electron": "^37.2.4"
+  },
+  "author": "DA Auto Test Generator",
+  "license": "MIT"
+}

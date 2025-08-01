@@ -24,6 +24,9 @@ REM Check if node_modules exists
 if not exist "node_modules" (
     echo Installing dependencies for first time...
     echo This may take a few minutes...
+    echo.
+    echo Copying electron package configuration...
+    copy electron-package.json package.json >nul 2>&1
     call npm install
     if %errorlevel% neq 0 (
         echo ERROR: Failed to install dependencies!

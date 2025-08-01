@@ -70,15 +70,26 @@ Once the desktop app opens, you should see:
 - Choose LTS version and install completely
 - Restart Command Prompt and try again
 
+### ❌ "Cannot find module" or "figma_export" Error
+**Quick Fix**: Double-click `fix-local-setup.bat`
+
+**Manual Fix**:
+1. Delete `node_modules` folder if it exists
+2. Copy `electron-package.json` to `package.json`
+3. Run: `npm install`
+4. Run: `npx electron .`
+
 ### ❌ "npm install" Fails
 - Right-click Command Prompt → "Run as administrator"
 - Make sure you have internet connection
 - Try: `npm install --force`
+- Or use the automatic fix: `fix-local-setup.bat`
 
 ### ❌ Desktop App Won't Start
 - Check if antivirus is blocking the app
 - Try running `start-desktop.bat` as administrator
 - Make sure all project files are in the same folder
+- Run `fix-local-setup.bat` to reset configuration
 
 ### ❌ "Select .exe File" Shows Error
 - This is normal in web browser version
