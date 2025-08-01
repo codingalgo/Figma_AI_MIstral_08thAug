@@ -109,7 +109,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // AI Test Case Generation endpoint
   app.post("/api/generate-test-cases", async (req, res) => {
     try {
-      const { figmaData } = req.body;
+      const { figmaData, mistralApiKey } = req.body;
       
       if (!figmaData) {
         return res.status(400).json({ 
@@ -118,11 +118,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      const mistralApiKey = process.env.MISTRAL_API_KEY;
       if (!mistralApiKey) {
-        return res.status(500).json({ 
+        return res.status(400).json({ 
           success: false, 
-          message: "Mistral API key not configured" 
+          message: "Mistral API key is required" 
         });
       }
 

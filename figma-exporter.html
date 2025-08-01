@@ -228,6 +228,10 @@
                 <label for="fileId">Figma File ID</label>
                 <input type="text" id="fileId" value="2k2t7ZfG09nLyjM4viAGHP" readonly>
             </div>
+            <div class="credential-item">
+                <label for="mistralKey">Mistral AI API Key</label>
+                <input type="password" id="mistralKey" value="gmEWLMGdvQ4loD8fJ1bO70eknyEgA35x" readonly>
+            </div>
         </div>
 
         <button class="export-button unified-button" id="unifiedButton" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); font-size: 18px; font-weight: bold; padding: 20px 24px;">🚀 Generate Everything - Export Frames + AI Test Cases</button>
@@ -271,6 +275,7 @@
             constructor() {
                 this.apiToken = document.getElementById('apiToken').value;
                 this.fileId = document.getElementById('fileId').value;
+                this.mistralKey = document.getElementById('mistralKey').value;
                 this.baseUrl = 'https://api.figma.com/v1';
                 this.frames = [];
                 this.exportedCount = 0;
@@ -333,7 +338,7 @@
                         headers: {
                             'Content-Type': 'application/json',
                         },
-                        body: JSON.stringify({ figmaData: fileData })
+                        body: JSON.stringify({ figmaData: fileData, mistralApiKey: this.mistralKey })
                     });
 
                     if (!response.ok) {
@@ -426,7 +431,7 @@
                         headers: {
                             'Content-Type': 'application/json',
                         },
-                        body: JSON.stringify({ figmaData: fileData })
+                        body: JSON.stringify({ figmaData: fileData, mistralApiKey: this.mistralKey })
                     });
 
                     if (!response.ok) {
