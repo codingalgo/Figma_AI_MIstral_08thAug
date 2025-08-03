@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Figma Frame Exporter</title>
+    <title>DA Auto Test Generator from Figma</title>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' https://api.figma.com https://api.mistral.ai https://s3-alpha-sig.figma.com; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';">
     <style>
         * {
             margin: 0;
@@ -657,20 +658,32 @@
                     const prompt = this.createMistralPrompt(prototypeData);
                     this.showPromptSection(prompt);
                     
-                    const response = await fetch('/api/generate-test-cases', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ figmaData: fileData, mistralApiKey: this.mistralKey })
-                    });
+                    let testResult;
+                    
+                    // Check if running in desktop mode (Electron) vs web browser
+                    console.log('Desktop detection - window.electronAPI:', !!window.electronAPI);
+                    if (window.electronAPI) {
+                        // Desktop mode - make direct API call to Mistral
+                        console.log('Using desktop mode for test case generation');
+                        this.updateProgress(40, 'Calling Mistral AI directly from desktop...', 3);
+                        testResult = await this.generateTestCasesDesktop(fileData);
+                    } else {
+                        // Web mode - use Express server
+                        const response = await fetch('/api/generate-test-cases', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ figmaData: fileData, mistralApiKey: this.mistralKey })
+                        });
 
-                    if (!response.ok) {
-                        const errorData = await response.json().catch(() => ({}));
-                        throw new Error(`AI Error ${response.status}: ${errorData.message || response.statusText}`);
+                        if (!response.ok) {
+                            const errorData = await response.json().catch(() => ({}));
+                            throw new Error(`AI Error ${response.status}: ${errorData.message || response.statusText}`);
+                        }
+
+                        testResult = await response.json();
                     }
-
-                    const testResult = await response.json();
                     if (!testResult.success || !testResult.testCases) {
                         throw new Error(testResult.message || 'Failed to generate test cases');
                     }
@@ -809,6 +822,55 @@
                 if (stepElement) {
                     stepElement.classList.remove('active', 'completed');
                     stepElement.classList.add('processing');
+                }
+            }
+
+            // Desktop mode: Direct API call to Mistral
+            async generateTestCasesDesktop(figmaData) {
+                try {
+                    const prototypeData = this.extractPrototypeData(figmaData);
+                    const prompt = this.createMistralPrompt(prototypeData);
+                    
+                    const response = await fetch('https://api.mistral.ai/v1/chat/completions', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${this.mistralKey}`
+                        },
+                        body: JSON.stringify({
+                            model: 'mistral-large-latest',
+                            messages: [
+                                {
+                                    role: 'user',
+                                    content: prompt
+                                }
+                            ],
+                            max_tokens: 4000,
+                            temperature: 0.3
+                        })
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json().catch(() => ({}));
+                        throw new Error(`Mistral API Error ${response.status}: ${errorData.message || response.statusText}`);
+                    }
+
+                    const result = await response.json();
+                    
+                    if (!result.choices || !result.choices[0] || !result.choices[0].message) {
+                        throw new Error('Invalid response from Mistral AI');
+                    }
+
+                    return {
+                        success: true,
+                        testCases: result.choices[0].message.content
+                    };
+                } catch (error) {
+                    console.error('Desktop test case generation error:', error);
+                    return {
+                        success: false,
+                        message: error.message || 'Failed to generate test cases in desktop mode'
+                    };
                 }
             }
 
@@ -1070,21 +1132,30 @@ Generate complete test cases following the exact format above:`;
                     this.showPromptSection(prompt);
 
                     // Step 3: Send to Mistral AI for test case generation
-                    const response = await fetch('/api/generate-test-cases', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ figmaData: fileData, mistralApiKey: this.mistralKey })
-                    });
+                    this.updateProgress(60, 'Sending to Mistral AI...');
+                    let result;
+                    
+                    if (window.electronAPI) {
+                        // Desktop mode - direct API call to Mistral
+                        result = await this.generateTestCasesDesktop(fileData);
+                    } else {
+                        // Web mode - use Express server
+                        const response = await fetch('/api/generate-test-cases', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ figmaData: fileData, mistralApiKey: this.mistralKey })
+                        });
 
-                    if (!response.ok) {
-                        const errorData = await response.json().catch(() => ({}));
-                        throw new Error(`AI Error ${response.status}: ${errorData.message || response.statusText}`);
+                        if (!response.ok) {
+                            const errorData = await response.json().catch(() => ({}));
+                            throw new Error(`AI Error ${response.status}: ${errorData.message || response.statusText}`);
+                        }
+
+                        this.updateProgress(80, 'Processing AI response...');
+                        result = await response.json();
                     }
-
-                    this.updateProgress(80, 'Processing AI response...');
-                    const result = await response.json();
                     
                     if (result.success && result.testCases) {
                         this.updateProgress(100, 'Test cases generated successfully!');
