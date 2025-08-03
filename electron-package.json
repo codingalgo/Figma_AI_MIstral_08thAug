@@ -13,10 +13,8 @@
     "build-exe-linux": "electron-builder --linux",
     "check": "node check-setup.js"
   },
-  "dependencies": {
-    "electron": "^37.2.4"
-  },
   "devDependencies": {
+    "electron": "^37.2.4",
     "electron-builder": "^26.0.12"
   },
   "build": {
