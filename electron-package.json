@@ -30,26 +30,20 @@
       "node_modules/**/*"
     ],
     "win": {
-      "target": "nsis",
-      "icon": "icon.ico"
+      "target": "portable",
+      "requestedExecutionLevel": "asInvoker"
     },
     "mac": {
-      "target": "dmg",
-      "icon": "icon.icns"
+      "target": "dir"
     },
     "linux": {
-      "target": "AppImage",
-      "icon": "icon.png"
+      "target": "dir"
     },
-    "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
-      "installerIcon": "icon.ico",
-      "uninstallerIcon": "icon.ico",
-      "installerHeaderIcon": "icon.ico",
-      "createDesktopShortcut": true,
-      "createStartMenuShortcut": true
-    }
+    "portable": {
+      "artifactName": "DA-Auto-Test-Generator-Portable.exe"
+    },
+    "forceCodeSigning": false,
+    "buildDependenciesFromSource": false
   },
   "author": "DA Auto Test Generator",
   "license": "MIT"
