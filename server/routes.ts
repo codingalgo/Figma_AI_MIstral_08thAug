@@ -109,7 +109,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // AI Test Case Generation endpoint
   app.post("/api/generate-test-cases", async (req, res) => {
     try {
-      const { figmaData, mistralApiKey } = req.body;
+      const { figmaData, aiConfig } = req.body;
       
       if (!figmaData) {
         return res.status(400).json({ 
@@ -118,10 +118,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      if (!mistralApiKey) {
+      if (!aiConfig || !aiConfig.apiKey) {
         return res.status(400).json({ 
           success: false, 
-          message: "Mistral API key is required" 
+          message: "AI configuration and API key are required" 
         });
       }
 
@@ -180,15 +180,16 @@ ${JSON.stringify(prototypeData, null, 2)}
 
 Generate complete test cases following the exact format above:`;
 
-      // Make request to Mistral AI
-      const mistralResponse = await fetch('https://api.mistral.ai/v1/chat/completions', {
+      // Make request to configured AI provider
+      const apiEndpoint = `${aiConfig.apiUrl.replace(/\/$/, '')}/v1/chat/completions`;
+      const aiResponse = await fetch(apiEndpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${mistralApiKey}`
+          'Authorization': `Bearer ${aiConfig.apiKey}`
         },
         body: JSON.stringify({
-          model: 'mistral-large-latest',
+          model: aiConfig.model || 'mistral-large-latest',
           messages: [
             {
               role: 'user',
@@ -200,16 +201,16 @@ Generate complete test cases following the exact format above:`;
         })
       });
 
-      if (!mistralResponse.ok) {
-        const errorData = await mistralResponse.json().catch(() => ({}));
+      if (!aiResponse.ok) {
+        const errorData = await aiResponse.json().catch(() => ({}));
         return res.status(500).json({ 
           success: false, 
-          message: `Mistral AI Error: ${errorData.message || mistralResponse.statusText}` 
+          message: `AI API Error: ${errorData.message || aiResponse.statusText}` 
         });
       }
 
-      const mistralData = await mistralResponse.json();
-      let testCases = mistralData.choices?.[0]?.message?.content;
+      const aiData = await aiResponse.json();
+      let testCases = aiData.choices?.[0]?.message?.content;
 
       if (!testCases) {
         return res.status(500).json({ 
