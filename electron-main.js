@@ -109,9 +109,20 @@ ipcMain.handle('select-directory', async () => {
 // Handle file saving
 ipcMain.handle('save-file', async (event, filePath, buffer) => {
   try {
+    // Create directory if it doesn't exist
+    const path = require('path');
+    const dir = path.dirname(filePath);
+    
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+      console.log(`Created directory: ${dir}`);
+    }
+    
     fs.writeFileSync(filePath, Buffer.from(buffer));
+    console.log(`File saved successfully: ${filePath}`);
     return { success: true, message: 'File saved successfully' };
   } catch (error) {
+    console.error(`Error saving file ${filePath}:`, error);
     return { success: false, message: error.message };
   }
 });

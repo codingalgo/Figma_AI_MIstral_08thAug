@@ -1230,17 +1230,15 @@ Generate complete test cases following the exact format above:`;
 
             async saveTestCasesDesktop() {
                 try {
-                    const savePath = await window.electronAPI.selectDirectory();
-                    if (savePath) {
-                        const filePath = `${savePath}/testcases.txt`;
-                        const buffer = new TextEncoder().encode(this.generatedTestCases);
-                        const result = await window.electronAPI.saveFile(filePath, Array.from(buffer));
-                        
-                        if (result.success) {
-                            this.showStatus(`Test cases saved to: ${filePath}`, 'success');
-                        } else {
-                            this.showStatus(`Error saving file: ${result.message}`, 'error');
-                        }
+                    // Save directly to C:\AutoExecutor\testcases.txt without dialog
+                    const filePath = `C:\\AutoExecutor\\testcases.txt`;
+                    const buffer = new TextEncoder().encode(this.generatedTestCases);
+                    const result = await window.electronAPI.saveFile(filePath, Array.from(buffer));
+                    
+                    if (result.success) {
+                        this.showStatus(`Test cases saved to: ${filePath}`, 'success');
+                    } else {
+                        this.showStatus(`Error saving file: ${result.message}`, 'error');
                     }
                 } catch (error) {
                     this.showStatus(`Error saving test cases: ${error.message}`, 'error');
@@ -1442,21 +1440,35 @@ Generate complete test cases following the exact format above:`;
                     }
 
                     const blob = await response.blob();
-                    const url = window.URL.createObjectURL(blob);
                     
-                    // Create download link
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = `${frameName.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.png`;
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                    
-                    // Clean up the blob URL
-                    window.URL.revokeObjectURL(url);
-                    
-                    this.updateFrameStatus(frameId, 'completed', 'Downloaded');
-                    this.exportedCount++;
+                    if (window.electronAPI) {
+                        // Desktop mode - save directly to C:\AutoExecutor\screenshots
+                        const arrayBuffer = await blob.arrayBuffer();
+                        const buffer = Array.from(new Uint8Array(arrayBuffer));
+                        const fileName = `${frameName.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.png`;
+                        const filePath = `C:\\AutoExecutor\\screenshots\\${fileName}`;
+                        
+                        const result = await window.electronAPI.saveFile(filePath, buffer);
+                        if (result.success) {
+                            this.updateFrameStatus(frameId, 'completed', 'Saved');
+                            this.exportedCount++;
+                        } else {
+                            throw new Error(`Failed to save: ${result.message}`);
+                        }
+                    } else {
+                        // Web mode - use browser download
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `${frameName.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.png`;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        window.URL.revokeObjectURL(url);
+                        
+                        this.updateFrameStatus(frameId, 'completed', 'Downloaded');
+                        this.exportedCount++;
+                    }
                     
                 } catch (error) {
                     this.updateFrameStatus(frameId, 'failed', 'Failed');
