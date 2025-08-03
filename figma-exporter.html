@@ -474,28 +474,6 @@
         </div>
 
         <button class="export-button unified-button" id="unifiedButton" style="background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%); font-size: 18px; font-weight: bold; padding: 20px 24px; transition: all 0.3s ease;">🚀 Generate Test Cases with AI & Auto Execute using Test Executor</button>
-        
-        <div class="individual-sections" style="margin-top: 20px; padding: 20px; background: #f8f9fa; border-radius: 8px;">
-            <h3 style="margin-bottom: 15px; color: #2c3e50;">Individual Operations</h3>
-            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                <button class="export-button" id="exportButton" style="flex: 1; padding: 12px; font-size: 14px; height: 48px; display: flex; align-items: center; justify-content: center;">📥 Export Frames Only</button>
-                <button class="ai-button" id="generateTestCasesButton" style="flex: 1; padding: 12px; background: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; height: 48px; display: flex; align-items: center; justify-content: center;">🤖 AI Test Cases Only</button>
-            </div>
-            <div id="testCaseOutput" style="display: none; margin-top: 15px;">
-                <h4 style="color: #2c3e50; margin-bottom: 10px;">Generated Test Cases:</h4>
-                <textarea id="testCaseText" readonly style="width: 100%; height: 200px; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-family: 'Courier New', monospace; font-size: 12px; background: #f8f9fa;"></textarea>
-                <button id="downloadTestCases" style="margin-top: 10px; padding: 8px 16px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer;">Download testcases.txt</button>
-            </div>
-        </div>
-
-        <div class="exe-section" style="margin-top: 20px; padding: 20px; background: #f8f9fa; border-radius: 8px; border: 1px solid #dee2e6;">
-            <h3 style="margin-bottom: 15px; color: #2c3e50;">🖥️ Manual Test Executor</h3>
-            <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-                <button class="exe-button" id="selectExeButton" style="flex: 1; padding: 12px; background: #28a745; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">📂 Select .exe File</button>
-                <button class="exe-button" id="runExeButton" style="flex: 1; padding: 12px; background: #dc3545; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;" disabled>▶️ Run Selected Exe</button>
-            </div>
-            <div id="selectedExePath" style="font-size: 12px; color: #6c757d; word-break: break-all; font-style: italic;"></div>
-        </div>
 
         <!-- AI Prompt Display Section -->
         <div class="prompt-section" id="promptSection" style="display: none; background: #f8f9fa; border-radius: 8px; padding: 20px; margin-bottom: 20px; border: 1px solid #dee2e6;">
@@ -564,6 +542,40 @@
             </div>
             <div id="consoleOutput" style="padding: 15px; color: #00ff00; font-family: 'Courier New', monospace; font-size: 12px; height: 300px; overflow-y: auto; background: #1e1e1e;">
                 <div style="color: #888;">Test Executor Console - Ready</div>
+            </div>
+        </div>
+
+        <!-- Individual Operations Section -->
+        <div class="individual-sections" style="margin-top: 30px; background: #f8f9fa; border-radius: 8px; border: 1px solid #dee2e6;">
+            <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer; padding: 15px 20px;" onclick="toggleIndividualOperations()">
+                <h3 style="color: #2c3e50; margin: 0; font-size: 16px;">⚙️ Individual Operations</h3>
+                <span id="individualToggle" style="color: #007bff; font-size: 20px; font-weight: bold;">▼</span>
+            </div>
+            <div id="individualContent" style="display: none; padding: 0 20px 20px 20px;">
+                <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                    <button class="export-button" id="exportButton" style="flex: 1; padding: 12px; font-size: 14px; height: 48px; display: flex; align-items: center; justify-content: center; background: #28a745; color: white; border: none; border-radius: 6px; cursor: pointer;">📥 Export Frames Only</button>
+                    <button class="ai-button" id="generateTestCasesButton" style="flex: 1; padding: 12px; background: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; height: 48px; display: flex; align-items: center; justify-content: center;">🤖 AI Test Cases Only</button>
+                </div>
+                <div id="testCaseOutput" style="display: none; margin-top: 15px;">
+                    <h4 style="color: #2c3e50; margin-bottom: 10px;">Generated Test Cases:</h4>
+                    <textarea id="testCaseText" readonly style="width: 100%; height: 200px; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-family: 'Courier New', monospace; font-size: 12px; background: #f8f9fa;"></textarea>
+                    <button id="downloadTestCases" style="margin-top: 10px; padding: 8px 16px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer;">Download testcases.txt</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Manual Test Execution Section -->
+        <div class="exe-section" style="margin-top: 20px; background: #f8f9fa; border-radius: 8px; border: 1px solid #dee2e6;">
+            <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer; padding: 15px 20px;" onclick="toggleManualExecution()">
+                <h3 style="color: #2c3e50; margin: 0; font-size: 16px;">🖥️ Manual Test Execution</h3>
+                <span id="manualToggle" style="color: #007bff; font-size: 20px; font-weight: bold;">▼</span>
+            </div>
+            <div id="manualContent" style="display: none; padding: 0 20px 20px 20px;">
+                <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                    <button class="exe-button" id="selectExeButton" style="flex: 1; padding: 12px; background: #28a745; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">📂 Select .exe File</button>
+                    <button class="exe-button" id="runExeButton" style="flex: 1; padding: 12px; background: #dc3545; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;" disabled>▶️ Run Selected Exe</button>
+                </div>
+                <div id="selectedExePath" style="font-size: 12px; color: #6c757d; word-break: break-all; font-style: italic;"></div>
             </div>
         </div>
     </div>
@@ -1523,6 +1535,34 @@ Generate complete test cases following the exact format above:`;
             }
         }
 
+        // Toggle individual operations functionality
+        function toggleIndividualOperations() {
+            const content = document.getElementById('individualContent');
+            const toggle = document.getElementById('individualToggle');
+            
+            if (content.style.display === 'none') {
+                content.style.display = 'block';
+                toggle.textContent = '▼';
+            } else {
+                content.style.display = 'none';
+                toggle.textContent = '▶';
+            }
+        }
+
+        // Toggle manual execution functionality
+        function toggleManualExecution() {
+            const content = document.getElementById('manualContent');
+            const toggle = document.getElementById('manualToggle');
+            
+            if (content.style.display === 'none') {
+                content.style.display = 'block';
+                toggle.textContent = '▼';
+            } else {
+                content.style.display = 'none';
+                toggle.textContent = '▶';
+            }
+        }
+
         // Initialize the exporter when the page loads
         document.addEventListener('DOMContentLoaded', () => {
             new FigmaExporter();
@@ -1530,6 +1570,14 @@ Generate complete test cases following the exact format above:`;
             // Initialize description as collapsed
             document.getElementById('descriptionContent').style.display = 'none';
             document.getElementById('descriptionToggle').textContent = '▶';
+            
+            // Initialize individual operations as collapsed
+            document.getElementById('individualContent').style.display = 'none';
+            document.getElementById('individualToggle').textContent = '▶';
+            
+            // Initialize manual execution as collapsed
+            document.getElementById('manualContent').style.display = 'none';
+            document.getElementById('manualToggle').textContent = '▶';
         });
     </script>
 </body>
