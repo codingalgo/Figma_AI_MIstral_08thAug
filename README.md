@@ -1,71 +1,115 @@
 # DA Auto Test Generator from Figma
 
-Generate and validate test cases & auto execute on real device.
+This application automatically exports Figma frames and generates AI-powered test cases with dynamic credential management and visual step tracking.
 
-## 🚀 Quick Setup for Local PC
+## 🚀 Three Ways to Run
 
-### Step 1: Install Requirements
-1. **Download Node.js**: Go to https://nodejs.org and download the latest LTS version
-2. **Install Node.js**: Run the installer and follow the steps
-3. **Verify Installation**: Open Command Prompt and type `node --version`
+### Method 1: Web Browser Mode
+```bash
+npm run dev
+```
+- Open browser to provided URL
+- Full web-based functionality
+- Requires internet connection
 
-### Step 2: Download Project Files
-1. Download all project files to your PC
-2. Extract to a folder (e.g., `C:\DA-Auto-Test-Generator`)
+### Method 2: Desktop Application Mode
+```bash
+# Windows
+start-desktop.bat
 
-### Step 3: Run the Desktop App
-**Option A: Simple Start (Recommended)**
-1. Double-click `start-desktop.bat`
-2. Wait for dependencies to install (first time only)
-3. Desktop app will launch automatically
+# Mac/Linux  
+./start-desktop.sh
+```
+- Native desktop app with enhanced file system access
+- Better performance and offline capabilities
+- Direct file operations
 
-**Option B: Manual Start**
-1. Open Command Prompt in project folder
-2. Run: `npm install` (first time only)
-3. Run: `npx electron .`
+### Method 3: Standalone Executable Mode
+```bash
+# Windows
+./build-exe.bat
 
-## 🎯 Features Available on Local PC
+# Mac/Linux
+./build-exe.sh
+```
+**Creates a portable .exe file that includes:**
+- ✅ All dependencies bundled
+- ✅ No installation required 
+- ✅ Works on any Windows PC
+- ✅ Single file distribution
+- ✅ Desktop shortcuts and Start Menu entries
 
-### Desktop App Features (Full Functionality)
-- ✅ Export Figma frames to local folders
-- ✅ Generate AI test cases with Mistral
-- ✅ **Select and run .exe files**
-- ✅ Save files anywhere on your PC
-- ✅ Native file dialogs
-- ✅ No browser limitations
+**Generated Files:**
+- `dist-exe/DA Auto Test Generator Setup.exe` - Full installer
+- `dist-exe/win-unpacked/DA Auto Test Generator.exe` - Portable version
 
-### Web Version (Limited)
-- Run `npm run dev` and open http://localhost:5000
-- Basic export/generation (no .exe file selection)
+## Features
 
-## 🔑 Pre-configured Credentials
-- **Figma API Token**: Already included
-- **Figma File ID**: Pre-filled with test project
-- **Mistral AI Key**: Ready for test case generation
+- **Figma Frame Export**: Automatically download frame images from Figma prototypes
+- **AI Test Case Generation**: Generate automated test cases using configurable AI providers
+- **Visual Progress Tracking**: Step-by-step UI with animated progress indicators
+- **Flexible AI Configuration**: Support for Mistral, OpenAI, Ollama, and local AI deployments
 
-## 📋 How to Use
+## AI Configuration
 
-1. **Launch**: Double-click `start-desktop.bat`
-2. **Generate Everything**: Click the main green button for full automation
-3. **Individual Operations**: Use separate buttons for specific tasks
-4. **Run Tests**: Use "Select .exe File" to execute automated tests
+The application supports multiple AI providers through the expandable "🤖 AI Configuration" section:
 
-## ⚠️ Troubleshooting
+| Provider | API Base URL | Model Examples |
+|----------|-------------|----------------|
+| **Mistral AI** | `https://api.mistral.ai` | `mistral-large-latest` |
+| **OpenAI** | `https://api.openai.com` | `gpt-4`, `gpt-3.5-turbo` |
+| **Ollama** | `http://localhost:11434` | `llama3-8b`, `codellama` |
+| **LM Studio** | `http://localhost:1234` | `local-model` |
+| **Groq** | `https://api.groq.com` | `llama3-8b-8192` |
+| **Custom** | Your endpoint | Any model name |
 
-### If start-desktop.bat doesn't work:
-1. Install Node.js from https://nodejs.org
-2. Open Command Prompt as Administrator
-3. Navigate to project folder: `cd C:\path\to\project`
-4. Run: `npm install`
-5. Run: `npx electron .`
+## 📦 Distribution Options
 
-### If you get permission errors:
-- Run Command Prompt as Administrator
-- Make sure antivirus isn't blocking the files
+1. **Development**: `npm run dev` - For coding and testing
+2. **Desktop App**: `start-desktop.bat` - For daily usage  
+3. **Portable EXE**: `build-exe.bat` - For sharing with others
 
-## 🔧 System Requirements
+The executable version is perfect for:
+- Sharing with team members who don't have Node.js
+- Running on restricted corporate machines
+- Quick deployment without setup
+- Offline usage scenarios
 
-- **OS**: Windows 10/11 (recommended)
-- **Node.js**: Version 14 or higher
-- **RAM**: 4GB minimum
-- **Internet**: Required for Figma API and AI generation
+## System Requirements
+
+- **Web/Desktop**: Node.js 18+, modern browser
+- **Executable**: Windows 10+ (standalone, no dependencies)
+- Internet connection for AI API calls
+- Figma access token for frame exports
+
+## Quick Commands
+
+| Action | Command |
+|--------|---------|
+| Web Mode | `npm run dev` |
+| Desktop Mode | `start-desktop.bat` |
+| Build EXE | `build-exe.bat` |
+| Install Dependencies | `npm install` |
+
+## Development
+
+Built with:
+- **Frontend**: React + TypeScript + Tailwind CSS
+- **Backend**: Express.js + Node.js
+- **Desktop**: Electron + electron-builder
+- **AI Integration**: Configurable providers with OpenAI-compatible APIs
+
+## File Structure
+
+```
+├── client/              # React frontend
+├── server/              # Express backend  
+├── figma-exporter.html  # Main application interface
+├── electron-main.js     # Electron main process
+├── electron-package.json # Electron build config
+├── build-exe.bat        # Windows executable builder
+├── build-exe.sh         # Mac/Linux executable builder
+├── start-desktop.*      # Desktop launch scripts
+├── dist-exe/            # Generated executable files
+└── package.json         # Dependencies and scripts
+```

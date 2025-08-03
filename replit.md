@@ -8,6 +8,17 @@ Preferred communication style: Simple, everyday language.
 
 ## Recent Changes
 
+### August 3, 2025 - Added Standalone Executable Packaging (3-Mode Operation)
+- **Three Operation Modes**: Web, Desktop, and Standalone Executable
+- **Electron Builder Integration**: Added comprehensive executable packaging with electron-builder
+- **Automated Build Scripts**: Created `build-exe.bat` (Windows) and `build-exe.sh` (Mac/Linux) for one-click executable generation
+- **Professional Packaging**: NSIS installer with desktop shortcuts, Start Menu entries, and proper uninstaller
+- **Distribution Ready**: Generates both installer (.exe) and portable versions for easy distribution
+- **No Dependencies**: Standalone executable includes all Node.js dependencies and runtime
+- **Corporate Friendly**: Perfect for restricted environments where Node.js installation isn't allowed
+- **Updated Documentation**: Comprehensive README with three-mode usage instructions and distribution guidelines
+- **Icon and Branding**: Added SVG icon and professional application metadata
+
 ### August 3, 2025 - Enhanced DA Auto Test Generator with Advanced Features
 - **Comprehensive Application Description**: Added detailed explanation of how the app works (Figma integration, JSON extraction, AI analysis, test case generation, auto execution)
 - **Enhanced Progress Indicators**: Implemented 5-step visual progress with animated progress bars and step-by-step indicators
