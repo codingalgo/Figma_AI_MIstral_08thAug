@@ -195,21 +195,56 @@
         }
 
         .progress-step.active .step-icon {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+            color: white;
+            transform: scale(1.15);
+            animation: activeBlink 1s infinite, pulse 2s infinite;
+            border: 2px solid #ff6b35;
+        }
+
+        .progress-step.processing .step-icon {
+            background: linear-gradient(135deg, #ffc107 0%, #ff8f00 100%);
             color: white;
             transform: scale(1.1);
-            animation: pulse 1.5s infinite;
+            animation: processingBlink 0.8s infinite;
+            border: 2px solid #ffc107;
+        }
+
+        @keyframes activeBlink {
+            0%, 50% {
+                opacity: 1;
+                background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+            }
+            25%, 75% {
+                opacity: 0.7;
+                background: linear-gradient(135deg, #f7931e 0%, #ff6b35 100%);
+            }
+        }
+
+        @keyframes processingBlink {
+            0% {
+                opacity: 1;
+                transform: scale(1.1);
+            }
+            50% {
+                opacity: 0.6;
+                transform: scale(1.05);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1.1);
+            }
         }
 
         @keyframes pulse {
             0% {
-                box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.7);
+                box-shadow: 0 0 0 0 rgba(255, 107, 53, 0.7);
             }
             70% {
-                box-shadow: 0 0 0 10px rgba(102, 126, 234, 0);
+                box-shadow: 0 0 0 15px rgba(255, 107, 53, 0);
             }
             100% {
-                box-shadow: 0 0 0 0 rgba(102, 126, 234, 0);
+                box-shadow: 0 0 0 0 rgba(255, 107, 53, 0);
             }
         }
 
@@ -363,7 +398,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>DA Auto Test Generator from Figma</h1>
+            <h1>DA: Auto Test Generator from Figma using AI & auto Execution on Device</h1>
             <p>Generate and validate test case & auto execute on real device</p>
         </div>
 
@@ -374,25 +409,40 @@
                 <span id="descriptionToggle" style="color: #007bff; font-size: 20px; font-weight: bold;">▼</span>
             </div>
             <div id="descriptionContent" style="margin-top: 15px; color: #495057; line-height: 1.6;">
-                <div style="margin-bottom: 12px; padding: 8px; background: rgba(0,123,255,0.1); border-radius: 6px;">
-                    <strong style="color: #0056b3;">🔗 Figma Integration:</strong> 
-                    <span style="color: #6c757d; font-size: 14px;">Connects to your Figma project using API tokens to extract design frames and interactive prototype data.</span>
+                <div style="margin-bottom: 12px; padding: 12px; background: rgba(0,123,255,0.1); border-radius: 6px; border-left: 4px solid #007bff;">
+                    <div style="display: flex; align-items: center; margin-bottom: 5px;">
+                        <span style="background: #007bff; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; margin-right: 10px;">1</span>
+                        <strong style="color: #0056b3;">🔗 Figma Integration</strong>
+                    </div>
+                    <span style="color: #6c757d; font-size: 14px; margin-left: 34px; display: block;">Connects to your Figma project using API tokens to extract design frames and interactive prototype data.</span>
                 </div>
-                <div style="margin-bottom: 12px; padding: 8px; background: rgba(220,53,69,0.1); border-radius: 6px;">
-                    <strong style="color: #dc3545;">📊 JSON Extraction:</strong> 
-                    <span style="color: #6c757d; font-size: 14px;">Processes Figma's design JSON to identify frames, interactions, clickable elements, and navigation flows.</span>
+                <div style="margin-bottom: 12px; padding: 12px; background: rgba(220,53,69,0.1); border-radius: 6px; border-left: 4px solid #dc3545;">
+                    <div style="display: flex; align-items: center; margin-bottom: 5px;">
+                        <span style="background: #dc3545; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; margin-right: 10px;">2</span>
+                        <strong style="color: #dc3545;">📊 JSON Extraction</strong>
+                    </div>
+                    <span style="color: #6c757d; font-size: 14px; margin-left: 34px; display: block;">Processes Figma's design JSON to identify frames, interactions, clickable elements, and navigation flows.</span>
                 </div>
-                <div style="margin-bottom: 12px; padding: 8px; background: rgba(255,193,7,0.1); border-radius: 6px;">
-                    <strong style="color: #ffc107;">🤖 AI-Powered Analysis:</strong> 
-                    <span style="color: #6c757d; font-size: 14px;">Sends extracted data to Mistral AI models to intelligently generate automated test cases based on your prototype interactions.</span>
+                <div style="margin-bottom: 12px; padding: 12px; background: rgba(255,193,7,0.1); border-radius: 6px; border-left: 4px solid #ffc107;">
+                    <div style="display: flex; align-items: center; margin-bottom: 5px;">
+                        <span style="background: #ffc107; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; margin-right: 10px;">3</span>
+                        <strong style="color: #ffc107;">🤖 AI-Powered Analysis</strong>
+                    </div>
+                    <span style="color: #6c757d; font-size: 14px; margin-left: 34px; display: block;">Sends extracted data to Mistral AI models to intelligently generate automated test cases based on your prototype interactions.</span>
                 </div>
-                <div style="margin-bottom: 12px; padding: 8px; background: rgba(40,167,69,0.1); border-radius: 6px;">
-                    <strong style="color: #28a745;">🧪 Test Case Generation:</strong> 
-                    <span style="color: #6c757d; font-size: 14px;">Creates precise test scripts with coordinates, actions (CLICK, SLEEP, CHECK), and validation steps for comprehensive testing.</span>
+                <div style="margin-bottom: 12px; padding: 12px; background: rgba(40,167,69,0.1); border-radius: 6px; border-left: 4px solid #28a745;">
+                    <div style="display: flex; align-items: center; margin-bottom: 5px;">
+                        <span style="background: #28a745; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; margin-right: 10px;">4</span>
+                        <strong style="color: #28a745;">🧪 Test Case Generation</strong>
+                    </div>
+                    <span style="color: #6c757d; font-size: 14px; margin-left: 34px; display: block;">Creates precise test scripts with coordinates, actions (CLICK, SLEEP, CHECK), and validation steps for comprehensive testing.</span>
                 </div>
-                <div style="margin-bottom: 0px; padding: 8px; background: rgba(102,126,234,0.1); border-radius: 6px;">
-                    <strong style="color: #667eea;">⚡ Auto Execution:</strong> 
-                    <span style="color: #6c757d; font-size: 14px;">Downloads test cases and automatically launches testexecutor.bat on desktop to execute tests on real devices.</span>
+                <div style="margin-bottom: 0px; padding: 12px; background: rgba(102,126,234,0.1); border-radius: 6px; border-left: 4px solid #667eea;">
+                    <div style="display: flex; align-items: center; margin-bottom: 5px;">
+                        <span style="background: #667eea; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; margin-right: 10px;">5</span>
+                        <strong style="color: #667eea;">⚡ Auto Execution</strong>
+                    </div>
+                    <span style="color: #6c757d; font-size: 14px; margin-left: 34px; display: block;">Downloads test cases and automatically launches testexecutor.bat on desktop to execute tests on real devices.</span>
                 </div>
             </div>
         </div>
@@ -577,14 +627,19 @@
                     this.showStatus('Starting unified process: Frames + Test Cases', 'info');
                     
                     // Step 1: Connect to Figma API
+                    this.markStepProcessing(1);
                     this.updateProgress(5, 'Connecting to Figma API...', 1);
                     const frames = await this.getFrames();
+                    this.markStepCompleted(1);
                     
                     // Step 2: Extract design data
+                    this.markStepProcessing(2);
                     this.updateProgress(20, 'Extracting design data and interactions...', 2);
                     const fileData = await this.makeApiRequest(`/files/${this.fileId}?geometry=paths`);
+                    this.markStepCompleted(2);
                     
                     // Step 3: AI Analysis with Prompt Display
+                    this.markStepProcessing(3);
                     this.updateProgress(35, 'Preparing AI analysis with Mistral...', 3);
                     
                     // Create and display the prompt being sent to Mistral
@@ -609,9 +664,11 @@
                     if (!testResult.success || !testResult.testCases) {
                         throw new Error(testResult.message || 'Failed to generate test cases');
                     }
+                    this.markStepCompleted(3);
 
-                    // Step 3: Export frames and download test cases
-                    this.updateProgress(70, 'Step 3/3: Downloading frames and test cases...');
+                    // Step 4: Generate test cases
+                    this.markStepProcessing(4);
+                    this.updateProgress(60, 'Generating test cases...', 4);
                     
                     // Process frames in chunks and download
                     this.showFrameList();
@@ -655,24 +712,26 @@
                     } else {
                         this.saveTestCasesWeb();
                     }
-
-                    // Step 4: Generate test cases
-                    this.updateProgress(75, 'Generating test cases...', 4);
+                    this.markStepCompleted(4);
                     
                     // Step 5: Auto execute (desktop only)
+                    this.markStepProcessing(5);
                     this.updateProgress(90, 'Preparing auto execution...', 5);
                     
                     // Run testexecutor.bat if on desktop
                     if (window.electronAPI) {
                         try {
                             await this.runTestExecutor();
+                            this.markStepCompleted(5);
                             this.updateProgress(100, 'Complete! Test executor launched successfully', 5);
                             this.showStatus(`✅ Success! Downloaded ${frames.length} frames, generated ${testResult.testCases.split('\n').filter(line => line.trim()).length} test cases, and launched test executor`, 'success');
                         } catch (error) {
+                            this.markStepCompleted(5);
                             this.updateProgress(100, 'Complete! Files downloaded (Test executor failed)', 5);
                             this.showStatus(`✅ Partial Success! Downloaded ${frames.length} frames and generated test cases, but test executor failed: ${error.message}`, 'info');
                         }
                     } else {
+                        this.markStepCompleted(5);
                         this.updateProgress(100, 'Complete! All frames and test cases downloaded', 5);
                         this.showStatus(`✅ Success! Downloaded ${frames.length} frames and generated ${testResult.testCases.split('\n').filter(line => line.trim()).length} test cases. Use desktop version for auto execution.`, 'success');
                     }
@@ -681,7 +740,20 @@
                     this.showStatus(`Error in unified process: ${error.message}`, 'error');
                     console.error('Unified process error:', error);
                 } finally {
-                    this.hideProgress();
+                    // Keep progress visible but stop animations
+                    const progressSteps = document.querySelectorAll('.progress-step');
+                    progressSteps.forEach(step => {
+                        step.classList.remove('active', 'processing');
+                        if (!step.classList.contains('completed')) {
+                            step.classList.add('completed');
+                        }
+                    });
+                    
+                    // Hide progress bar but keep steps visible
+                    document.getElementById('progressFill').style.display = 'none';
+                    document.getElementById('progressText').style.display = 'none';
+                    document.getElementById('progressPercentage').style.display = 'none';
+                    
                     unifiedButton.disabled = false;
                     unifiedButton.textContent = originalText;
                 }
@@ -693,7 +765,7 @@
                 
                 steps.forEach((stepId, index) => {
                     const stepElement = document.getElementById(stepId);
-                    stepElement.classList.remove('active', 'completed');
+                    stepElement.classList.remove('active', 'completed', 'processing');
                     
                     if (index < currentStep - 1) {
                         stepElement.classList.add('completed');
@@ -701,6 +773,24 @@
                         stepElement.classList.add('active');
                     }
                 });
+            }
+
+            // Keep steps visible and mark as completed without hiding
+            markStepCompleted(stepNumber) {
+                const stepElement = document.getElementById(`step${stepNumber}`);
+                if (stepElement) {
+                    stepElement.classList.remove('active', 'processing');
+                    stepElement.classList.add('completed');
+                }
+            }
+
+            // Show step as processing (blinking)
+            markStepProcessing(stepNumber) {
+                const stepElement = document.getElementById(`step${stepNumber}`);
+                if (stepElement) {
+                    stepElement.classList.remove('active', 'completed');
+                    stepElement.classList.add('processing');
+                }
             }
 
             updateProgress(percentage, text, step = null) {
