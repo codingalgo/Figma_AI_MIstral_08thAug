@@ -1364,11 +1364,13 @@ Generate complete test cases following the exact format above:`;
                         }
                         
                         if (node.type === 'FRAME') {
-                            frames.push({
+                            const frame = {
                                 id: node.id,
                                 name: node.name,
                                 page: pageName
-                            });
+                            };
+                            frames.push(frame);
+                            console.log('Found frame:', frame);
                         }
 
                         if (node.children) {
@@ -1407,6 +1409,19 @@ Generate complete test cases following the exact format above:`;
                     
                     if (!exportData.images || Object.keys(exportData.images).length === 0) {
                         throw new Error('No export URLs received from Figma API');
+                    }
+
+                    // Debug: Log which frames got URLs and which didn't
+                    console.log('Export data received:', exportData);
+                    frameIds.forEach(frameId => {
+                        if (!exportData.images[frameId]) {
+                            console.warn(`No export URL for frame ID: ${frameId}`);
+                        }
+                    });
+
+                    // Check for any API errors in the response
+                    if (exportData.err) {
+                        console.error('Figma API returned error:', exportData.err);
                     }
 
                     this.updateProgress(50, 'Export URLs generated');
@@ -1490,6 +1505,12 @@ Generate complete test cases following the exact format above:`;
                             if (imageUrl) {
                                 return this.downloadImage(frame.id, imageUrl, frame.name);
                             } else {
+                                console.error(`Failed to download frame ${frame.name}:`, {
+                                    frameId: frame.id,
+                                    frameName: frame.name,
+                                    reason: 'No export URL received from Figma API',
+                                    availableIds: Object.keys(imageUrls)
+                                });
                                 this.updateFrameStatus(frame.id, 'failed', 'No URL');
                                 return Promise.resolve();
                             }
