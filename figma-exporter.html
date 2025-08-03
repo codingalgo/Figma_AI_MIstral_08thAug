@@ -114,6 +114,16 @@
             transform: none;
         }
 
+        .unified-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 193, 7, 0.4);
+        }
+
+        .unified-button:disabled {
+            transform: none;
+            box-shadow: none;
+        }
+
         .status {
             padding: 15px;
             border-radius: 6px;
@@ -450,19 +460,19 @@
         <div class="credentials">
             <div class="credential-item">
                 <label for="apiToken">Figma API Token</label>
-                <input type="password" id="apiToken" value="figd_2nGk49M9ujxccf01lNpgv3gGfqKaRQ74Q0jBhzn1" readonly>
+                <input type="password" id="apiToken" value="figd_2nGk49M9ujxccf01lNpgv3gGfqKaRQ74Q0jBhzn1" style="background: #fff; border: 1px solid #ced4da; font-family: monospace;">
             </div>
             <div class="credential-item">
                 <label for="fileId">Figma File ID</label>
-                <input type="text" id="fileId" value="2k2t7ZfG09nLyjM4viAGHP" readonly>
+                <input type="text" id="fileId" value="2k2t7ZfG09nLyjM4viAGHP" style="background: #fff; border: 1px solid #ced4da; font-family: monospace;">
             </div>
             <div class="credential-item">
                 <label for="mistralKey">Mistral AI API Key</label>
-                <input type="password" id="mistralKey" value="gmEWLMGdvQ4loD8fJ1bO70eknyEgA35x" readonly>
+                <input type="password" id="mistralKey" value="gmEWLMGdvQ4loD8fJ1bO70eknyEgA35x" style="background: #fff; border: 1px solid #ced4da; font-family: monospace;">
             </div>
         </div>
 
-        <button class="export-button unified-button" id="unifiedButton" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); font-size: 18px; font-weight: bold; padding: 20px 24px;">🚀 Generate Test Cases with AI & Auto Execute using Test Executor</button>
+        <button class="export-button unified-button" id="unifiedButton" style="background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%); font-size: 18px; font-weight: bold; padding: 20px 24px; transition: all 0.3s ease;">🚀 Generate Test Cases with AI & Auto Execute using Test Executor</button>
         
         <div class="individual-sections" style="margin-top: 20px; padding: 20px; background: #f8f9fa; border-radius: 8px;">
             <h3 style="margin-bottom: 15px; color: #2c3e50;">Individual Operations</h3>
@@ -754,8 +764,17 @@
                     document.getElementById('progressText').style.display = 'none';
                     document.getElementById('progressPercentage').style.display = 'none';
                     
+                    // Change button to green when completed
+                    unifiedButton.style.background = 'linear-gradient(135deg, #28a745 0%, #20c997 100%)';
+                    unifiedButton.innerHTML = '✅ Task Completed Successfully';
+                    
                     unifiedButton.disabled = false;
-                    unifiedButton.textContent = originalText;
+                    
+                    // Reset button after 3 seconds
+                    setTimeout(() => {
+                        unifiedButton.style.background = 'linear-gradient(135deg, #ffc107 0%, #fd7e14 100%)';
+                        unifiedButton.textContent = originalText;
+                    }, 3000);
                 }
             }
 
