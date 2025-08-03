@@ -115,3 +115,62 @@ ipcMain.handle('save-file', async (event, filePath, buffer) => {
     return { success: false, message: error.message };
   }
 });
+
+// Handle running executable with console output capture
+ipcMain.handle('run-executable', async (event, executablePath, args = []) => {
+  return new Promise((resolve, reject) => {
+    if (!fs.existsSync(executablePath)) {
+      reject(new Error(`Executable not found: ${executablePath}`));
+      return;
+    }
+
+    try {
+      const child = spawn(executablePath, args, {
+        stdio: ['pipe', 'pipe', 'pipe'],
+        shell: true
+      });
+
+      let output = '';
+      let errorOutput = '';
+
+      child.stdout.on('data', (data) => {
+        output += data.toString();
+      });
+
+      child.stderr.on('data', (data) => {
+        errorOutput += data.toString();
+      });
+
+      child.on('close', (code) => {
+        resolve({
+          success: code === 0,
+          code: code,
+          output: output,
+          error: errorOutput,
+          message: code === 0 ? 'Executable completed successfully' : `Executable exited with code ${code}`
+        });
+      });
+
+      child.on('error', (error) => {
+        reject(new Error(`Failed to start executable: ${error.message}`));
+      });
+
+      // For batch files that might run indefinitely, resolve after starting
+      setTimeout(() => {
+        if (!child.killed) {
+          resolve({
+            success: true,
+            code: null,
+            output: output,
+            error: errorOutput,
+            message: 'Executable started successfully (running in background)',
+            pid: child.pid
+          });
+        }
+      }, 3000);
+
+    } catch (error) {
+      reject(new Error(`Error running executable: ${error.message}`));
+    }
+  });
+});

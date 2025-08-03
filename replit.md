@@ -8,6 +8,15 @@ Preferred communication style: Simple, everyday language.
 
 ## Recent Changes
 
+### August 3, 2025 - Enhanced DA Auto Test Generator with Advanced Features
+- **Comprehensive Application Description**: Added detailed explanation of how the app works (Figma integration, JSON extraction, AI analysis, test case generation, auto execution)
+- **Enhanced Progress Indicators**: Implemented 5-step visual progress with animated progress bars and step-by-step indicators
+- **AI Prompt Display**: Added collapsible section showing the actual prompt being sent to Mistral AI for transparency
+- **Auto Test Executor**: Integrated automatic launching of c:\testexecutor.bat after downloads complete (desktop version only)
+- **Console Output Window**: Added real-time console window to display test executor output with color-coded messages
+- **Step-by-Step Process**: Enhanced unified workflow with clear visual progression through Connect → Extract → AI Analysis → Generate → Execute
+- **Real-time Feedback**: Users can now see exactly what's happening behind the scenes during each processing step
+
 ### August 1, 2025 - Electron Desktop App Implementation
 - **Desktop App Support**: Added full Electron desktop application functionality
 - **Executable Runner**: Desktop app can select and run .exe files for automated testing

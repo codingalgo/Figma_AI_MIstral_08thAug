@@ -145,26 +145,143 @@
             display: none;
         }
 
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .progress-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            padding: 10px 5px;
+        }
+
+        .progress-step::after {
+            content: '';
+            position: absolute;
+            top: 25px;
+            right: -50%;
+            width: 100%;
+            height: 2px;
+            background: #e9ecef;
+            z-index: 1;
+        }
+
+        .progress-step:last-child::after {
+            display: none;
+        }
+
+        .progress-step.active::after {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .step-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #e9ecef;
+            color: #6c757d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 8px;
+            font-weight: bold;
+            position: relative;
+            z-index: 2;
+            transition: all 0.3s ease;
+        }
+
+        .progress-step.active .step-icon {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .progress-step.completed .step-icon {
+            background: #28a745;
+            color: white;
+        }
+
+        .step-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 4px;
+        }
+
+        .step-description {
+            font-size: 10px;
+            color: #6c757d;
+        }
+
+        .progress-step.active .step-title {
+            color: #667eea;
+        }
+
         .progress-bar {
             width: 100%;
-            height: 8px;
+            height: 12px;
             background: #e9ecef;
-            border-radius: 4px;
+            border-radius: 6px;
             overflow: hidden;
+            margin-bottom: 15px;
         }
 
         .progress-fill {
             height: 100%;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             width: 0%;
-            transition: width 0.3s ease;
+            transition: width 0.5s ease;
+            border-radius: 6px;
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background-image: 
+                linear-gradient(
+                    -45deg,
+                    rgba(255, 255, 255, .2) 25%,
+                    transparent 25%,
+                    transparent 50%,
+                    rgba(255, 255, 255, .2) 50%,
+                    rgba(255, 255, 255, .2) 75%,
+                    transparent 75%,
+                    transparent
+                );
+            background-size: 50px 50px;
+            animation: move 2s linear infinite;
+        }
+
+        @keyframes move {
+            0% {
+                background-position: 0 0;
+            }
+            100% {
+                background-position: 50px 50px;
+            }
         }
 
         .progress-text {
             text-align: center;
-            margin-top: 10px;
             font-size: 14px;
+            color: #495057;
+            font-weight: 500;
+        }
+
+        .progress-percentage {
+            text-align: center;
+            font-size: 12px;
             color: #6c757d;
+            margin-top: 5px;
         }
 
         .frame-list {
@@ -219,6 +336,18 @@
             <p>Generate and validate test case & auto execute on real device</p>
         </div>
 
+        <!-- Application Description Section -->
+        <div class="description-section" style="background: #e8f4fd; border-radius: 8px; padding: 20px; margin-bottom: 30px; border-left: 4px solid #007bff;">
+            <h3 style="color: #0056b3; margin-bottom: 15px; font-size: 18px;">How This Application Works</h3>
+            <div style="color: #495057; line-height: 1.6;">
+                <p style="margin-bottom: 10px;"><strong>🔗 Figma Integration:</strong> Connects to your Figma project using API tokens to extract design frames and interactive prototype data.</p>
+                <p style="margin-bottom: 10px;"><strong>📊 JSON Extraction:</strong> Processes Figma's design JSON to identify frames, interactions, clickable elements, and navigation flows.</p>
+                <p style="margin-bottom: 10px;"><strong>🤖 AI-Powered Analysis:</strong> Sends extracted data to Mistral AI models to intelligently generate automated test cases based on your prototype interactions.</p>
+                <p style="margin-bottom: 10px;"><strong>🧪 Test Case Generation:</strong> Creates precise test scripts with coordinates, actions (CLICK, SLEEP, CHECK), and validation steps for comprehensive testing.</p>
+                <p style="margin-bottom: 0px;"><strong>⚡ Auto Execution:</strong> Downloads test cases and automatically launches testexecutor.bat on desktop to execute tests on real devices.</p>
+            </div>
+        </div>
+
         <div class="credentials">
             <div class="credential-item">
                 <label for="apiToken">Figma API Token</label>
@@ -258,16 +387,75 @@
             <div id="selectedExePath" style="font-size: 12px; color: #6c757d; word-break: break-all;"></div>
         </div>
 
+        <!-- AI Prompt Display Section -->
+        <div class="prompt-section" id="promptSection" style="display: none; background: #f8f9fa; border-radius: 8px; padding: 20px; margin-bottom: 20px; border: 1px solid #dee2e6;">
+            <h4 style="color: #2c3e50; margin-bottom: 15px; display: flex; align-items: center;">
+                🤖 AI Prompt Being Sent to Mistral
+                <button id="togglePrompt" style="margin-left: auto; padding: 4px 8px; background: #007bff; color: white; border: none; border-radius: 4px; font-size: 12px; cursor: pointer;">Show/Hide</button>
+            </h4>
+            <div id="promptContent" style="display: none;">
+                <textarea id="promptText" readonly style="width: 100%; height: 300px; padding: 15px; border: 1px solid #ced4da; border-radius: 6px; font-family: 'Courier New', monospace; font-size: 11px; background: #fff; resize: vertical;"></textarea>
+                <div style="margin-top: 10px; font-size: 12px; color: #6c757d;">
+                    <strong>Note:</strong> This is the actual prompt being sent to Mistral AI with your Figma data for test case generation.
+                </div>
+            </div>
+        </div>
+
         <div class="status" id="status"></div>
 
         <div class="progress" id="progress">
+            <!-- Progress Steps -->
+            <div class="progress-steps" id="progressSteps">
+                <div class="progress-step" id="step1">
+                    <div class="step-icon">1</div>
+                    <div class="step-title">Connect</div>
+                    <div class="step-description">Figma API</div>
+                </div>
+                <div class="progress-step" id="step2">
+                    <div class="step-icon">2</div>
+                    <div class="step-title">Extract</div>
+                    <div class="step-description">Design Data</div>
+                </div>
+                <div class="progress-step" id="step3">
+                    <div class="step-icon">3</div>
+                    <div class="step-title">AI Analysis</div>
+                    <div class="step-description">Mistral AI</div>
+                </div>
+                <div class="progress-step" id="step4">
+                    <div class="step-icon">4</div>
+                    <div class="step-title">Generate</div>
+                    <div class="step-description">Test Cases</div>
+                </div>
+                <div class="progress-step" id="step5">
+                    <div class="step-icon">5</div>
+                    <div class="step-title">Execute</div>
+                    <div class="step-description">Auto Run</div>
+                </div>
+            </div>
+            
+            <!-- Progress Bar -->
             <div class="progress-bar">
                 <div class="progress-fill" id="progressFill"></div>
             </div>
             <div class="progress-text" id="progressText">Preparing export...</div>
+            <div class="progress-percentage" id="progressPercentage">0%</div>
         </div>
 
         <div class="frame-list" id="frameList"></div>
+
+        <!-- Console Output Window -->
+        <div class="console-window" id="consoleWindow" style="display: none; margin-top: 20px; background: #1e1e1e; border-radius: 8px; border: 1px solid #333;">
+            <div style="background: #333; padding: 10px 15px; border-radius: 8px 8px 0 0; display: flex; justify-content: space-between; align-items: center;">
+                <h4 style="color: #fff; margin: 0; font-size: 14px;">🖥️ Test Executor Console Output</h4>
+                <div>
+                    <button id="clearConsole" style="padding: 4px 8px; background: #666; color: white; border: none; border-radius: 4px; font-size: 12px; cursor: pointer; margin-right: 5px;">Clear</button>
+                    <button id="closeConsole" style="padding: 4px 8px; background: #dc3545; color: white; border: none; border-radius: 4px; font-size: 12px; cursor: pointer;">Close</button>
+                </div>
+            </div>
+            <div id="consoleOutput" style="padding: 15px; color: #00ff00; font-family: 'Courier New', monospace; font-size: 12px; height: 300px; overflow-y: auto; background: #1e1e1e;">
+                <div style="color: #888;">Test Executor Console - Ready</div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -310,6 +498,20 @@
                 document.getElementById('unifiedButton').addEventListener('click', () => {
                     this.runUnifiedProcess();
                 });
+
+                // Prompt toggle event listener
+                document.getElementById('togglePrompt').addEventListener('click', () => {
+                    this.togglePromptDisplay();
+                });
+
+                // Console window event listeners
+                document.getElementById('clearConsole').addEventListener('click', () => {
+                    this.clearConsoleOutput();
+                });
+
+                document.getElementById('closeConsole').addEventListener('click', () => {
+                    this.hideConsoleWindow();
+                });
             }
 
             // Unified process that runs everything in sequence
@@ -325,13 +527,21 @@
                 try {
                     this.showStatus('Starting unified process: Frames + Test Cases', 'info');
                     
-                    // Step 1: Export all frames
-                    this.updateProgress(10, 'Step 1/3: Fetching frames...');
+                    // Step 1: Connect to Figma API
+                    this.updateProgress(5, 'Connecting to Figma API...', 1);
                     const frames = await this.getFrames();
                     
-                    // Step 2: Generate test cases
-                    this.updateProgress(40, 'Step 2/3: Generating AI test cases...');
+                    // Step 2: Extract design data
+                    this.updateProgress(20, 'Extracting design data and interactions...', 2);
                     const fileData = await this.makeApiRequest(`/files/${this.fileId}?geometry=paths`);
+                    
+                    // Step 3: AI Analysis with Prompt Display
+                    this.updateProgress(35, 'Preparing AI analysis with Mistral...', 3);
+                    
+                    // Create and display the prompt being sent to Mistral
+                    const prototypeData = this.extractPrototypeData(fileData);
+                    const prompt = this.createMistralPrompt(prototypeData);
+                    this.showPromptSection(prompt);
                     
                     const response = await fetch('/api/generate-test-cases', {
                         method: 'POST',
@@ -397,8 +607,26 @@
                         this.saveTestCasesWeb();
                     }
 
-                    this.updateProgress(100, 'Complete! All frames and test cases downloaded');
-                    this.showStatus(`✅ Success! Downloaded ${frames.length} frames and generated ${testResult.testCases.split('\n').filter(line => line.trim()).length} test cases`, 'success');
+                    // Step 4: Generate test cases
+                    this.updateProgress(75, 'Generating test cases...', 4);
+                    
+                    // Step 5: Auto execute (desktop only)
+                    this.updateProgress(90, 'Preparing auto execution...', 5);
+                    
+                    // Run testexecutor.bat if on desktop
+                    if (window.electronAPI) {
+                        try {
+                            await this.runTestExecutor();
+                            this.updateProgress(100, 'Complete! Test executor launched successfully', 5);
+                            this.showStatus(`✅ Success! Downloaded ${frames.length} frames, generated ${testResult.testCases.split('\n').filter(line => line.trim()).length} test cases, and launched test executor`, 'success');
+                        } catch (error) {
+                            this.updateProgress(100, 'Complete! Files downloaded (Test executor failed)', 5);
+                            this.showStatus(`✅ Partial Success! Downloaded ${frames.length} frames and generated test cases, but test executor failed: ${error.message}`, 'info');
+                        }
+                    } else {
+                        this.updateProgress(100, 'Complete! All frames and test cases downloaded', 5);
+                        this.showStatus(`✅ Success! Downloaded ${frames.length} frames and generated ${testResult.testCases.split('\n').filter(line => line.trim()).length} test cases. Use desktop version for auto execution.`, 'success');
+                    }
 
                 } catch (error) {
                     this.showStatus(`Error in unified process: ${error.message}`, 'error');
@@ -407,6 +635,259 @@
                     this.hideProgress();
                     unifiedButton.disabled = false;
                     unifiedButton.textContent = originalText;
+                }
+            }
+
+            // Enhanced Progress Management
+            updateProgressSteps(currentStep) {
+                const steps = ['step1', 'step2', 'step3', 'step4', 'step5'];
+                
+                steps.forEach((stepId, index) => {
+                    const stepElement = document.getElementById(stepId);
+                    stepElement.classList.remove('active', 'completed');
+                    
+                    if (index < currentStep - 1) {
+                        stepElement.classList.add('completed');
+                    } else if (index === currentStep - 1) {
+                        stepElement.classList.add('active');
+                    }
+                });
+            }
+
+            updateProgress(percentage, text, step = null) {
+                const progressFill = document.getElementById('progressFill');
+                const progressText = document.getElementById('progressText');
+                const progressPercentage = document.getElementById('progressPercentage');
+                
+                progressFill.style.width = percentage + '%';
+                progressText.textContent = text;
+                progressPercentage.textContent = Math.round(percentage) + '%';
+                
+                if (step) {
+                    this.updateProgressSteps(step);
+                }
+            }
+
+            // Prompt Display Management
+            togglePromptDisplay() {
+                const promptContent = document.getElementById('promptContent');
+                if (promptContent.style.display === 'none') {
+                    promptContent.style.display = 'block';
+                } else {
+                    promptContent.style.display = 'none';
+                }
+            }
+
+            showPromptSection(prompt) {
+                const promptSection = document.getElementById('promptSection');
+                const promptText = document.getElementById('promptText');
+                
+                promptText.value = prompt;
+                promptSection.style.display = 'block';
+            }
+
+            hidePromptSection() {
+                const promptSection = document.getElementById('promptSection');
+                promptSection.style.display = 'none';
+            }
+
+            // Helper methods for prompt creation and prototype data extraction
+            extractPrototypeData(figmaData) {
+                const prototypeData = {
+                    frames: [],
+                    interactions: []
+                };
+
+                function traverseNode(node, parentType = '') {
+                    if (node.type === 'FRAME') {
+                        const frame = {
+                            id: node.id,
+                            name: node.name,
+                            type: node.type,
+                            absoluteBoundingBox: node.absoluteBoundingBox,
+                            children: []
+                        };
+
+                        if (node.children) {
+                            frame.children = extractTextAndInteractions(node.children);
+                        }
+
+                        if (node.interactions && node.interactions.length > 0) {
+                            node.interactions.forEach((interaction) => {
+                                prototypeData.interactions.push({
+                                    sourceId: node.id,
+                                    sourceName: node.name,
+                                    trigger: interaction.trigger,
+                                    actions: interaction.actions,
+                                    absoluteBoundingBox: node.absoluteBoundingBox
+                                });
+                            });
+                        }
+
+                        prototypeData.frames.push(frame);
+                    }
+
+                    if (node.children) {
+                        node.children.forEach((child) => traverseNode(child, node.type));
+                    }
+                }
+
+                function extractTextAndInteractions(children) {
+                    const extracted = [];
+                    
+                    children.forEach(child => {
+                        if (child.type === 'TEXT' && child.characters) {
+                            extracted.push({
+                                type: 'TEXT',
+                                characters: child.characters,
+                                absoluteBoundingBox: child.absoluteBoundingBox
+                            });
+                        }
+                        
+                        if (child.interactions && child.interactions.length > 0) {
+                            child.interactions.forEach((interaction) => {
+                                prototypeData.interactions.push({
+                                    sourceId: child.id,
+                                    sourceName: child.name || 'Unnamed Element',
+                                    trigger: interaction.trigger,
+                                    actions: interaction.actions,
+                                    absoluteBoundingBox: child.absoluteBoundingBox
+                                });
+                            });
+                        }
+
+                        if (child.children) {
+                            extracted.push(...extractTextAndInteractions(child.children));
+                        }
+                    });
+
+                    return extracted;
+                }
+
+                if (figmaData.document && figmaData.document.children) {
+                    figmaData.document.children.forEach((page) => {
+                        if (page.children) {
+                            page.children.forEach((child) => traverseNode(child));
+                        }
+                    });
+                }
+
+                return prototypeData;
+            }
+
+            createMistralPrompt(prototypeData) {
+                return `You are analyzing Figma design data to generate automated test cases for prototype interactions.
+
+CRITICAL REQUIREMENTS:
+1. Each test case MUST include ALL 6 components in this exact order:
+   <Test Case Name>,CLICK/CLICK_COORDS,coordinates/text,SLEEP,duration,CHECK,expected_text
+
+2. CORRECT Test Case Format Examples:
+   Navigate from Splash to Popular,CLICK_COORDS,540,960,SLEEP,2,CHECK,POPULAR RECIPES
+   Navigate from Popular to Menu,CLICK_COORDS,74,83,SLEEP,2,CHECK,EXIT
+   Navigate from Menu to Favorite,CLICK,FAVORITE RECIPES,SLEEP,2,CHECK,FAVORITE RECIPES
+
+3. Command Rules:
+   - CLICK_COORDS: Use for clickable areas without text. Format: CLICK_COORDS,x,y (where x,y are POSITIVE numbers)
+   - CLICK: Use for buttons/text elements. Format: CLICK,TEXT_TO_CLICK
+   - SLEEP: Always use SLEEP,2 (2 seconds wait)
+   - CHECK: Verify destination screen text in UPPER CASE
+
+4. MANDATORY Coordinate Guidelines:
+   - Screen size: 1080 x 1920 pixels (width x height)
+   - Top-left corner is (0,0)
+   - Center coordinates: (540,960)
+   - Menu button coordinates: (74,83)
+   - ALL COORDINATES MUST BE POSITIVE NUMBERS ONLY
+   - NEVER use negative coordinates like (-1295,-134) - this is WRONG
+   - Valid coordinate range: X: 0-1080, Y: 0-1920
+   - Examples of CORRECT coordinates: 74,83 or 540,960 or 200,400
+   - Examples of WRONG coordinates: -1295,-134 or 1131,-134 (negative numbers are invalid)
+
+5. Navigation Flow Rules:
+   - Create sequential navigation paths
+   - Navigate FROM source TO destination
+   - Then continue FROM that destination to next screen
+   - Include back navigation using menu buttons at coordinates like 74,83
+
+6. Text Formatting:
+   - ALL text in CLICK and CHECK commands must be UPPER CASE
+   - Match exact spelling from Figma data
+   - No extra spaces around commas
+
+7. Required Output:
+   - Generate test cases that follow complete user journeys
+   - Include forward and backward navigation
+   - Each line must be a complete test case with all 6 components
+   - NO comments, explanations, or additional text
+   - ONLY use POSITIVE coordinate values (0-1080 for X, 0-1920 for Y)
+
+Figma Prototype Data:
+${JSON.stringify(prototypeData, null, 2)}
+
+Generate complete test cases following the exact format above:`;
+            }
+
+            // Console Output Management
+            showConsoleWindow() {
+                const consoleWindow = document.getElementById('consoleWindow');
+                consoleWindow.style.display = 'block';
+            }
+
+            hideConsoleWindow() {
+                const consoleWindow = document.getElementById('consoleWindow');
+                consoleWindow.style.display = 'none';
+            }
+
+            addConsoleOutput(message, type = 'info') {
+                const consoleOutput = document.getElementById('consoleOutput');
+                const timestamp = new Date().toLocaleTimeString();
+                
+                let color = '#00ff00'; // default green
+                if (type === 'error') color = '#ff4444';
+                if (type === 'warning') color = '#ffaa00';
+                if (type === 'info') color = '#00aaff';
+                
+                const logEntry = document.createElement('div');
+                logEntry.style.color = color;
+                logEntry.innerHTML = `[${timestamp}] ${message}`;
+                
+                consoleOutput.appendChild(logEntry);
+                consoleOutput.scrollTop = consoleOutput.scrollHeight;
+            }
+
+            clearConsoleOutput() {
+                const consoleOutput = document.getElementById('consoleOutput');
+                consoleOutput.innerHTML = '<div style="color: #888;">Test Executor Console - Cleared</div>';
+            }
+
+            // Auto-run testexecutor.bat functionality
+            async runTestExecutor() {
+                if (window.electronAPI) {
+                    this.showConsoleWindow();
+                    this.addConsoleOutput('Starting Test Executor...', 'info');
+                    
+                    try {
+                        // For desktop version, run c:\testexecutor.bat
+                        const result = await window.electronAPI.runExecutable('c:\\testexecutor.bat');
+                        this.addConsoleOutput('Test Executor launched successfully', 'info');
+                        
+                        // Monitor output if available
+                        if (result.output) {
+                            result.output.split('\n').forEach(line => {
+                                if (line.trim()) {
+                                    this.addConsoleOutput(line, 'info');
+                                }
+                            });
+                        }
+                        
+                    } catch (error) {
+                        this.addConsoleOutput(`Error running Test Executor: ${error.message}`, 'error');
+                        this.showStatus('Failed to run Test Executor: ' + error.message, 'error');
+                        throw error;
+                    }
+                } else {
+                    throw new Error('Test Executor can only run in desktop mode');
                 }
             }
 
@@ -425,7 +906,12 @@
                     const fileData = await this.makeApiRequest(`/files/${this.fileId}?geometry=paths`);
                     this.updateProgress(30, 'Analyzing prototype interactions...');
 
-                    // Step 2: Send to Mistral AI for test case generation
+                    // Step 2: Create and display the prompt
+                    const prototypeData = this.extractPrototypeData(fileData);
+                    const prompt = this.createMistralPrompt(prototypeData);
+                    this.showPromptSection(prompt);
+
+                    // Step 3: Send to Mistral AI for test case generation
                     const response = await fetch('/api/generate-test-cases', {
                         method: 'POST',
                         headers: {
