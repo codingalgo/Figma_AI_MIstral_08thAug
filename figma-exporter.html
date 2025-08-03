@@ -198,11 +198,31 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             transform: scale(1.1);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(102, 126, 234, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(102, 126, 234, 0);
+            }
         }
 
         .progress-step.completed .step-icon {
             background: #28a745;
             color: white;
+        }
+
+        .progress-step.completed .step-icon::after {
+            content: '✓';
+            position: absolute;
+            font-size: 16px;
+            font-weight: bold;
         }
 
         .step-title {
@@ -219,6 +239,17 @@
 
         .progress-step.active .step-title {
             color: #667eea;
+            font-weight: bold;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 5px #667eea;
+            }
+            to {
+                text-shadow: 0 0 10px #667eea, 0 0 15px #667eea;
+            }
         }
 
         .progress-bar {
@@ -337,14 +368,32 @@
         </div>
 
         <!-- Application Description Section -->
-        <div class="description-section" style="background: #e8f4fd; border-radius: 8px; padding: 20px; margin-bottom: 30px; border-left: 4px solid #007bff;">
-            <h3 style="color: #0056b3; margin-bottom: 15px; font-size: 18px;">How This Application Works</h3>
-            <div style="color: #495057; line-height: 1.6;">
-                <p style="margin-bottom: 10px;"><strong>🔗 Figma Integration:</strong> Connects to your Figma project using API tokens to extract design frames and interactive prototype data.</p>
-                <p style="margin-bottom: 10px;"><strong>📊 JSON Extraction:</strong> Processes Figma's design JSON to identify frames, interactions, clickable elements, and navigation flows.</p>
-                <p style="margin-bottom: 10px;"><strong>🤖 AI-Powered Analysis:</strong> Sends extracted data to Mistral AI models to intelligently generate automated test cases based on your prototype interactions.</p>
-                <p style="margin-bottom: 10px;"><strong>🧪 Test Case Generation:</strong> Creates precise test scripts with coordinates, actions (CLICK, SLEEP, CHECK), and validation steps for comprehensive testing.</p>
-                <p style="margin-bottom: 0px;"><strong>⚡ Auto Execution:</strong> Downloads test cases and automatically launches testexecutor.bat on desktop to execute tests on real devices.</p>
+        <div class="description-section" style="background: #e8f4fd; border-radius: 8px; padding: 15px 20px; margin-bottom: 30px; border-left: 4px solid #007bff;">
+            <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;" onclick="toggleDescription()">
+                <h3 style="color: #0056b3; margin: 0; font-size: 18px;">How This Application Works</h3>
+                <span id="descriptionToggle" style="color: #007bff; font-size: 20px; font-weight: bold;">▼</span>
+            </div>
+            <div id="descriptionContent" style="margin-top: 15px; color: #495057; line-height: 1.6;">
+                <div style="margin-bottom: 12px; padding: 8px; background: rgba(0,123,255,0.1); border-radius: 6px;">
+                    <strong style="color: #0056b3;">🔗 Figma Integration:</strong> 
+                    <span style="color: #6c757d; font-size: 14px;">Connects to your Figma project using API tokens to extract design frames and interactive prototype data.</span>
+                </div>
+                <div style="margin-bottom: 12px; padding: 8px; background: rgba(220,53,69,0.1); border-radius: 6px;">
+                    <strong style="color: #dc3545;">📊 JSON Extraction:</strong> 
+                    <span style="color: #6c757d; font-size: 14px;">Processes Figma's design JSON to identify frames, interactions, clickable elements, and navigation flows.</span>
+                </div>
+                <div style="margin-bottom: 12px; padding: 8px; background: rgba(255,193,7,0.1); border-radius: 6px;">
+                    <strong style="color: #ffc107;">🤖 AI-Powered Analysis:</strong> 
+                    <span style="color: #6c757d; font-size: 14px;">Sends extracted data to Mistral AI models to intelligently generate automated test cases based on your prototype interactions.</span>
+                </div>
+                <div style="margin-bottom: 12px; padding: 8px; background: rgba(40,167,69,0.1); border-radius: 6px;">
+                    <strong style="color: #28a745;">🧪 Test Case Generation:</strong> 
+                    <span style="color: #6c757d; font-size: 14px;">Creates precise test scripts with coordinates, actions (CLICK, SLEEP, CHECK), and validation steps for comprehensive testing.</span>
+                </div>
+                <div style="margin-bottom: 0px; padding: 8px; background: rgba(102,126,234,0.1); border-radius: 6px;">
+                    <strong style="color: #667eea;">⚡ Auto Execution:</strong> 
+                    <span style="color: #6c757d; font-size: 14px;">Downloads test cases and automatically launches testexecutor.bat on desktop to execute tests on real devices.</span>
+                </div>
             </div>
         </div>
 
@@ -363,13 +412,13 @@
             </div>
         </div>
 
-        <button class="export-button unified-button" id="unifiedButton" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); font-size: 18px; font-weight: bold; padding: 20px 24px;">🚀 Generate Everything - Export Frames + AI Test Cases</button>
+        <button class="export-button unified-button" id="unifiedButton" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); font-size: 18px; font-weight: bold; padding: 20px 24px;">🚀 Generate Test Cases with AI & Auto Execute using Test Executor</button>
         
         <div class="individual-sections" style="margin-top: 20px; padding: 20px; background: #f8f9fa; border-radius: 8px;">
             <h3 style="margin-bottom: 15px; color: #2c3e50;">Individual Operations</h3>
             <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                <button class="export-button" id="exportButton" style="flex: 1; padding: 12px; font-size: 14px;">Export Frames Only</button>
-                <button class="ai-button" id="generateTestCasesButton" style="flex: 1; padding: 12px; background: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px;">Generate Test Cases Only</button>
+                <button class="export-button" id="exportButton" style="flex: 1; padding: 12px; font-size: 14px;">📥 Export Frames Only</button>
+                <button class="ai-button" id="generateTestCasesButton" style="flex: 1; padding: 12px; background: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px;">🤖 AI Test Cases Only</button>
             </div>
             <div id="testCaseOutput" style="display: none; margin-top: 15px;">
                 <h4 style="color: #2c3e50; margin-bottom: 10px;">Generated Test Cases:</h4>
@@ -378,13 +427,13 @@
             </div>
         </div>
 
-        <div class="exe-section" style="margin-top: 20px; padding: 20px; background: #f8f9fa; border-radius: 8px;">
-            <h3 style="margin-bottom: 15px; color: #2c3e50;">Local Executable Runner</h3>
+        <div class="exe-section" style="margin-top: 20px; padding: 20px; background: #f8f9fa; border-radius: 8px; border: 1px solid #dee2e6;">
+            <h3 style="margin-bottom: 15px; color: #2c3e50;">🖥️ Manual Test Executor</h3>
             <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-                <button class="exe-button" id="selectExeButton" style="flex: 1; padding: 12px; background: #28a745; color: white; border: none; border-radius: 6px; cursor: pointer;">Select .exe File</button>
-                <button class="exe-button" id="runExeButton" style="flex: 1; padding: 12px; background: #dc3545; color: white; border: none; border-radius: 6px; cursor: pointer;" disabled>Run Selected Exe</button>
+                <button class="exe-button" id="selectExeButton" style="flex: 1; padding: 12px; background: #28a745; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">📂 Select .exe File</button>
+                <button class="exe-button" id="runExeButton" style="flex: 1; padding: 12px; background: #dc3545; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;" disabled>▶️ Run Selected Exe</button>
             </div>
-            <div id="selectedExePath" style="font-size: 12px; color: #6c757d; word-break: break-all;"></div>
+            <div id="selectedExePath" style="font-size: 12px; color: #6c757d; word-break: break-all; font-style: italic;"></div>
         </div>
 
         <!-- AI Prompt Display Section -->
@@ -1280,9 +1329,27 @@ Generate complete test cases following the exact format above:`;
             }
         }
 
+        // Toggle description functionality
+        function toggleDescription() {
+            const content = document.getElementById('descriptionContent');
+            const toggle = document.getElementById('descriptionToggle');
+            
+            if (content.style.display === 'none') {
+                content.style.display = 'block';
+                toggle.textContent = '▼';
+            } else {
+                content.style.display = 'none';
+                toggle.textContent = '▶';
+            }
+        }
+
         // Initialize the exporter when the page loads
         document.addEventListener('DOMContentLoaded', () => {
             new FigmaExporter();
+            
+            // Initialize description as collapsed
+            document.getElementById('descriptionContent').style.display = 'none';
+            document.getElementById('descriptionToggle').textContent = '▶';
         });
     </script>
 </body>
