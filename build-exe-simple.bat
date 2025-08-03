@@ -8,20 +8,30 @@ echo.
 
 cd /d "%~dp0"
 
-echo Step 1: Installing electron-builder dependencies...
-call npm install --prefix . electron@37.2.4 electron-builder@26.0.12
+echo Step 1: Creating build directory...
+if not exist build-temp mkdir build-temp
+cd build-temp
 
 echo.
-echo Step 2: Copying electron-package.json to package.json temporarily...
-copy electron-package.json package.json.temp
+echo Step 2: Copying necessary files...
+copy ..\electron-main.js .
+copy ..\electron-preload.js .
+copy ..\figma-exporter.html .
+copy ..\electron-package.json package.json
 
 echo.
-echo Step 3: Building Windows executable...
+echo Step 3: Installing dependencies...
+call npm install
+
+echo.
+echo Step 4: Building Windows executable...
 call npx electron-builder --win
 
 echo.
-echo Step 4: Restoring original package.json...
-if exist package.json.temp del package.json.temp
+echo Step 5: Moving files back to main directory...
+cd ..
+if exist build-temp\dist move build-temp\dist dist-exe
+rmdir /s /q build-temp
 
 echo.
 echo ========================================
