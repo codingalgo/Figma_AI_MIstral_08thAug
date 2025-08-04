@@ -659,10 +659,19 @@ Generate complete test cases following the exact format above:</textarea>
             </div>
         </div>
 
+        <!-- Professional Separator -->
+        <div style="margin: 30px 0; border-top: 2px solid #e9ecef; position: relative;">
+            <div style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: white; padding: 0 20px; color: #6c757d; font-weight: 600; font-size: 14px;">MAIN ACTION</div>
+        </div>
+
         <!-- Full Width Generate Button -->
         <div style="margin-bottom: 30px; width: 100%;">
             <button class="export-button unified-button" id="unifiedButtonFullWidth" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); font-size: 20px; font-weight: bold; padding: 24px 32px; transition: all 0.3s ease; width: 100%; border-radius: 12px; border: none; color: white; cursor: pointer; box-shadow: 0 6px 20px rgba(40, 167, 69, 0.3);" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 30px rgba(40, 167, 69, 0.4)'" onmouseout="this.style.transform='translateY(0px)'; this.style.boxShadow='0 6px 20px rgba(40, 167, 69, 0.3)'">🚀 Generate Test Cases with AI & Auto Execute using Test Executor - Full Process</button>
-            </div>
+        </div>
+
+        <!-- Progress Separator -->
+        <div style="margin: 40px 0; border-top: 2px solid #e9ecef; position: relative;">
+            <div style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: white; padding: 0 20px; color: #6c757d; font-weight: 600; font-size: 14px;">WORKFLOW PROGRESS</div>
         </div>
 
         <!-- AI Data Display Sections -->
@@ -835,14 +844,20 @@ Generate complete test cases following the exact format above:</textarea>
                 });
 
                 // Unified button event listener
-                document.getElementById('unifiedButton').addEventListener('click', () => {
-                    this.runUnifiedProcess();
-                });
+                const unifiedButton = document.getElementById('unifiedButton');
+                if (unifiedButton) {
+                    unifiedButton.addEventListener('click', () => {
+                        this.runUnifiedProcess();
+                    });
+                }
 
                 // Full width unified button event listener
-                document.getElementById('unifiedButtonFullWidth').addEventListener('click', () => {
-                    this.runUnifiedProcess();
-                });
+                const unifiedButtonFullWidth = document.getElementById('unifiedButtonFullWidth');
+                if (unifiedButtonFullWidth) {
+                    unifiedButtonFullWidth.addEventListener('click', () => {
+                        this.runUnifiedProcess();
+                    });
+                }
 
                 // Prompt toggle event listener
                 document.getElementById('togglePrompt').addEventListener('click', () => {
@@ -857,20 +872,39 @@ Generate complete test cases following the exact format above:</textarea>
                 document.getElementById('closeConsole').addEventListener('click', () => {
                     this.hideConsoleWindow();
                 });
+
+                // Additional download and copy button event listeners
+                const downloadTestCasesExpanded = document.getElementById('downloadTestCasesExpanded');
+                if (downloadTestCasesExpanded) {
+                    downloadTestCasesExpanded.addEventListener('click', () => {
+                        this.downloadTestCases();
+                    });
+                }
+
+                const copyTestCases = document.getElementById('copyTestCases');
+                if (copyTestCases) {
+                    copyTestCases.addEventListener('click', () => {
+                        this.copyTestCasesToClipboard();
+                    });
+                }
             }
 
             // Unified process that runs everything in sequence
             async runUnifiedProcess() {
                 const unifiedButton = document.getElementById('unifiedButton');
                 const unifiedButtonFullWidth = document.getElementById('unifiedButtonFullWidth');
-                const originalText = unifiedButton.textContent;
-                const originalTextFullWidth = unifiedButtonFullWidth.textContent;
+                const originalText = unifiedButton ? unifiedButton.textContent : '';
+                const originalTextFullWidth = unifiedButtonFullWidth ? unifiedButtonFullWidth.textContent : '';
                 
-                // Disable both buttons
-                unifiedButton.disabled = true;
-                unifiedButtonFullWidth.disabled = true;
-                unifiedButton.textContent = '🔄 Processing Everything...';
-                unifiedButtonFullWidth.textContent = '🔄 Processing Everything...';
+                // Disable both buttons if they exist
+                if (unifiedButton) {
+                    unifiedButton.disabled = true;
+                    unifiedButton.textContent = '🔄 Processing Everything...';
+                }
+                if (unifiedButtonFullWidth) {
+                    unifiedButtonFullWidth.disabled = true;
+                    unifiedButtonFullWidth.textContent = '🔄 Processing Everything...';
+                }
                 
                 this.hideStatus();
                 this.showProgress();
@@ -1029,20 +1063,27 @@ Generate complete test cases following the exact format above:</textarea>
                     document.getElementById('progressPercentage').style.display = 'none';
                     
                     // Change buttons to green when completed
-                    unifiedButton.style.background = 'linear-gradient(135deg, #28a745 0%, #20c997 100%)';
-                    unifiedButton.innerHTML = '✅ Task Completed Successfully';
-                    unifiedButtonFullWidth.style.background = 'linear-gradient(135deg, #28a745 0%, #20c997 100%)';
-                    unifiedButtonFullWidth.innerHTML = '✅ Task Completed Successfully';
-                    
-                    unifiedButton.disabled = false;
-                    unifiedButtonFullWidth.disabled = false;
+                    if (unifiedButton) {
+                        unifiedButton.style.background = 'linear-gradient(135deg, #28a745 0%, #20c997 100%)';
+                        unifiedButton.innerHTML = '✅ Task Completed Successfully';
+                        unifiedButton.disabled = false;
+                    }
+                    if (unifiedButtonFullWidth) {
+                        unifiedButtonFullWidth.style.background = 'linear-gradient(135deg, #28a745 0%, #20c997 100%)';
+                        unifiedButtonFullWidth.innerHTML = '✅ Task Completed Successfully';
+                        unifiedButtonFullWidth.disabled = false;
+                    }
                     
                     // Reset buttons after 3 seconds
                     setTimeout(() => {
-                        unifiedButton.style.background = 'linear-gradient(135deg, #ffc107 0%, #fd7e14 100%)';
-                        unifiedButton.textContent = originalText;
-                        unifiedButtonFullWidth.style.background = 'linear-gradient(135deg, #28a745 0%, #20c997 100%)';
-                        unifiedButtonFullWidth.textContent = originalTextFullWidth;
+                        if (unifiedButton) {
+                            unifiedButton.style.background = 'linear-gradient(135deg, #ffc107 0%, #fd7e14 100%)';
+                            unifiedButton.textContent = originalText;
+                        }
+                        if (unifiedButtonFullWidth) {
+                            unifiedButtonFullWidth.style.background = 'linear-gradient(135deg, #28a745 0%, #20c997 100%)';
+                            unifiedButtonFullWidth.textContent = originalTextFullWidth;
+                        }
                     }, 3000);
                 }
             }
@@ -1562,6 +1603,26 @@ Generate complete test cases following the exact format above:`;
                 document.body.removeChild(a);
                 window.URL.revokeObjectURL(url);
                 this.showStatus('Test cases downloaded as testcases.txt', 'success');
+            }
+
+            async copyTestCasesToClipboard() {
+                try {
+                    if (this.generatedTestCases) {
+                        await navigator.clipboard.writeText(this.generatedTestCases);
+                        this.showStatus('Test cases copied to clipboard successfully', 'success');
+                    } else {
+                        this.showStatus('No test cases available to copy', 'error');
+                    }
+                } catch (error) {
+                    // Fallback for older browsers
+                    const textArea = document.createElement('textarea');
+                    textArea.value = this.generatedTestCases;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                    this.showStatus('Test cases copied to clipboard', 'success');
+                }
             }
 
             async saveTestCasesDesktop() {
