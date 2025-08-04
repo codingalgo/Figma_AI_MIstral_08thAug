@@ -304,6 +304,62 @@
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
+        /* Different colors for each step when completed */
+        #step1.completed .step-icon {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            border: 3px solid #007bff;
+            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+        }
+
+        #step1.completed .step-icon::after {
+            color: #ffffff;
+            content: '✓';
+        }
+
+        #step2.completed .step-icon {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            border: 3px solid #dc3545;
+            box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+        }
+
+        #step2.completed .step-icon::after {
+            color: #ffffff;
+            content: '✓';
+        }
+
+        #step3.completed .step-icon {
+            background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+            border: 3px solid #ffc107;
+            box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
+        }
+
+        #step3.completed .step-icon::after {
+            color: #ffffff;
+            content: '✓';
+        }
+
+        #step4.completed .step-icon {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            border: 3px solid #28a745;
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+        }
+
+        #step4.completed .step-icon::after {
+            color: #ffffff;
+            content: '✓';
+        }
+
+        #step5.completed .step-icon {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: 3px solid #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        #step5.completed .step-icon::after {
+            color: #ffffff;
+            content: '✓';
+        }
+
         .step-title {
             font-size: 16px;
             font-weight: 700;
@@ -603,6 +659,12 @@ Generate complete test cases following the exact format above:</textarea>
             </div>
         </div>
 
+        <!-- Full Width Generate Button -->
+        <div style="margin-bottom: 30px; width: 100%;">
+            <button class="export-button unified-button" id="unifiedButtonFullWidth" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); font-size: 20px; font-weight: bold; padding: 24px 32px; transition: all 0.3s ease; width: 100%; border-radius: 12px; border: none; color: white; cursor: pointer; box-shadow: 0 6px 20px rgba(40, 167, 69, 0.3);" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 30px rgba(40, 167, 69, 0.4)'" onmouseout="this.style.transform='translateY(0px)'; this.style.boxShadow='0 6px 20px rgba(40, 167, 69, 0.3)'">🚀 Generate Test Cases with AI & Auto Execute using Test Executor - Full Process</button>
+            </div>
+        </div>
+
         <!-- AI Data Display Sections -->
 
         <!-- Mistral JSON Section -->
@@ -777,6 +839,11 @@ Generate complete test cases following the exact format above:</textarea>
                     this.runUnifiedProcess();
                 });
 
+                // Full width unified button event listener
+                document.getElementById('unifiedButtonFullWidth').addEventListener('click', () => {
+                    this.runUnifiedProcess();
+                });
+
                 // Prompt toggle event listener
                 document.getElementById('togglePrompt').addEventListener('click', () => {
                     this.togglePromptDisplay();
@@ -795,9 +862,15 @@ Generate complete test cases following the exact format above:</textarea>
             // Unified process that runs everything in sequence
             async runUnifiedProcess() {
                 const unifiedButton = document.getElementById('unifiedButton');
+                const unifiedButtonFullWidth = document.getElementById('unifiedButtonFullWidth');
                 const originalText = unifiedButton.textContent;
+                const originalTextFullWidth = unifiedButtonFullWidth.textContent;
+                
+                // Disable both buttons
                 unifiedButton.disabled = true;
+                unifiedButtonFullWidth.disabled = true;
                 unifiedButton.textContent = '🔄 Processing Everything...';
+                unifiedButtonFullWidth.textContent = '🔄 Processing Everything...';
                 
                 this.hideStatus();
                 this.showProgress();
@@ -955,16 +1028,21 @@ Generate complete test cases following the exact format above:</textarea>
                     document.getElementById('progressText').style.display = 'none';
                     document.getElementById('progressPercentage').style.display = 'none';
                     
-                    // Change button to green when completed
+                    // Change buttons to green when completed
                     unifiedButton.style.background = 'linear-gradient(135deg, #28a745 0%, #20c997 100%)';
                     unifiedButton.innerHTML = '✅ Task Completed Successfully';
+                    unifiedButtonFullWidth.style.background = 'linear-gradient(135deg, #28a745 0%, #20c997 100%)';
+                    unifiedButtonFullWidth.innerHTML = '✅ Task Completed Successfully';
                     
                     unifiedButton.disabled = false;
+                    unifiedButtonFullWidth.disabled = false;
                     
-                    // Reset button after 3 seconds
+                    // Reset buttons after 3 seconds
                     setTimeout(() => {
                         unifiedButton.style.background = 'linear-gradient(135deg, #ffc107 0%, #fd7e14 100%)';
                         unifiedButton.textContent = originalText;
+                        unifiedButtonFullWidth.style.background = 'linear-gradient(135deg, #28a745 0%, #20c997 100%)';
+                        unifiedButtonFullWidth.textContent = originalTextFullWidth;
                     }, 3000);
                 }
             }
