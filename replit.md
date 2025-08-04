@@ -8,6 +8,17 @@ Preferred communication style: Simple, everyday language.
 
 ## Recent Changes
 
+### August 4, 2025 - Enhanced UI for Professional Presentation
+- **Expanded Application Guide**: "How This Application Works" section now permanently expanded with concise keyword-focused descriptions
+- **Enhanced Visual Hierarchy**: Streamlined text with keyword headings and shorter descriptions for better readability
+- **Full-Width Test Case Display**: Generated test cases section now uses full window width with larger display area (500px height)
+- **Updated AI Branding**: Changed "Mistral AI prompt" to "AI prompt" for broader AI provider compatibility
+- **Organized Figma Resources**: Created expandable "Figma Resources" section containing API token and File ID fields
+- **Bigger Progress Indicators**: Enlarged step icons (60px), titles (16px), and descriptions for better visibility
+- **Enhanced Step Animations**: Added 1.5-second visual delays between step transitions for smoother user experience
+- **Professional Color Scheme**: Improved overall visual presentation suitable for both MD and technical audiences
+- **Responsive Layout**: Maintained mobile-friendly design while enhancing desktop presentation
+
 ### August 3, 2025 - Added Standalone Executable Packaging (3-Mode Operation)
 - **Three Operation Modes**: Web, Desktop, and Standalone Executable
 - **Electron Builder Integration**: Added comprehensive executable packaging with electron-builder

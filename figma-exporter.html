@@ -215,19 +215,20 @@
         }
 
         .step-icon {
-            width: 40px;
-            height: 40px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             background: #e9ecef;
             color: #6c757d;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 8px;
+            margin: 0 auto 12px;
             font-weight: bold;
             position: relative;
             z-index: 2;
             transition: all 0.3s ease;
+            font-size: 18px;
         }
 
         .progress-step.active .step-icon {
@@ -297,15 +298,16 @@
         }
 
         .step-title {
-            font-size: 12px;
-            font-weight: 600;
+            font-size: 16px;
+            font-weight: 700;
             color: #2c3e50;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
         }
 
         .step-description {
-            font-size: 10px;
+            font-size: 12px;
             color: #6c757d;
+            font-weight: 500;
         }
 
         .progress-step.active .step-title {
@@ -445,43 +447,43 @@
                 <div class="description-section" style="background: #e8f4fd; border-radius: 8px; padding: 15px 20px; border-left: 4px solid #007bff;">
                     <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;" onclick="toggleDescription()">
                         <h3 style="color: #0056b3; margin: 0; font-size: 18px;">How This Application Works</h3>
-                        <span id="descriptionToggle" style="color: #007bff; font-size: 20px; font-weight: bold;">▶</span>
+                        <span id="descriptionToggle" style="color: #007bff; font-size: 20px; font-weight: bold;">▼</span>
                     </div>
-                    <div id="descriptionContent" style="display: none; margin-top: 15px; color: #495057; line-height: 1.6;">
+                    <div id="descriptionContent" style="display: block; margin-top: 15px; color: #495057; line-height: 1.6;">
                         <div style="margin-bottom: 12px; padding: 12px; background: rgba(0,123,255,0.1); border-radius: 6px; border-left: 4px solid #007bff;">
                             <div style="display: flex; align-items: center; margin-bottom: 5px;">
                                 <span style="background: #007bff; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; margin-right: 10px;">1</span>
-                                <strong style="color: #0056b3;">🔗 Figma Integration</strong>
+                                <strong style="color: #0056b3;">🔗 Figma Connect</strong>
                             </div>
-                            <span style="color: #6c757d; font-size: 14px; margin-left: 34px; display: block;">Connects to your Figma project using API tokens to extract design frames and interactive prototype data.</span>
+                            <span style="color: #6c757d; font-size: 12px; margin-left: 34px; display: block;">API Token → Extract Design Frames & Prototypes</span>
                         </div>
                         <div style="margin-bottom: 12px; padding: 12px; background: rgba(220,53,69,0.1); border-radius: 6px; border-left: 4px solid #dc3545;">
                             <div style="display: flex; align-items: center; margin-bottom: 5px;">
                                 <span style="background: #dc3545; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; margin-right: 10px;">2</span>
-                                <strong style="color: #dc3545;">📊 JSON Extraction</strong>
+                                <strong style="color: #dc3545;">📊 JSON Process</strong>
                             </div>
-                            <span style="color: #6c757d; font-size: 14px; margin-left: 34px; display: block;">Processes Figma's design JSON to identify frames, interactions, clickable elements, and navigation flows.</span>
+                            <span style="color: #6c757d; font-size: 12px; margin-left: 34px; display: block;">Parse Elements → Identify Clickable Areas & Navigation</span>
                         </div>
                         <div style="margin-bottom: 12px; padding: 12px; background: rgba(255,193,7,0.1); border-radius: 6px; border-left: 4px solid #ffc107;">
                             <div style="display: flex; align-items: center; margin-bottom: 5px;">
                                 <span style="background: #ffc107; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; margin-right: 10px;">3</span>
-                                <strong style="color: #ffc107;">🤖 AI-Powered Analysis</strong>
+                                <strong style="color: #ffc107;">🤖 AI Analysis</strong>
                             </div>
-                            <span style="color: #6c757d; font-size: 14px; margin-left: 34px; display: block;">Sends extracted data to Mistral AI models to intelligently generate automated test cases based on your prototype interactions.</span>
+                            <span style="color: #6c757d; font-size: 12px; margin-left: 34px; display: block;">Send Data → AI Models → Intelligent Test Generation</span>
                         </div>
                         <div style="margin-bottom: 12px; padding: 12px; background: rgba(40,167,69,0.1); border-radius: 6px; border-left: 4px solid #28a745;">
                             <div style="display: flex; align-items: center; margin-bottom: 5px;">
                                 <span style="background: #28a745; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; margin-right: 10px;">4</span>
-                                <strong style="color: #28a745;">🧪 Test Case Generation</strong>
+                                <strong style="color: #28a745;">🧪 Test Generate</strong>
                             </div>
-                            <span style="color: #6c757d; font-size: 14px; margin-left: 34px; display: block;">Creates precise test scripts with coordinates, actions (CLICK, SLEEP, CHECK), and validation steps for comprehensive testing.</span>
+                            <span style="color: #6c757d; font-size: 12px; margin-left: 34px; display: block;">Create Scripts → Coordinates + Actions + Validation</span>
                         </div>
                         <div style="margin-bottom: 0px; padding: 12px; background: rgba(102,126,234,0.1); border-radius: 6px; border-left: 4px solid #667eea;">
                             <div style="display: flex; align-items: center; margin-bottom: 5px;">
                                 <span style="background: #667eea; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; margin-right: 10px;">5</span>
-                                <strong style="color: #667eea;">⚡ Auto Execution</strong>
+                                <strong style="color: #667eea;">⚡ Auto Execute</strong>
                             </div>
-                            <span style="color: #6c757d; font-size: 14px; margin-left: 34px; display: block;">Downloads test cases and automatically launches testexecutor.bat on desktop to execute tests on real devices.</span>
+                            <span style="color: #6c757d; font-size: 12px; margin-left: 34px; display: block;">Download → Launch TestExecutor → Run on Device</span>
                         </div>
                     </div>
                 </div>
@@ -489,14 +491,21 @@
 
             <!-- Right Column: Steps & Execution -->
             <div style="flex: 1; min-width: 0;">
-                <div class="credentials">
-                    <div class="credential-item">
-                        <label for="apiToken">Figma API Token</label>
-                        <input type="password" id="apiToken" value="figd_2nGk49M9ujxccf01lNpgv3gGfqKaRQ74Q0jBhzn1" style="background: #fff; border: 1px solid #ced4da; font-family: monospace;">
+                <!-- Figma Resources Section -->
+                <div class="figma-resources-section" style="margin-bottom: 20px; background: #f8f9fa; border-radius: 8px; border: 1px solid #dee2e6;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer; padding: 15px 20px;" onclick="toggleFigmaResources()">
+                        <h3 style="color: #2c3e50; margin: 0; font-size: 16px;">🎨 Figma Resources</h3>
+                        <span id="figmaResourcesToggle" style="color: #2c3e50; font-size: 20px; font-weight: bold;">▶</span>
                     </div>
-                    <div class="credential-item">
-                        <label for="fileId">Figma File ID</label>
-                        <input type="text" id="fileId" value="2k2t7ZfG09nLyjM4viAGHP" style="background: #fff; border: 1px solid #ced4da; font-family: monospace;">
+                    <div id="figmaResourcesContent" style="display: none; padding: 0 20px 20px 20px;">
+                        <div class="credential-item">
+                            <label for="apiToken">Figma API Token</label>
+                            <input type="password" id="apiToken" value="figd_2nGk49M9ujxccf01lNpgv3gGfqKaRQ74Q0jBhzn1" style="background: #fff; border: 1px solid #ced4da; font-family: monospace;">
+                        </div>
+                        <div class="credential-item">
+                            <label for="fileId">Figma File ID</label>
+                            <input type="text" id="fileId" value="2k2t7ZfG09nLyjM4viAGHP" style="background: #fff; border: 1px solid #ced4da; font-family: monospace;">
+                        </div>
                     </div>
                 </div>
 
@@ -539,7 +548,7 @@
                 <!-- Mistral Prompt Section - Moved above the button -->
                 <div class="mistral-prompt-section" id="mistralPromptSection" style="margin-bottom: 20px; background: #e3f2fd; border-radius: 8px; border: 1px solid #90caf9;">
                     <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer; padding: 15px 20px;" onclick="toggleMistralPrompt()">
-                        <h4 style="color: #1976d2; margin: 0; font-size: 16px;">🤖 Mistral AI Prompt (Fixed Template)</h4>
+                        <h4 style="color: #1976d2; margin: 0; font-size: 16px;">🤖 AI Prompt (Fixed Template)</h4>
                         <span id="mistralPromptToggle" style="color: #1976d2; font-size: 20px; font-weight: bold;">▶</span>
                     </div>
                     <div id="mistralPromptContent" style="display: none; padding: 0 20px 20px 20px;">
@@ -603,14 +612,14 @@ Generate complete test cases following the exact format above:</textarea>
             </div>
         </div>
 
-        <!-- Generated Test Cases Section -->
-        <div class="test-cases-section" id="testCasesSection" style="display: none; margin-bottom: 20px; background: #e8f5e8; border-radius: 8px; border: 1px solid #4caf50;">
+        <!-- Generated Test Cases Section - Full Width -->
+        <div class="test-cases-section" id="testCasesSection" style="display: none; margin-bottom: 20px; background: #e8f5e8; border-radius: 8px; border: 1px solid #4caf50; width: 100%; max-width: 100%;">
             <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer; padding: 15px 20px;" onclick="toggleTestCases()">
-                <h4 style="color: #2e7d32; margin: 0; font-size: 16px;">🧪 Generated Test Cases (Ready for Download)</h4>
+                <h4 style="color: #2e7d32; margin: 0; font-size: 18px; font-weight: 700;">🧪 Generated Test Cases (Ready for Download)</h4>
                 <span id="testCasesToggle" style="color: #2e7d32; font-size: 20px; font-weight: bold;">▶</span>
             </div>
             <div id="testCasesContent" style="display: none; padding: 0 20px 20px 20px;">
-                <textarea id="testCasesText" readonly style="width: 100%; height: 300px; padding: 15px; border: 1px solid #4caf50; border-radius: 6px; font-family: 'Courier New', monospace; font-size: 12px; background: #f9fff9; resize: vertical;"></textarea>
+                <textarea id="testCasesText" readonly style="width: 100%; height: 500px; padding: 15px; border: 1px solid #4caf50; border-radius: 6px; font-family: 'Courier New', monospace; font-size: 12px; background: #f9fff9; resize: vertical; max-width: 100%;"></textarea>
                 <div style="display: flex; gap: 10px; margin-top: 15px;">
                     <button id="downloadTestCasesExpanded" style="padding: 10px 20px; background: #4caf50; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">📥 Download testcases.txt</button>
                     <button id="copyTestCases" style="padding: 10px 20px; background: #2196f3; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">📋 Copy to Clipboard</button>
@@ -794,16 +803,18 @@ Generate complete test cases following the exact format above:</textarea>
                     this.updateProgress(5, 'Connecting to Figma API...', 1);
                     const frames = await this.getFrames();
                     this.markStepCompleted(1);
+                    await new Promise(resolve => setTimeout(resolve, 1500)); // Visual delay for step completion
                     
                     // Step 2: Extract design data
                     this.markStepProcessing(2);
                     this.updateProgress(20, 'Extracting design data and interactions...', 2);
                     const fileData = await this.makeApiRequest(`/files/${this.fileId}?geometry=paths`);
                     this.markStepCompleted(2);
+                    await new Promise(resolve => setTimeout(resolve, 1500)); // Visual delay for step completion
                     
                     // Step 3: AI Analysis with Prompt Display
                     this.markStepProcessing(3);
-                    this.updateProgress(35, 'Preparing AI analysis with Mistral...', 3);
+                    this.updateProgress(35, 'Preparing AI analysis with AI models...', 3);
                     
                     // Create and display the prompt being sent to Mistral
                     const prototypeData = this.extractPrototypeData(fileData);
@@ -846,6 +857,7 @@ Generate complete test cases following the exact format above:</textarea>
                         throw new Error(testResult.message || 'Failed to generate test cases');
                     }
                     this.markStepCompleted(3);
+                    await new Promise(resolve => setTimeout(resolve, 1500)); // Visual delay for step completion
 
                     // Step 4: Generate test cases
                     this.markStepProcessing(4);
@@ -894,6 +906,7 @@ Generate complete test cases following the exact format above:</textarea>
                         this.saveTestCasesWeb();
                     }
                     this.markStepCompleted(4);
+                    await new Promise(resolve => setTimeout(resolve, 1500)); // Visual delay for step completion
                     
                     // Step 5: Auto execute (desktop only)
                     this.markStepProcessing(5);
@@ -1824,6 +1837,20 @@ Generate complete test cases following the exact format above:`;
         function toggleManualExecution() {
             const content = document.getElementById('manualContent');
             const toggle = document.getElementById('manualToggle');
+            
+            if (content.style.display === 'none') {
+                content.style.display = 'block';
+                toggle.textContent = '▼';
+            } else {
+                content.style.display = 'none';
+                toggle.textContent = '▶';
+            }
+        }
+
+        // Toggle Figma Resources functionality
+        function toggleFigmaResources() {
+            const content = document.getElementById('figmaResourcesContent');
+            const toggle = document.getElementById('figmaResourcesToggle');
             
             if (content.style.display === 'none') {
                 content.style.display = 'block';
