@@ -507,16 +507,49 @@
 
         <button class="export-button unified-button" id="unifiedButton" style="background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%); font-size: 18px; font-weight: bold; padding: 20px 24px; transition: all 0.3s ease;">🚀 Generate Test Cases with AI & Auto Execute using Test Executor</button>
 
-        <!-- AI Prompt Display Section -->
-        <div class="prompt-section" id="promptSection" style="display: none; background: #f8f9fa; border-radius: 8px; padding: 20px; margin-bottom: 20px; border: 1px solid #dee2e6;">
-            <h4 style="color: #2c3e50; margin-bottom: 15px; display: flex; align-items: center;">
-                🤖 AI Prompt Being Sent to Mistral
-                <button id="togglePrompt" style="margin-left: auto; padding: 4px 8px; background: #007bff; color: white; border: none; border-radius: 4px; font-size: 12px; cursor: pointer;">Show/Hide</button>
-            </h4>
-            <div id="promptContent" style="display: none;">
-                <textarea id="promptText" readonly style="width: 100%; height: 300px; padding: 15px; border: 1px solid #ced4da; border-radius: 6px; font-family: 'Courier New', monospace; font-size: 11px; background: #fff; resize: vertical;"></textarea>
-                <div style="margin-top: 10px; font-size: 12px; color: #6c757d;">
-                    <strong>Note:</strong> This is the actual prompt being sent to Mistral AI with your Figma data for test case generation.
+        <!-- AI Data Display Sections -->
+        <!-- Mistral Prompt Section -->
+        <div class="mistral-prompt-section" id="mistralPromptSection" style="margin-bottom: 20px; background: #e3f2fd; border-radius: 8px; border: 1px solid #90caf9;">
+            <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer; padding: 15px 20px;" onclick="toggleMistralPrompt()">
+                <h4 style="color: #1976d2; margin: 0; font-size: 16px;">🤖 Mistral AI Prompt (Fixed Template)</h4>
+                <span id="mistralPromptToggle" style="color: #1976d2; font-size: 20px; font-weight: bold;">▶</span>
+            </div>
+            <div id="mistralPromptContent" style="display: none; padding: 0 20px 20px 20px;">
+                <textarea id="mistralPromptText" readonly style="width: 100%; height: 300px; padding: 15px; border: 1px solid #90caf9; border-radius: 6px; font-family: 'Courier New', monospace; font-size: 11px; background: #f3f9ff; resize: vertical;"></textarea>
+                <div style="margin-top: 10px; font-size: 12px; color: #555;">
+                    <strong>Note:</strong> This is the fixed prompt template sent to Mistral AI for test case generation.
+                </div>
+            </div>
+        </div>
+
+        <!-- Mistral JSON Section -->
+        <div class="mistral-json-section" id="mistralJsonSection" style="display: none; margin-bottom: 20px; background: #fff3e0; border-radius: 8px; border: 1px solid #ffb74d;">
+            <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer; padding: 15px 20px;" onclick="toggleMistralJson()">
+                <h4 style="color: #f57c00; margin: 0; font-size: 16px;">📊 Figma JSON Data (Sent to Mistral)</h4>
+                <span id="mistralJsonToggle" style="color: #f57c00; font-size: 20px; font-weight: bold;">▼</span>
+            </div>
+            <div id="mistralJsonContent" style="padding: 0 20px 20px 20px;">
+                <textarea id="mistralJsonText" readonly style="width: 100%; height: 400px; padding: 15px; border: 1px solid #ffb74d; border-radius: 6px; font-family: 'Courier New', monospace; font-size: 10px; background: #fffdf7; resize: vertical;"></textarea>
+                <div style="margin-top: 10px; font-size: 12px; color: #555;">
+                    <strong>Note:</strong> This is the processed Figma prototype data that gets sent to Mistral AI along with the prompt.
+                </div>
+            </div>
+        </div>
+
+        <!-- Generated Test Cases Section -->
+        <div class="test-cases-section" id="testCasesSection" style="display: none; margin-bottom: 20px; background: #e8f5e8; border-radius: 8px; border: 1px solid #4caf50;">
+            <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer; padding: 15px 20px;" onclick="toggleTestCases()">
+                <h4 style="color: #2e7d32; margin: 0; font-size: 16px;">🧪 Generated Test Cases (Ready for Download)</h4>
+                <span id="testCasesToggle" style="color: #2e7d32; font-size: 20px; font-weight: bold;">▼</span>
+            </div>
+            <div id="testCasesContent" style="padding: 0 20px 20px 20px;">
+                <textarea id="testCasesText" readonly style="width: 100%; height: 300px; padding: 15px; border: 1px solid #4caf50; border-radius: 6px; font-family: 'Courier New', monospace; font-size: 12px; background: #f9fff9; resize: vertical;"></textarea>
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button id="downloadTestCasesExpanded" style="padding: 10px 20px; background: #4caf50; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">📥 Download testcases.txt</button>
+                    <button id="copyTestCases" style="padding: 10px 20px; background: #2196f3; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">📋 Copy to Clipboard</button>
+                </div>
+                <div style="margin-top: 10px; font-size: 12px; color: #555;">
+                    <strong>Note:</strong> Test cases generated by Mistral AI. Download as .txt file or copy to clipboard for manual use.
                 </div>
             </div>
         </div>
@@ -708,7 +741,9 @@
                     // Create and display the prompt being sent to Mistral
                     const prototypeData = this.extractPrototypeData(fileData);
                     const prompt = this.createMistralPrompt(prototypeData);
-                    this.showPromptSection(prompt);
+                    
+                    // Show the Mistral JSON section with the prototype data
+                    this.showMistralJsonSection(prototypeData);
                     
                     let testResult;
                     
@@ -1055,6 +1090,59 @@
                 return prototypeData;
             }
 
+            getFixedMistralPrompt() {
+                return `You are analyzing Figma design data to generate automated test cases for prototype interactions.
+
+CRITICAL REQUIREMENTS:
+1. Each test case MUST include ALL 6 components in this exact order:
+   <Test Case Name>,CLICK/CLICK_COORDS,coordinates/text,SLEEP,duration,CHECK,expected_text
+
+2. CORRECT Test Case Format Examples:
+   Navigate from Splash to Popular,CLICK_COORDS,540,960,SLEEP,2,CHECK,POPULAR RECIPES
+   Navigate from Popular to Menu,CLICK_COORDS,74,83,SLEEP,2,CHECK,EXIT
+   Navigate from Menu to Favorite,CLICK,FAVORITE RECIPES,SLEEP,2,CHECK,FAVORITE RECIPES
+
+3. Command Rules:
+   - CLICK_COORDS: Use for clickable areas without text. Format: CLICK_COORDS,x,y (where x,y are POSITIVE numbers)
+   - CLICK: Use for buttons/text elements. Format: CLICK,TEXT_TO_CLICK
+   - SLEEP: Always use SLEEP,2 (2 seconds wait)
+   - CHECK: Verify destination screen text in UPPER CASE
+
+4. MANDATORY Coordinate Guidelines:
+   - Screen size: 1080 x 1920 pixels (width x height)
+   - Top-left corner is (0,0)
+   - Center coordinates: (540,960)
+   - Menu button coordinates: (74,83)
+   - ALL COORDINATES MUST BE POSITIVE NUMBERS ONLY
+   - NEVER use negative coordinates like (-1295,-134) - this is WRONG
+   - Valid coordinate range: X: 0-1080, Y: 0-1920
+   - Examples of CORRECT coordinates: 74,83 or 540,960 or 200,400
+   - Examples of WRONG coordinates: -1295,-134 or 1131,-134 (negative numbers are invalid)
+
+5. Navigation Flow Rules:
+   - Create sequential navigation paths
+   - Navigate FROM source TO destination
+   - Then continue FROM that destination to next screen
+   - Include back navigation using menu buttons at coordinates like 74,83
+
+6. Text Formatting:
+   - ALL text in CLICK and CHECK commands must be UPPER CASE
+   - Match exact spelling from Figma data
+   - No extra spaces around commas
+
+7. Required Output:
+   - Generate test cases that follow complete user journeys
+   - Include forward and backward navigation
+   - Each line must be a complete test case with all 6 components
+   - NO comments, explanations, or additional text
+   - ONLY use POSITIVE coordinate values (0-1080 for X, 0-1920 for Y)
+
+Figma Prototype Data:
+[WILL BE POPULATED WITH FIGMA JSON DATA]
+
+Generate complete test cases following the exact format above:`;
+            }
+
             createMistralPrompt(prototypeData) {
                 return `You are analyzing Figma design data to generate automated test cases for prototype interactions.
 
@@ -1189,7 +1277,9 @@ Generate complete test cases following the exact format above:`;
                     // Step 2: Create and display the prompt
                     const prototypeData = this.extractPrototypeData(fileData);
                     const prompt = this.createMistralPrompt(prototypeData);
-                    this.showPromptSection(prompt);
+                    
+                    // Show the Mistral JSON section with the prototype data
+                    this.showMistralJsonSection(prototypeData);
 
                     // Step 3: Send to Mistral AI for test case generation
                     this.updateProgress(60, 'Sending to Mistral AI...');
@@ -1236,12 +1326,45 @@ Generate complete test cases following the exact format above:`;
             }
 
             displayTestCases(testCases) {
+                // Update original section (for backward compatibility)
                 const outputDiv = document.getElementById('testCaseOutput');
                 const textArea = document.getElementById('testCaseText');
                 
                 textArea.value = testCases;
                 outputDiv.style.display = 'block';
+                
+                // Update new expandable test cases section
+                this.showTestCasesSection(testCases);
+                
                 this.generatedTestCases = testCases;
+            }
+
+            showTestCasesSection(testCases) {
+                const section = document.getElementById('testCasesSection');
+                const textArea = document.getElementById('testCasesText');
+                
+                textArea.value = testCases;
+                section.style.display = 'block';
+                
+                // Auto-expand if it was collapsed
+                const content = document.getElementById('testCasesContent');
+                const toggle = document.getElementById('testCasesToggle');
+                content.style.display = 'block';
+                toggle.textContent = '▼';
+            }
+
+            showMistralJsonSection(prototypeData) {
+                const section = document.getElementById('mistralJsonSection');
+                const textArea = document.getElementById('mistralJsonText');
+                
+                textArea.value = JSON.stringify(prototypeData, null, 2);
+                section.style.display = 'block';
+                
+                // Auto-expand by default when populated
+                const content = document.getElementById('mistralJsonContent');
+                const toggle = document.getElementById('mistralJsonToggle');
+                content.style.display = 'block';
+                toggle.textContent = '▼';
             }
 
             downloadTestCases() {
@@ -1658,9 +1781,51 @@ Generate complete test cases following the exact format above:`;
             }
         }
 
+        // Toggle Mistral Prompt functionality
+        function toggleMistralPrompt() {
+            const content = document.getElementById('mistralPromptContent');
+            const toggle = document.getElementById('mistralPromptToggle');
+            
+            if (content.style.display === 'none') {
+                content.style.display = 'block';
+                toggle.textContent = '▼';
+            } else {
+                content.style.display = 'none';
+                toggle.textContent = '▶';
+            }
+        }
+
+        // Toggle Mistral JSON functionality
+        function toggleMistralJson() {
+            const content = document.getElementById('mistralJsonContent');
+            const toggle = document.getElementById('mistralJsonToggle');
+            
+            if (content.style.display === 'none') {
+                content.style.display = 'block';
+                toggle.textContent = '▼';
+            } else {
+                content.style.display = 'none';
+                toggle.textContent = '▶';
+            }
+        }
+
+        // Toggle Test Cases functionality
+        function toggleTestCases() {
+            const content = document.getElementById('testCasesContent');
+            const toggle = document.getElementById('testCasesToggle');
+            
+            if (content.style.display === 'none') {
+                content.style.display = 'block';
+                toggle.textContent = '▼';
+            } else {
+                content.style.display = 'none';
+                toggle.textContent = '▶';
+            }
+        }
+
         // Initialize the exporter when the page loads
         document.addEventListener('DOMContentLoaded', () => {
-            new FigmaExporter();
+            const exporter = new FigmaExporter();
             
             // Initialize description as collapsed
             document.getElementById('descriptionContent').style.display = 'none';
@@ -1677,6 +1842,37 @@ Generate complete test cases following the exact format above:`;
             // Initialize AI config as collapsed
             document.getElementById('aiConfigContent').style.display = 'none';
             document.getElementById('aiConfigToggle').textContent = '▶';
+            
+            // Initialize new sections as collapsed
+            document.getElementById('mistralPromptContent').style.display = 'none';
+            document.getElementById('mistralPromptToggle').textContent = '▶';
+            
+            // Initialize and populate the fixed Mistral prompt
+            document.getElementById('mistralPromptText').value = exporter.getFixedMistralPrompt();
+            
+            // Add event listeners for new buttons
+            document.getElementById('downloadTestCasesExpanded').addEventListener('click', () => {
+                exporter.downloadTestCases();
+            });
+            
+            document.getElementById('copyTestCases').addEventListener('click', () => {
+                const testCasesText = document.getElementById('testCasesText').value;
+                if (testCasesText) {
+                    navigator.clipboard.writeText(testCasesText).then(() => {
+                        // Temporarily change button text to show success
+                        const button = document.getElementById('copyTestCases');
+                        const originalText = button.textContent;
+                        button.textContent = '✅ Copied!';
+                        setTimeout(() => {
+                            button.textContent = originalText;
+                        }, 2000);
+                    }).catch(() => {
+                        alert('Failed to copy to clipboard. Please copy manually.');
+                    });
+                } else {
+                    alert('No test cases to copy. Generate test cases first.');
+                }
+            });
         });
     </script>
 </body>
