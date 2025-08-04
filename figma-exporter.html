@@ -512,10 +512,59 @@
         <div class="mistral-prompt-section" id="mistralPromptSection" style="margin-bottom: 20px; background: #e3f2fd; border-radius: 8px; border: 1px solid #90caf9;">
             <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer; padding: 15px 20px;" onclick="toggleMistralPrompt()">
                 <h4 style="color: #1976d2; margin: 0; font-size: 16px;">🤖 Mistral AI Prompt (Fixed Template)</h4>
-                <span id="mistralPromptToggle" style="color: #1976d2; font-size: 20px; font-weight: bold;">▶</span>
+                <span id="mistralPromptToggle" style="color: #1976d2; font-size: 20px; font-weight: bold;">▼</span>
             </div>
-            <div id="mistralPromptContent" style="display: none; padding: 0 20px 20px 20px;">
-                <textarea id="mistralPromptText" readonly style="width: 100%; height: 300px; padding: 15px; border: 1px solid #90caf9; border-radius: 6px; font-family: 'Courier New', monospace; font-size: 11px; background: #f3f9ff; resize: vertical;"></textarea>
+            <div id="mistralPromptContent" style="display: block; padding: 0 20px 20px 20px;">
+                <textarea id="mistralPromptText" readonly style="width: 100%; height: 300px; padding: 15px; border: 1px solid #90caf9; border-radius: 6px; font-family: 'Courier New', monospace; font-size: 11px; background: #f3f9ff; resize: vertical;">You are analyzing Figma design data to generate automated test cases for prototype interactions.
+
+CRITICAL REQUIREMENTS:
+1. Each test case MUST include ALL 6 components in this exact order:
+   <Test Case Name>,CLICK/CLICK_COORDS,coordinates/text,SLEEP,duration,CHECK,expected_text
+
+2. CORRECT Test Case Format Examples:
+   Navigate from Splash to Popular,CLICK_COORDS,540,960,SLEEP,2,CHECK,POPULAR RECIPES
+   Navigate from Popular to Menu,CLICK_COORDS,74,83,SLEEP,2,CHECK,EXIT
+   Navigate from Menu to Favorite,CLICK,FAVORITE RECIPES,SLEEP,2,CHECK,FAVORITE RECIPES
+
+3. Command Rules:
+   - CLICK_COORDS: Use for clickable areas without text. Format: CLICK_COORDS,x,y (where x,y are POSITIVE numbers)
+   - CLICK: Use for buttons/text elements. Format: CLICK,TEXT_TO_CLICK
+   - SLEEP: Always use SLEEP,2 (2 seconds wait)
+   - CHECK: Verify destination screen text in UPPER CASE
+
+4. MANDATORY Coordinate Guidelines:
+   - Screen size: 1080 x 1920 pixels (width x height)
+   - Top-left corner is (0,0)
+   - Center coordinates: (540,960)
+   - Menu button coordinates: (74,83)
+   - ALL COORDINATES MUST BE POSITIVE NUMBERS ONLY
+   - NEVER use negative coordinates like (-1295,-134) - this is WRONG
+   - Valid coordinate range: X: 0-1080, Y: 0-1920
+   - Examples of CORRECT coordinates: 74,83 or 540,960 or 200,400
+   - Examples of WRONG coordinates: -1295,-134 or 1131,-134 (negative numbers are invalid)
+
+5. Navigation Flow Rules:
+   - Create sequential navigation paths
+   - Navigate FROM source TO destination
+   - Then continue FROM that destination to next screen
+   - Include back navigation using menu buttons at coordinates like 74,83
+
+6. Text Formatting:
+   - ALL text in CLICK and CHECK commands must be UPPER CASE
+   - Match exact spelling from Figma data
+   - No extra spaces around commas
+
+7. Required Output:
+   - Generate test cases that follow complete user journeys
+   - Include forward and backward navigation
+   - Each line must be a complete test case with all 6 components
+   - NO comments, explanations, or additional text
+   - ONLY use POSITIVE coordinate values (0-1080 for X, 0-1920 for Y)
+
+Figma Prototype Data:
+[WILL BE POPULATED WITH FIGMA JSON DATA]
+
+Generate complete test cases following the exact format above:</textarea>
                 <div style="margin-top: 10px; font-size: 12px; color: #555;">
                     <strong>Note:</strong> This is the fixed prompt template sent to Mistral AI for test case generation.
                 </div>
@@ -1843,36 +1892,44 @@ Generate complete test cases following the exact format above:`;
             document.getElementById('aiConfigContent').style.display = 'none';
             document.getElementById('aiConfigToggle').textContent = '▶';
             
-            // Initialize new sections as collapsed
-            document.getElementById('mistralPromptContent').style.display = 'none';
-            document.getElementById('mistralPromptToggle').textContent = '▶';
+            // Initialize new sections - Mistral prompt is expanded by default
+            document.getElementById('mistralPromptContent').style.display = 'block';
+            document.getElementById('mistralPromptToggle').textContent = '▼';
             
             // Initialize and populate the fixed Mistral prompt
-            document.getElementById('mistralPromptText').value = exporter.getFixedMistralPrompt();
+            const mistralPromptText = document.getElementById('mistralPromptText');
+            if (mistralPromptText) {
+                mistralPromptText.value = exporter.getFixedMistralPrompt();
+            }
             
-            // Add event listeners for new buttons
-            document.getElementById('downloadTestCasesExpanded').addEventListener('click', () => {
-                exporter.downloadTestCases();
-            });
+            // Add event listeners for new buttons with null checks
+            const downloadButton = document.getElementById('downloadTestCasesExpanded');
+            if (downloadButton) {
+                downloadButton.addEventListener('click', () => {
+                    exporter.downloadTestCases();
+                });
+            }
             
-            document.getElementById('copyTestCases').addEventListener('click', () => {
-                const testCasesText = document.getElementById('testCasesText').value;
-                if (testCasesText) {
-                    navigator.clipboard.writeText(testCasesText).then(() => {
-                        // Temporarily change button text to show success
-                        const button = document.getElementById('copyTestCases');
-                        const originalText = button.textContent;
-                        button.textContent = '✅ Copied!';
-                        setTimeout(() => {
-                            button.textContent = originalText;
-                        }, 2000);
-                    }).catch(() => {
-                        alert('Failed to copy to clipboard. Please copy manually.');
-                    });
-                } else {
-                    alert('No test cases to copy. Generate test cases first.');
-                }
-            });
+            const copyButton = document.getElementById('copyTestCases');
+            if (copyButton) {
+                copyButton.addEventListener('click', () => {
+                    const testCasesText = document.getElementById('testCasesText').value;
+                    if (testCasesText) {
+                        navigator.clipboard.writeText(testCasesText).then(() => {
+                            // Temporarily change button text to show success
+                            const originalText = copyButton.textContent;
+                            copyButton.textContent = '✅ Copied!';
+                            setTimeout(() => {
+                                copyButton.textContent = originalText;
+                            }, 2000);
+                        }).catch(() => {
+                            alert('Failed to copy to clipboard. Please copy manually.');
+                        });
+                    } else {
+                        alert('No test cases to copy. Generate test cases first.');
+                    }
+                });
+            }
         });
     </script>
 </body>
