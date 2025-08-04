@@ -215,20 +215,21 @@
         }
 
         .step-icon {
-            width: 60px;
-            height: 60px;
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
             background: #e9ecef;
             color: #6c757d;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 12px;
-            font-weight: bold;
+            margin: 0 auto 15px;
+            font-weight: 900;
             position: relative;
             z-index: 2;
             transition: all 0.3s ease;
-            font-size: 18px;
+            font-size: 32px;
+            font-family: Arial, sans-serif;
         }
 
         .progress-step.active .step-icon {
@@ -236,7 +237,8 @@
             color: white;
             transform: scale(1.15);
             animation: activeBlink 1s infinite, pulse 2s infinite;
-            border: 2px solid #ff6b35;
+            border: 3px solid #ff6b35;
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
         }
 
         .progress-step.processing .step-icon {
@@ -244,7 +246,8 @@
             color: white;
             transform: scale(1.1);
             animation: processingBlink 0.8s infinite;
-            border: 2px solid #ffc107;
+            border: 3px solid #ffc107;
+            box-shadow: 0 4px 12px rgba(255, 193, 7, 0.4);
         }
 
         @keyframes activeBlink {
@@ -286,15 +289,19 @@
         }
 
         .progress-step.completed .step-icon {
-            background: #28a745;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
             color: white;
+            border: 3px solid #28a745;
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
         }
 
         .progress-step.completed .step-icon::after {
             content: '✓';
             position: absolute;
-            font-size: 16px;
+            font-size: 28px;
             font-weight: bold;
+            color: #ffffff;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         .step-title {
@@ -512,7 +519,7 @@
                 <!-- AI Configuration Section -->
                 <div class="ai-config-section" style="margin-bottom: 20px; background: #fff3cd; border-radius: 8px; border: 1px solid #ffeaa7;">
                     <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer; padding: 15px 20px;" onclick="toggleAIConfig()">
-                        <h3 style="color: #856404; margin: 0; font-size: 16px;">🤖 AI Configuration</h3>
+                        <h3 style="color: #856404; margin: 0; font-size: 16px;">⚙️ AI Configuration</h3>
                         <span id="aiConfigToggle" style="color: #856404; font-size: 20px; font-weight: bold;">▶</span>
                     </div>
                     <div id="aiConfigContent" style="display: none; padding: 0 20px 20px 20px;">
@@ -548,7 +555,7 @@
                 <!-- Mistral Prompt Section - Moved above the button -->
                 <div class="mistral-prompt-section" id="mistralPromptSection" style="margin-bottom: 20px; background: #e3f2fd; border-radius: 8px; border: 1px solid #90caf9;">
                     <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer; padding: 15px 20px;" onclick="toggleMistralPrompt()">
-                        <h4 style="color: #1976d2; margin: 0; font-size: 16px;">🤖 AI Prompt (Fixed Template)</h4>
+                        <h4 style="color: #1976d2; margin: 0; font-size: 16px;">📝 AI Prompt (Fixed Template)</h4>
                         <span id="mistralPromptToggle" style="color: #1976d2; font-size: 20px; font-weight: bold;">▶</span>
                     </div>
                     <div id="mistralPromptContent" style="display: none; padding: 0 20px 20px 20px;">
@@ -615,7 +622,7 @@ Generate complete test cases following the exact format above:</textarea>
         <!-- Generated Test Cases Section - Full Width -->
         <div class="test-cases-section" id="testCasesSection" style="display: none; margin-bottom: 20px; background: #e8f5e8; border-radius: 8px; border: 1px solid #4caf50; width: 100%; max-width: 100%;">
             <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer; padding: 15px 20px;" onclick="toggleTestCases()">
-                <h4 style="color: #2e7d32; margin: 0; font-size: 18px; font-weight: 700;">🧪 Generated Test Cases (Ready for Download)</h4>
+                <h4 style="color: #2e7d32; margin: 0; font-size: 18px; font-weight: 700;">🧪 Generated Test Cases with AI & Auto Execute using Test Executor</h4>
                 <span id="testCasesToggle" style="color: #2e7d32; font-size: 20px; font-weight: bold;">▶</span>
             </div>
             <div id="testCasesContent" style="display: none; padding: 0 20px 20px 20px;">
