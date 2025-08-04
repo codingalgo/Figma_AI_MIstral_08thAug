@@ -27,8 +27,33 @@
             border-radius: 16px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
             padding: 40px;
-            max-width: 600px;
+            max-width: 1200px;
             width: 100%;
+        }
+
+        /* Responsive layout for mobile devices */
+        @media (max-width: 768px) {
+            .two-column-layout {
+                flex-direction: column !important;
+                gap: 20px !important;
+            }
+            
+            .container {
+                padding: 20px !important;
+                max-width: 100% !important;
+            }
+            
+            body {
+                padding: 10px !important;
+            }
+
+            .header h1 {
+                font-size: 24px !important;
+            }
+
+            .header p {
+                font-size: 14px !important;
+            }
         }
 
         .header {
@@ -413,109 +438,112 @@
             <p>Generate and validate test case & auto execute on real device</p>
         </div>
 
-        <!-- Application Description Section -->
-        <div class="description-section" style="background: #e8f4fd; border-radius: 8px; padding: 15px 20px; margin-bottom: 30px; border-left: 4px solid #007bff;">
-            <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;" onclick="toggleDescription()">
-                <h3 style="color: #0056b3; margin: 0; font-size: 18px;">How This Application Works</h3>
-                <span id="descriptionToggle" style="color: #007bff; font-size: 20px; font-weight: bold;">▶</span>
+        <!-- Two Column Layout -->
+        <div class="two-column-layout" style="display: flex; gap: 30px; margin-bottom: 30px;">
+            <!-- Left Column: How Application Works -->
+            <div style="flex: 1; min-width: 0;">
+                <div class="description-section" style="background: #e8f4fd; border-radius: 8px; padding: 15px 20px; border-left: 4px solid #007bff;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;" onclick="toggleDescription()">
+                        <h3 style="color: #0056b3; margin: 0; font-size: 18px;">How This Application Works</h3>
+                        <span id="descriptionToggle" style="color: #007bff; font-size: 20px; font-weight: bold;">▶</span>
+                    </div>
+                    <div id="descriptionContent" style="display: none; margin-top: 15px; color: #495057; line-height: 1.6;">
+                        <div style="margin-bottom: 12px; padding: 12px; background: rgba(0,123,255,0.1); border-radius: 6px; border-left: 4px solid #007bff;">
+                            <div style="display: flex; align-items: center; margin-bottom: 5px;">
+                                <span style="background: #007bff; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; margin-right: 10px;">1</span>
+                                <strong style="color: #0056b3;">🔗 Figma Integration</strong>
+                            </div>
+                            <span style="color: #6c757d; font-size: 14px; margin-left: 34px; display: block;">Connects to your Figma project using API tokens to extract design frames and interactive prototype data.</span>
+                        </div>
+                        <div style="margin-bottom: 12px; padding: 12px; background: rgba(220,53,69,0.1); border-radius: 6px; border-left: 4px solid #dc3545;">
+                            <div style="display: flex; align-items: center; margin-bottom: 5px;">
+                                <span style="background: #dc3545; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; margin-right: 10px;">2</span>
+                                <strong style="color: #dc3545;">📊 JSON Extraction</strong>
+                            </div>
+                            <span style="color: #6c757d; font-size: 14px; margin-left: 34px; display: block;">Processes Figma's design JSON to identify frames, interactions, clickable elements, and navigation flows.</span>
+                        </div>
+                        <div style="margin-bottom: 12px; padding: 12px; background: rgba(255,193,7,0.1); border-radius: 6px; border-left: 4px solid #ffc107;">
+                            <div style="display: flex; align-items: center; margin-bottom: 5px;">
+                                <span style="background: #ffc107; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; margin-right: 10px;">3</span>
+                                <strong style="color: #ffc107;">🤖 AI-Powered Analysis</strong>
+                            </div>
+                            <span style="color: #6c757d; font-size: 14px; margin-left: 34px; display: block;">Sends extracted data to Mistral AI models to intelligently generate automated test cases based on your prototype interactions.</span>
+                        </div>
+                        <div style="margin-bottom: 12px; padding: 12px; background: rgba(40,167,69,0.1); border-radius: 6px; border-left: 4px solid #28a745;">
+                            <div style="display: flex; align-items: center; margin-bottom: 5px;">
+                                <span style="background: #28a745; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; margin-right: 10px;">4</span>
+                                <strong style="color: #28a745;">🧪 Test Case Generation</strong>
+                            </div>
+                            <span style="color: #6c757d; font-size: 14px; margin-left: 34px; display: block;">Creates precise test scripts with coordinates, actions (CLICK, SLEEP, CHECK), and validation steps for comprehensive testing.</span>
+                        </div>
+                        <div style="margin-bottom: 0px; padding: 12px; background: rgba(102,126,234,0.1); border-radius: 6px; border-left: 4px solid #667eea;">
+                            <div style="display: flex; align-items: center; margin-bottom: 5px;">
+                                <span style="background: #667eea; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; margin-right: 10px;">5</span>
+                                <strong style="color: #667eea;">⚡ Auto Execution</strong>
+                            </div>
+                            <span style="color: #6c757d; font-size: 14px; margin-left: 34px; display: block;">Downloads test cases and automatically launches testexecutor.bat on desktop to execute tests on real devices.</span>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div id="descriptionContent" style="display: none; margin-top: 15px; color: #495057; line-height: 1.6;">
-                <div style="margin-bottom: 12px; padding: 12px; background: rgba(0,123,255,0.1); border-radius: 6px; border-left: 4px solid #007bff;">
-                    <div style="display: flex; align-items: center; margin-bottom: 5px;">
-                        <span style="background: #007bff; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; margin-right: 10px;">1</span>
-                        <strong style="color: #0056b3;">🔗 Figma Integration</strong>
-                    </div>
-                    <span style="color: #6c757d; font-size: 14px; margin-left: 34px; display: block;">Connects to your Figma project using API tokens to extract design frames and interactive prototype data.</span>
-                </div>
-                <div style="margin-bottom: 12px; padding: 12px; background: rgba(220,53,69,0.1); border-radius: 6px; border-left: 4px solid #dc3545;">
-                    <div style="display: flex; align-items: center; margin-bottom: 5px;">
-                        <span style="background: #dc3545; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; margin-right: 10px;">2</span>
-                        <strong style="color: #dc3545;">📊 JSON Extraction</strong>
-                    </div>
-                    <span style="color: #6c757d; font-size: 14px; margin-left: 34px; display: block;">Processes Figma's design JSON to identify frames, interactions, clickable elements, and navigation flows.</span>
-                </div>
-                <div style="margin-bottom: 12px; padding: 12px; background: rgba(255,193,7,0.1); border-radius: 6px; border-left: 4px solid #ffc107;">
-                    <div style="display: flex; align-items: center; margin-bottom: 5px;">
-                        <span style="background: #ffc107; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; margin-right: 10px;">3</span>
-                        <strong style="color: #ffc107;">🤖 AI-Powered Analysis</strong>
-                    </div>
-                    <span style="color: #6c757d; font-size: 14px; margin-left: 34px; display: block;">Sends extracted data to Mistral AI models to intelligently generate automated test cases based on your prototype interactions.</span>
-                </div>
-                <div style="margin-bottom: 12px; padding: 12px; background: rgba(40,167,69,0.1); border-radius: 6px; border-left: 4px solid #28a745;">
-                    <div style="display: flex; align-items: center; margin-bottom: 5px;">
-                        <span style="background: #28a745; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; margin-right: 10px;">4</span>
-                        <strong style="color: #28a745;">🧪 Test Case Generation</strong>
-                    </div>
-                    <span style="color: #6c757d; font-size: 14px; margin-left: 34px; display: block;">Creates precise test scripts with coordinates, actions (CLICK, SLEEP, CHECK), and validation steps for comprehensive testing.</span>
-                </div>
-                <div style="margin-bottom: 0px; padding: 12px; background: rgba(102,126,234,0.1); border-radius: 6px; border-left: 4px solid #667eea;">
-                    <div style="display: flex; align-items: center; margin-bottom: 5px;">
-                        <span style="background: #667eea; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; margin-right: 10px;">5</span>
-                        <strong style="color: #667eea;">⚡ Auto Execution</strong>
-                    </div>
-                    <span style="color: #6c757d; font-size: 14px; margin-left: 34px; display: block;">Downloads test cases and automatically launches testexecutor.bat on desktop to execute tests on real devices.</span>
-                </div>
-            </div>
-        </div>
 
-        <div class="credentials">
-            <div class="credential-item">
-                <label for="apiToken">Figma API Token</label>
-                <input type="password" id="apiToken" value="figd_2nGk49M9ujxccf01lNpgv3gGfqKaRQ74Q0jBhzn1" style="background: #fff; border: 1px solid #ced4da; font-family: monospace;">
-            </div>
-            <div class="credential-item">
-                <label for="fileId">Figma File ID</label>
-                <input type="text" id="fileId" value="2k2t7ZfG09nLyjM4viAGHP" style="background: #fff; border: 1px solid #ced4da; font-family: monospace;">
-            </div>
-        </div>
-
-        <!-- AI Configuration Section -->
-        <div class="ai-config-section" style="margin-bottom: 30px; background: #fff3cd; border-radius: 8px; border: 1px solid #ffeaa7;">
-            <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer; padding: 15px 20px;" onclick="toggleAIConfig()">
-                <h3 style="color: #856404; margin: 0; font-size: 16px;">🤖 AI Configuration</h3>
-                <span id="aiConfigToggle" style="color: #856404; font-size: 20px; font-weight: bold;">▶</span>
-            </div>
-            <div id="aiConfigContent" style="display: none; padding: 0 20px 20px 20px;">
-                <div style="margin-bottom: 15px; padding: 10px; background: rgba(255, 193, 7, 0.1); border-radius: 6px; border-left: 4px solid #ffc107;">
-                    <div style="font-size: 13px; color: #856404; font-weight: 600; margin-bottom: 5px;">💡 Configuration Options</div>
-                    <div style="font-size: 12px; color: #6c757d;">
-                        • <strong>Mistral AI:</strong> https://api.mistral.ai (Default)<br>
-                        • <strong>Local Ollama:</strong> http://localhost:11434<br>
-                        • <strong>Local LM Studio:</strong> http://localhost:1234<br>
-                        • <strong>OpenAI:</strong> https://api.openai.com<br>
-                        • <strong>Groq:</strong> https://api.groq.com<br>
-                        • <strong>Custom Local:</strong> Your own deployment URL
+            <!-- Right Column: Steps & Execution -->
+            <div style="flex: 1; min-width: 0;">
+                <div class="credentials">
+                    <div class="credential-item">
+                        <label for="apiToken">Figma API Token</label>
+                        <input type="password" id="apiToken" value="figd_2nGk49M9ujxccf01lNpgv3gGfqKaRQ74Q0jBhzn1" style="background: #fff; border: 1px solid #ced4da; font-family: monospace;">
+                    </div>
+                    <div class="credential-item">
+                        <label for="fileId">Figma File ID</label>
+                        <input type="text" id="fileId" value="2k2t7ZfG09nLyjM4viAGHP" style="background: #fff; border: 1px solid #ced4da; font-family: monospace;">
                     </div>
                 </div>
-                <div class="credential-item">
-                    <label for="aiApiUrl">AI API Base URL</label>
-                    <input type="text" id="aiApiUrl" value="https://api.mistral.ai" style="background: #fff; border: 1px solid #ced4da; font-family: monospace;" placeholder="https://api.mistral.ai">
-                </div>
-                <div class="credential-item">
-                    <label for="aiApiKey">AI API Key</label>
-                    <input type="password" id="aiApiKey" value="gmEWLMGdvQ4loD8fJ1bO70eknyEgA35x" style="background: #fff; border: 1px solid #ced4da; font-family: monospace;" placeholder="Your AI API key">
-                </div>
-                <div class="credential-item" style="margin-bottom: 0;">
-                    <label for="aiModel">AI Model</label>
-                    <input type="text" id="aiModel" value="mistral-large-latest" style="background: #fff; border: 1px solid #ced4da; font-family: monospace;" placeholder="mistral-large-latest">
-                    <div style="font-size: 11px; color: #6c757d; margin-top: 5px;">
-                        Examples: mistral-large-latest, llama3-8b-8192, gpt-4, claude-3-haiku-20240307
+
+                <!-- AI Configuration Section -->
+                <div class="ai-config-section" style="margin-bottom: 20px; background: #fff3cd; border-radius: 8px; border: 1px solid #ffeaa7;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer; padding: 15px 20px;" onclick="toggleAIConfig()">
+                        <h3 style="color: #856404; margin: 0; font-size: 16px;">🤖 AI Configuration</h3>
+                        <span id="aiConfigToggle" style="color: #856404; font-size: 20px; font-weight: bold;">▶</span>
+                    </div>
+                    <div id="aiConfigContent" style="display: none; padding: 0 20px 20px 20px;">
+                        <div style="margin-bottom: 15px; padding: 10px; background: rgba(255, 193, 7, 0.1); border-radius: 6px; border-left: 4px solid #ffc107;">
+                            <div style="font-size: 13px; color: #856404; font-weight: 600; margin-bottom: 5px;">💡 Configuration Options</div>
+                            <div style="font-size: 12px; color: #6c757d;">
+                                • <strong>Mistral AI:</strong> https://api.mistral.ai (Default)<br>
+                                • <strong>Local Ollama:</strong> http://localhost:11434<br>
+                                • <strong>Local LM Studio:</strong> http://localhost:1234<br>
+                                • <strong>OpenAI:</strong> https://api.openai.com<br>
+                                • <strong>Groq:</strong> https://api.groq.com<br>
+                                • <strong>Custom Local:</strong> Your own deployment URL
+                            </div>
+                        </div>
+                        <div class="credential-item">
+                            <label for="aiApiUrl">AI API Base URL</label>
+                            <input type="text" id="aiApiUrl" value="https://api.mistral.ai" style="background: #fff; border: 1px solid #ced4da; font-family: monospace;" placeholder="https://api.mistral.ai">
+                        </div>
+                        <div class="credential-item">
+                            <label for="aiApiKey">AI API Key</label>
+                            <input type="password" id="aiApiKey" value="gmEWLMGdvQ4loD8fJ1bO70eknyEgA35x" style="background: #fff; border: 1px solid #ced4da; font-family: monospace;" placeholder="Your AI API key">
+                        </div>
+                        <div class="credential-item" style="margin-bottom: 0;">
+                            <label for="aiModel">AI Model</label>
+                            <input type="text" id="aiModel" value="mistral-large-latest" style="background: #fff; border: 1px solid #ced4da; font-family: monospace;" placeholder="mistral-large-latest">
+                            <div style="font-size: 11px; color: #6c757d; margin-top: 5px;">
+                                Examples: mistral-large-latest, llama3-8b-8192, gpt-4, claude-3-haiku-20240307
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <button class="export-button unified-button" id="unifiedButton" style="background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%); font-size: 18px; font-weight: bold; padding: 20px 24px; transition: all 0.3s ease;">🚀 Generate Test Cases with AI & Auto Execute using Test Executor</button>
-
-        <!-- AI Data Display Sections -->
-        <!-- Mistral Prompt Section -->
-        <div class="mistral-prompt-section" id="mistralPromptSection" style="margin-bottom: 20px; background: #e3f2fd; border-radius: 8px; border: 1px solid #90caf9;">
-            <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer; padding: 15px 20px;" onclick="toggleMistralPrompt()">
-                <h4 style="color: #1976d2; margin: 0; font-size: 16px;">🤖 Mistral AI Prompt (Fixed Template)</h4>
-                <span id="mistralPromptToggle" style="color: #1976d2; font-size: 20px; font-weight: bold;">▶</span>
-            </div>
-            <div id="mistralPromptContent" style="display: none; padding: 0 20px 20px 20px;">
-                <textarea id="mistralPromptText" readonly style="width: 100%; height: 300px; padding: 15px; border: 1px solid #90caf9; border-radius: 6px; font-family: 'Courier New', monospace; font-size: 11px; background: #f3f9ff; resize: vertical;">You are a QA automation expert specializing in mobile app testing and test case generation. You are analyzing Figma design data to generate automated test cases for prototype interactions with precision and thoroughness.
+                <!-- Mistral Prompt Section - Moved above the button -->
+                <div class="mistral-prompt-section" id="mistralPromptSection" style="margin-bottom: 20px; background: #e3f2fd; border-radius: 8px; border: 1px solid #90caf9;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer; padding: 15px 20px;" onclick="toggleMistralPrompt()">
+                        <h4 style="color: #1976d2; margin: 0; font-size: 16px;">🤖 Mistral AI Prompt (Fixed Template)</h4>
+                        <span id="mistralPromptToggle" style="color: #1976d2; font-size: 20px; font-weight: bold;">▶</span>
+                    </div>
+                    <div id="mistralPromptContent" style="display: none; padding: 0 20px 20px 20px;">
+                        <textarea id="mistralPromptText" readonly style="width: 100%; height: 300px; padding: 15px; border: 1px solid #90caf9; border-radius: 6px; font-family: 'Courier New', monospace; font-size: 11px; background: #f3f9ff; resize: vertical;">You are a QA automation expert specializing in mobile app testing and test case generation. You are analyzing Figma design data to generate automated test cases for prototype interactions with precision and thoroughness.
 
 CRITICAL REQUIREMENTS:
 1. Each test case MUST include ALL 6 components in this exact order:
@@ -533,43 +561,33 @@ CRITICAL REQUIREMENTS:
    - CHECK: Verify destination screen text in UPPER CASE
 
 4. MANDATORY Coordinate Guidelines:
-   - Screen size: 1080 x 1920 pixels (width x height)
-   - Top-left corner is (0,0)
-   - Center coordinates: (540,960)
-   - Menu button coordinates: (74,83)
-   - ALL COORDINATES MUST BE POSITIVE NUMBERS ONLY
-   - NEVER use negative coordinates like (-1295,-134) - this is WRONG
-   - Valid coordinate range: X: 0-1080, Y: 0-1920
-   - Examples of CORRECT coordinates: 74,83 or 540,960 or 200,400
-   - Examples of WRONG coordinates: -1295,-134 or 1131,-134 (negative numbers are invalid)
+   - All coordinates must be POSITIVE numbers (no negative values)
+   - X coordinate: 0 to screen width (typically 1080)
+   - Y coordinate: 0 to screen height (typically 1920)
+   - Use EXACT coordinates from node.absoluteBoundingBox
 
-5. Navigation Flow Rules:
-   - Create sequential navigation paths
-   - Navigate FROM source TO destination
-   - Then continue FROM that destination to next screen
-   - Include back navigation using menu buttons at coordinates like 74,83
+5. Navigation Flow Analysis:
+   - Identify ALL clickable elements with their exact coordinates
+   - Map destination screens for each interaction
+   - Create comprehensive test coverage
 
-6. Text Formatting:
-   - ALL text in CLICK and CHECK commands must be UPPER CASE
-   - Match exact spelling from Figma data
-   - No extra spaces around commas
-
-7. Required Output:
-   - Generate test cases that follow complete user journeys
-   - Include forward and backward navigation
-   - Each line must be a complete test case with all 6 components
-   - NO comments, explanations, or additional text
-   - ONLY use POSITIVE coordinate values (0-1080 for X, 0-1920 for Y)
-
-Figma Prototype Data:
-[WILL BE POPULATED WITH FIGMA JSON DATA]
+6. Output Format:
+   - Start each test case on a new line
+   - Use EXACT comma separation (no spaces after commas)
+   - Keep destination text in UPPER CASE for CHECK commands
 
 Generate complete test cases following the exact format above:</textarea>
-                <div style="margin-top: 10px; font-size: 12px; color: #555;">
-                    <strong>Note:</strong> This is the fixed prompt template sent to Mistral AI for test case generation.
+                        <div style="margin-top: 10px; font-size: 12px; color: #555;">
+                            <strong>Note:</strong> This is the template sent to Mistral AI to generate test cases.
+                        </div>
+                    </div>
                 </div>
+
+                <button class="export-button unified-button" id="unifiedButton" style="background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%); font-size: 18px; font-weight: bold; padding: 20px 24px; transition: all 0.3s ease; width: 100%;">🚀 Generate Test Cases with AI & Auto Execute using Test Executor</button>
             </div>
         </div>
+
+        <!-- AI Data Display Sections -->
 
         <!-- Mistral JSON Section -->
         <div class="mistral-json-section" id="mistralJsonSection" style="display: none; margin-bottom: 20px; background: #fff3e0; border-radius: 8px; border: 1px solid #ffb74d;">
