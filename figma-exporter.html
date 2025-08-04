@@ -619,21 +619,7 @@ Generate complete test cases following the exact format above:</textarea>
             <div style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: white; padding: 0 20px; color: #6c757d; font-weight: 600; font-size: 14px;">WORKFLOW PROGRESS</div>
         </div>
 
-        <!-- AI Data Display Sections -->
 
-        <!-- Mistral JSON Section -->
-        <div class="mistral-json-section" id="mistralJsonSection" style="display: none; margin-bottom: 20px; background: #fff3e0; border-radius: 8px; border: 1px solid #ffb74d;">
-            <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer; padding: 15px 20px;" onclick="toggleMistralJson()">
-                <h4 style="color: #f57c00; margin: 0; font-size: 16px;">📊 Figma data sent to AI</h4>
-                <span id="mistralJsonToggle" style="color: #f57c00; font-size: 20px; font-weight: bold;">▶</span>
-            </div>
-            <div id="mistralJsonContent" style="display: none; padding: 0 20px 20px 20px;">
-                <textarea id="mistralJsonText" readonly style="width: 100%; height: 400px; padding: 15px; border: 1px solid #ffb74d; border-radius: 6px; font-family: 'Courier New', monospace; font-size: 10px; background: #fffdf7; resize: vertical;"></textarea>
-                <div style="margin-top: 10px; font-size: 12px; color: #555;">
-                    <strong>Note:</strong> This is the processed Figma prototype data that gets sent to Mistral AI along with the prompt.
-                </div>
-            </div>
-        </div>
 
 
 
@@ -675,6 +661,20 @@ Generate complete test cases following the exact format above:</textarea>
             </div>
             <div class="progress-text" id="progressText">Preparing export...</div>
             <div class="progress-percentage" id="progressPercentage">0%</div>
+        </div>
+
+        <!-- Figma data sent to AI Section -->
+        <div class="mistral-json-section" id="mistralJsonSection" style="display: none; margin-bottom: 20px; background: #fff3e0; border-radius: 8px; border: 1px solid #ffb74d;">
+            <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer; padding: 15px 20px;" onclick="toggleMistralJson()">
+                <h4 style="color: #f57c00; margin: 0; font-size: 16px;">📊 Figma data sent to AI</h4>
+                <span id="mistralJsonToggle" style="color: #f57c00; font-size: 20px; font-weight: bold;">▶</span>
+            </div>
+            <div id="mistralJsonContent" style="display: none; padding: 0 20px 20px 20px;">
+                <textarea id="mistralJsonText" readonly style="width: 100%; height: 400px; padding: 15px; border: 1px solid #ffb74d; border-radius: 6px; font-family: 'Courier New', monospace; font-size: 10px; background: #fffdf7; resize: vertical;"></textarea>
+                <div style="margin-top: 10px; font-size: 12px; color: #555;">
+                    <strong>Note:</strong> This is the processed Figma prototype data that gets sent to Mistral AI along with the prompt.
+                </div>
+            </div>
         </div>
 
         <!-- Generated Test Cases Section - Full Width -->
