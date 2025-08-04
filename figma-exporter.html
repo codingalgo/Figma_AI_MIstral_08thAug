@@ -304,61 +304,7 @@
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
-        /* Different colors for each step when completed */
-        #step1.completed .step-icon {
-            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-            border: 3px solid #007bff;
-            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
-        }
 
-        #step1.completed .step-icon::after {
-            color: #ffffff;
-            content: '✓';
-        }
-
-        #step2.completed .step-icon {
-            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
-            border: 3px solid #dc3545;
-            box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
-        }
-
-        #step2.completed .step-icon::after {
-            color: #ffffff;
-            content: '✓';
-        }
-
-        #step3.completed .step-icon {
-            background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
-            border: 3px solid #ffc107;
-            box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
-        }
-
-        #step3.completed .step-icon::after {
-            color: #ffffff;
-            content: '✓';
-        }
-
-        #step4.completed .step-icon {
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-            border: 3px solid #28a745;
-            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
-        }
-
-        #step4.completed .step-icon::after {
-            color: #ffffff;
-            content: '✓';
-        }
-
-        #step5.completed .step-icon {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: 3px solid #667eea;
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-        }
-
-        #step5.completed .step-icon::after {
-            color: #ffffff;
-            content: '✓';
-        }
 
         .step-title {
             font-size: 16px;
@@ -1096,25 +1042,19 @@ Generate complete test cases following the exact format above:</textarea>
                 }
             }
 
-            // Progressive button color change from yellow to green during workflow
+            // Simple button progress - just keep yellow during progress, green at completion
             updateButtonProgress(stepNumber) {
                 const unifiedButtonFullWidth = document.getElementById('unifiedButtonFullWidth');
                 if (!unifiedButtonFullWidth) return;
                 
-                // Progressive color change from yellow to green based on step completion
-                const progressColors = {
-                    1: 'linear-gradient(135deg, #ffc107 0%, #fd7e14 100%)', // Yellow (20%)
-                    2: 'linear-gradient(135deg, #f39c12 0%, #e67e22 100%)', // Orange-Yellow (40%)
-                    3: 'linear-gradient(135deg, #f1c40f 0%, #e74c3c 100%)', // Yellow-Orange (60%)
-                    4: 'linear-gradient(135deg, #e67e22 0%, #27ae60 100%)', // Orange-Green (80%)
-                    5: 'linear-gradient(135deg, #27ae60 0%, #2ecc71 100%)'  // Green (100%)
-                };
-                
-                if (progressColors[stepNumber]) {
-                    unifiedButtonFullWidth.style.background = progressColors[stepNumber];
-                    unifiedButtonFullWidth.style.boxShadow = stepNumber === 5 ? 
-                        '0 6px 20px rgba(40, 167, 69, 0.3)' : 
-                        '0 6px 20px rgba(255, 193, 7, 0.3)';
+                // Keep yellow color during all progress steps
+                if (stepNumber < 5) {
+                    unifiedButtonFullWidth.style.background = 'linear-gradient(135deg, #ffc107 0%, #fd7e14 100%)';
+                    unifiedButtonFullWidth.style.boxShadow = '0 6px 20px rgba(255, 193, 7, 0.3)';
+                } else {
+                    // Turn green only at final completion
+                    unifiedButtonFullWidth.style.background = 'linear-gradient(135deg, #28a745 0%, #20c997 100%)';
+                    unifiedButtonFullWidth.style.boxShadow = '0 6px 20px rgba(40, 167, 69, 0.3)';
                 }
             }
 
