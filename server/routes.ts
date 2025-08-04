@@ -19,6 +19,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.sendFile(path.join(__dirname, "..", "figma-exporter.html"));
   });
 
+  // Serve the presentation HTML file
+  app.get("/presentation", (req, res) => {
+    res.sendFile(path.join(__dirname, "..", "presentation.html"));
+  });
+
   // Helper function to extract relevant data from Figma JSON
   function extractPrototypeData(figmaData: any) {
     const prototypeData: any = {
