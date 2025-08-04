@@ -417,9 +417,9 @@
         <div class="description-section" style="background: #e8f4fd; border-radius: 8px; padding: 15px 20px; margin-bottom: 30px; border-left: 4px solid #007bff;">
             <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;" onclick="toggleDescription()">
                 <h3 style="color: #0056b3; margin: 0; font-size: 18px;">How This Application Works</h3>
-                <span id="descriptionToggle" style="color: #007bff; font-size: 20px; font-weight: bold;">▼</span>
+                <span id="descriptionToggle" style="color: #007bff; font-size: 20px; font-weight: bold;">▶</span>
             </div>
-            <div id="descriptionContent" style="margin-top: 15px; color: #495057; line-height: 1.6;">
+            <div id="descriptionContent" style="display: none; margin-top: 15px; color: #495057; line-height: 1.6;">
                 <div style="margin-bottom: 12px; padding: 12px; background: rgba(0,123,255,0.1); border-radius: 6px; border-left: 4px solid #007bff;">
                     <div style="display: flex; align-items: center; margin-bottom: 5px;">
                         <span style="background: #007bff; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; margin-right: 10px;">1</span>
@@ -1887,6 +1887,10 @@ Generate complete test cases following the exact format above:`;
             // Initialize manual execution as collapsed
             document.getElementById('manualContent').style.display = 'none';
             document.getElementById('manualToggle').textContent = '▶';
+            
+            // Initialize description section as collapsed
+            document.getElementById('descriptionContent').style.display = 'none';
+            document.getElementById('descriptionToggle').textContent = '▶';
             
             // Initialize AI config as collapsed
             document.getElementById('aiConfigContent').style.display = 'none';
