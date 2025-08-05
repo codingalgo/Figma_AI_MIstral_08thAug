@@ -709,39 +709,29 @@ Generate complete test cases following the exact format above:</textarea>
                     </div>
                     <div id="workflowStepsContent" style="display: none; padding: 0 20px 20px 20px;">
                         <!-- Step 1: Figma data sent to AI -->
-                        <div style="margin-bottom: 15px;">
-                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
-                                <div id="workflowStep1" style="background: white; padding: 12px; border-radius: 6px; border-left: 4px solid #2196f3; flex: 1; margin-right: 10px; transition: background-color 0.3s ease; cursor: pointer;" onclick="toggleWorkflowStep1()">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <div style="display: flex; align-items: center;">
-                                            <span id="workflowCheckmark1" style="display: none; color: #28a745; font-weight: bold; margin-right: 8px;">✓</span>
-                                            <strong style="color: #1976d2;">📊 Figma data sent to AI</strong>
-                                        </div>
-                                        <span id="workflowStep1Toggle" style="color: #1976d2; font-size: 16px; font-weight: bold;">▶</span>
-                                    </div>
+                        <div id="workflowStep1" style="background: white; padding: 12px; border-radius: 6px; border-left: 4px solid #2196f3; margin-bottom: 15px; cursor: pointer;" onclick="toggleWorkflowStep1()">
+                            <div style="display: flex; align-items: center; justify-content: space-between;">
+                                <div style="display: flex; align-items: center;">
+                                    <span id="workflowCheckmark1" style="display: none; color: #28a745; font-weight: bold; margin-right: 8px;">✓</span>
+                                    <strong style="color: #1976d2;">📊 Figma data sent to AI</strong>
                                 </div>
-                                <div style="font-size: 24px; color: #666;">▶</div>
+                                <span id="workflowStep1Toggle" style="color: #1976d2; font-size: 16px; font-weight: bold;">▶</span>
                             </div>
-                            <div id="workflowStep1Content" style="display: none; margin-left: 20px; margin-bottom: 10px;">
+                            <div id="workflowStep1Content" style="display: none; margin-top: 10px;">
                                 <textarea id="workflowStep1Data" readonly style="width: 100%; height: 200px; padding: 10px; border: 1px solid #2196f3; border-radius: 4px; font-family: 'Courier New', monospace; font-size: 10px; background: #f8f9fa; resize: vertical;"></textarea>
                             </div>
                         </div>
 
                         <!-- Step 2: Generated Test Cases with AI -->
-                        <div style="margin-bottom: 15px;">
-                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
-                                <div id="workflowStep2" style="background: white; padding: 12px; border-radius: 6px; border-left: 4px solid #9c27b0; flex: 1; margin-right: 10px; transition: background-color 0.3s ease; cursor: pointer;" onclick="toggleWorkflowStep2()">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <div style="display: flex; align-items: center;">
-                                            <span id="workflowCheckmark2" style="display: none; color: #28a745; font-weight: bold; margin-right: 8px;">✓</span>
-                                            <strong style="color: #7b1fa2;">🧪 Generated Test Cases with AI</strong>
-                                        </div>
-                                        <span id="workflowStep2Toggle" style="color: #7b1fa2; font-size: 16px; font-weight: bold;">▶</span>
-                                    </div>
+                        <div id="workflowStep2" style="background: white; padding: 12px; border-radius: 6px; border-left: 4px solid #9c27b0; margin-bottom: 15px; cursor: pointer;" onclick="toggleWorkflowStep2()">
+                            <div style="display: flex; align-items: center; justify-content: space-between;">
+                                <div style="display: flex; align-items: center;">
+                                    <span id="workflowCheckmark2" style="display: none; color: #28a745; font-weight: bold; margin-right: 8px;">✓</span>
+                                    <strong style="color: #7b1fa2;">🧪 Generated Test Cases with AI</strong>
                                 </div>
-                                <div style="font-size: 24px; color: #666;">▶</div>
+                                <span id="workflowStep2Toggle" style="color: #7b1fa2; font-size: 16px; font-weight: bold;">▶</span>
                             </div>
-                            <div id="workflowStep2Content" style="display: none; margin-left: 20px; margin-bottom: 10px;">
+                            <div id="workflowStep2Content" style="display: none; margin-top: 10px;">
                                 <textarea id="workflowStep2Data" readonly style="width: 100%; height: 200px; padding: 10px; border: 1px solid #9c27b0; border-radius: 4px; font-family: 'Courier New', monospace; font-size: 12px; background: #f8f9fa; resize: vertical;"></textarea>
                                 <div style="display: flex; gap: 10px; margin-top: 10px;">
                                     <button id="workflowDownloadTestCases" style="padding: 8px 16px; background: #9c27b0; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 500;" onclick="downloadWorkflowTestCases()">📥 Download testcases.txt</button>
@@ -751,20 +741,15 @@ Generate complete test cases following the exact format above:</textarea>
                         </div>
 
                         <!-- Step 3: Figma GUI frame for test case -->
-                        <div>
-                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
-                                <div id="workflowStep3" style="background: white; padding: 12px; border-radius: 6px; border-left: 4px solid #4caf50; flex: 1; margin-right: 10px; transition: background-color 0.3s ease; cursor: pointer;" onclick="toggleWorkflowStep3()">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <div style="display: flex; align-items: center;">
-                                            <span id="workflowCheckmark3" style="display: none; color: #28a745; font-weight: bold; margin-right: 8px;">✓</span>
-                                            <strong style="color: #388e3c;">📥 Figma GUI frame for test case</strong>
-                                        </div>
-                                        <span id="workflowStep3Toggle" style="color: #388e3c; font-size: 16px; font-weight: bold;">▶</span>
-                                    </div>
+                        <div id="workflowStep3" style="background: white; padding: 12px; border-radius: 6px; border-left: 4px solid #4caf50; cursor: pointer;" onclick="toggleWorkflowStep3()">
+                            <div style="display: flex; align-items: center; justify-content: space-between;">
+                                <div style="display: flex; align-items: center;">
+                                    <span id="workflowCheckmark3" style="display: none; color: #28a745; font-weight: bold; margin-right: 8px;">✓</span>
+                                    <strong style="color: #388e3c;">📥 Figma GUI frame for test case</strong>
                                 </div>
-                                <div style="font-size: 24px; color: #666;">▶</div>
+                                <span id="workflowStep3Toggle" style="color: #388e3c; font-size: 16px; font-weight: bold;">▶</span>
                             </div>
-                            <div id="workflowStep3Content" style="display: none; margin-left: 20px;">
+                            <div id="workflowStep3Content" style="display: none; margin-top: 10px;">
                                 <div id="workflowStep3FrameList" style="background: #f8f9fa; border-radius: 4px; border: 1px solid #4caf50; padding: 15px;"></div>
                             </div>
                         </div>
@@ -1872,31 +1857,8 @@ Generate complete test cases following the exact format above:`;
             }
 
             markTopWorkflowStepActive(stepNumber) {
-                // Reset all workflow steps to default white background
-                for (let i = 1; i <= 3; i++) {
-                    const workflowStep = document.getElementById(`workflowStep${i}`);
-                    if (workflowStep) {
-                        workflowStep.style.background = 'white';
-                        const checkmark = document.getElementById(`workflowCheckmark${i}`);
-                        if (checkmark) {
-                            checkmark.style.display = 'none';
-                        }
-                    }
-                }
-                
-                // Map step numbers to workflow steps
-                let workflowStepNumber = 0;
-                if (stepNumber === 3) workflowStepNumber = 1; // "Process Figma data" maps to "Figma data sent to AI"
-                if (stepNumber === 4) workflowStepNumber = 2; // "Generate test case" maps to "Generated Test Cases with AI"
-                if (stepNumber === 1 || stepNumber === 2 || stepNumber === 5) workflowStepNumber = 3; // Other steps map to "Figma GUI frame"
-                
-                // Make the specific workflow step active (yellow)
-                if (workflowStepNumber > 0) {
-                    const workflowStep = document.getElementById(`workflowStep${workflowStepNumber}`);
-                    if (workflowStep) {
-                        workflowStep.style.background = '#ffff00';
-                    }
-                }
+                // Don't change background colors during processing - keep them white
+                // Only show checkmarks when completed
             }
 
             markWorkflowStepCompleted(stepNumber) {
@@ -1924,12 +1886,10 @@ Generate complete test cases following the exact format above:`;
                 if (stepNumber === 4) workflowStepNumber = 2; // "Generate test case" maps to "Generated Test Cases with AI"
                 if (stepNumber === 1 || stepNumber === 2 || stepNumber === 5) workflowStepNumber = 3; // Other steps map to "Figma GUI frame"
                 
-                // Mark the specific workflow step as completed (green with checkmark)
+                // Mark the specific workflow step as completed (keep white background, just show checkmark)
                 if (workflowStepNumber > 0) {
-                    const workflowStep = document.getElementById(`workflowStep${workflowStepNumber}`);
                     const checkmark = document.getElementById(`workflowCheckmark${workflowStepNumber}`);
-                    if (workflowStep && checkmark) {
-                        workflowStep.style.background = '#90EE90';
+                    if (checkmark) {
                         checkmark.style.display = 'inline';
                     }
                 }
@@ -2027,10 +1987,20 @@ Generate complete test cases following the exact format above:`;
                     const frameItem = document.createElement('div');
                     frameItem.className = 'frame-item';
                     frameItem.id = `workflow-frame-${frame.id}`;
-                    frameItem.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 8px; margin-bottom: 5px; background: #f8f9fa; border-radius: 4px; border-left: 3px solid #4caf50;';
+                    frameItem.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 10px; margin-bottom: 8px; background: white; border-radius: 6px; border: 1px solid #ddd;';
                     frameItem.innerHTML = `
-                        <span style="font-weight: 500; color: #2c3e50;">${frame.name}</span>
-                        <span id="workflow-status-${frame.id}" style="padding: 2px 8px; border-radius: 12px; font-size: 12px; background: #ffc107; color: white;">Pending</span>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div id="workflow-image-container-${frame.id}" style="display: none; width: 60px; height: 60px; border-radius: 4px; overflow: hidden; border: 1px solid #ddd;">
+                                <img id="workflow-image-${frame.id}" style="width: 100%; height: 100%; object-fit: cover;" />
+                            </div>
+                            <div>
+                                <div style="font-weight: 500; color: #2c3e50; margin-bottom: 2px;">${frame.name}</div>
+                                <div id="workflow-download-link-${frame.id}" style="display: none;">
+                                    <a href="#" download="${frame.name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.png" style="color: #007bff; text-decoration: none; font-size: 12px;">📥 Download PNG</a>
+                                </div>
+                            </div>
+                        </div>
+                        <span id="workflow-status-${frame.id}" style="padding: 4px 12px; border-radius: 12px; font-size: 12px; background: #ffc107; color: white;">Pending</span>
                     `;
                     workflowFrameList.appendChild(frameItem);
                 }
@@ -2050,12 +2020,39 @@ Generate complete test cases following the exact format above:`;
                     // Update colors based on status
                     if (status === 'completed') {
                         workflowStatusEl.style.background = '#28a745';
+                        // Show image and download link when completed
+                        this.showWorkflowFrameImage(frameId);
                     } else if (status === 'downloading') {
                         workflowStatusEl.style.background = '#007bff';
                     } else if (status === 'failed') {
                         workflowStatusEl.style.background = '#dc3545';
                     } else {
                         workflowStatusEl.style.background = '#ffc107';
+                    }
+                }
+            }
+
+            showWorkflowFrameImage(frameId) {
+                // Find the corresponding image in the main frame list and copy it to workflow section
+                const mainFrameItem = document.getElementById(`frame-${frameId}`);
+                if (mainFrameItem) {
+                    const mainImage = mainFrameItem.querySelector('img');
+                    if (mainImage && mainImage.src) {
+                        const workflowImageContainer = document.getElementById(`workflow-image-container-${frameId}`);
+                        const workflowImage = document.getElementById(`workflow-image-${frameId}`);
+                        const workflowDownloadLink = document.getElementById(`workflow-download-link-${frameId}`);
+                        
+                        if (workflowImageContainer && workflowImage && workflowDownloadLink) {
+                            workflowImage.src = mainImage.src;
+                            workflowImageContainer.style.display = 'block';
+                            workflowDownloadLink.style.display = 'block';
+                            
+                            // Update download link href
+                            const downloadLink = workflowDownloadLink.querySelector('a');
+                            if (downloadLink) {
+                                downloadLink.href = mainImage.src;
+                            }
+                        }
                     }
                 }
             }
