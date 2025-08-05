@@ -709,20 +709,29 @@ Generate complete test cases following the exact format above:</textarea>
                     </div>
                     <div id="workflowStepsContent" style="display: none; padding: 0 20px 20px 20px;">
                         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
-                            <div style="background: #e3f2fd; padding: 12px; border-radius: 6px; border-left: 4px solid #2196f3; flex: 1; margin-right: 10px;">
-                                <strong style="color: #1976d2;">📊 Figma data sent to AI</strong>
+                            <div id="workflowStep1" style="background: white; padding: 12px; border-radius: 6px; border-left: 4px solid #2196f3; flex: 1; margin-right: 10px; transition: background-color 0.3s ease;">
+                                <div style="display: flex; align-items: center;">
+                                    <span id="workflowCheckmark1" style="display: none; color: #28a745; font-weight: bold; margin-right: 8px;">✓</span>
+                                    <strong style="color: #1976d2;">📊 Figma data sent to AI</strong>
+                                </div>
                             </div>
                             <div style="font-size: 24px; color: #666;">▶</div>
                         </div>
                         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
-                            <div style="background: #f3e5f5; padding: 12px; border-radius: 6px; border-left: 4px solid #9c27b0; flex: 1; margin-right: 10px;">
-                                <strong style="color: #7b1fa2;">🧪 Generated Test Cases with AI</strong>
+                            <div id="workflowStep2" style="background: white; padding: 12px; border-radius: 6px; border-left: 4px solid #9c27b0; flex: 1; margin-right: 10px; transition: background-color 0.3s ease;">
+                                <div style="display: flex; align-items: center;">
+                                    <span id="workflowCheckmark2" style="display: none; color: #28a745; font-weight: bold; margin-right: 8px;">✓</span>
+                                    <strong style="color: #7b1fa2;">🧪 Generated Test Cases with AI</strong>
+                                </div>
                             </div>
                             <div style="font-size: 24px; color: #666;">▶</div>
                         </div>
                         <div style="display: flex; align-items: center; justify-content: space-between;">
-                            <div style="background: #e8f5e8; padding: 12px; border-radius: 6px; border-left: 4px solid #4caf50; flex: 1; margin-right: 10px;">
-                                <strong style="color: #388e3c;">📥 Figma GUI frame for test case</strong>
+                            <div id="workflowStep3" style="background: white; padding: 12px; border-radius: 6px; border-left: 4px solid #4caf50; flex: 1; margin-right: 10px; transition: background-color 0.3s ease;">
+                                <div style="display: flex; align-items: center;">
+                                    <span id="workflowCheckmark3" style="display: none; color: #28a745; font-weight: bold; margin-right: 8px;">✓</span>
+                                    <strong style="color: #388e3c;">📥 Figma GUI frame for test case</strong>
+                                </div>
                             </div>
                             <div style="font-size: 24px; color: #666;">▶</div>
                         </div>
@@ -1812,6 +1821,37 @@ Generate complete test cases following the exact format above:`;
                     stepDiv.setAttribute('style', newStyle);
                     stepDiv.classList.add('workflow-step-active');
                 }
+                
+                // Also update the workflow steps section
+                this.markTopWorkflowStepActive(stepNumber);
+            }
+
+            markTopWorkflowStepActive(stepNumber) {
+                // Reset all workflow steps to default white background
+                for (let i = 1; i <= 3; i++) {
+                    const workflowStep = document.getElementById(`workflowStep${i}`);
+                    if (workflowStep) {
+                        workflowStep.style.background = 'white';
+                        const checkmark = document.getElementById(`workflowCheckmark${i}`);
+                        if (checkmark) {
+                            checkmark.style.display = 'none';
+                        }
+                    }
+                }
+                
+                // Map step numbers to workflow steps
+                let workflowStepNumber = 0;
+                if (stepNumber === 3) workflowStepNumber = 1; // "Process Figma data" maps to "Figma data sent to AI"
+                if (stepNumber === 4) workflowStepNumber = 2; // "Generate test case" maps to "Generated Test Cases with AI"
+                if (stepNumber === 1 || stepNumber === 2 || stepNumber === 5) workflowStepNumber = 3; // Other steps map to "Figma GUI frame"
+                
+                // Make the specific workflow step active (yellow)
+                if (workflowStepNumber > 0) {
+                    const workflowStep = document.getElementById(`workflowStep${workflowStepNumber}`);
+                    if (workflowStep) {
+                        workflowStep.style.background = '#ffff00';
+                    }
+                }
             }
 
             markWorkflowStepCompleted(stepNumber) {
@@ -1827,6 +1867,27 @@ Generate complete test cases following the exact format above:`;
                     stepDiv.setAttribute('style', newStyle);
                     stepDiv.classList.add('workflow-step-completed');
                 }
+                
+                // Also update the workflow steps section
+                this.markTopWorkflowStepCompleted(stepNumber);
+            }
+
+            markTopWorkflowStepCompleted(stepNumber) {
+                // Map step numbers to workflow steps
+                let workflowStepNumber = 0;
+                if (stepNumber === 3) workflowStepNumber = 1; // "Process Figma data" maps to "Figma data sent to AI"
+                if (stepNumber === 4) workflowStepNumber = 2; // "Generate test case" maps to "Generated Test Cases with AI"
+                if (stepNumber === 1 || stepNumber === 2 || stepNumber === 5) workflowStepNumber = 3; // Other steps map to "Figma GUI frame"
+                
+                // Mark the specific workflow step as completed (green with checkmark)
+                if (workflowStepNumber > 0) {
+                    const workflowStep = document.getElementById(`workflowStep${workflowStepNumber}`);
+                    const checkmark = document.getElementById(`workflowCheckmark${workflowStepNumber}`);
+                    if (workflowStep && checkmark) {
+                        workflowStep.style.background = '#90EE90';
+                        checkmark.style.display = 'inline';
+                    }
+                }
             }
 
             resetWorkflowProgress() {
@@ -1840,6 +1901,23 @@ Generate complete test cases following the exact format above:`;
                         step.setAttribute('style', originalStyle);
                     }
                 });
+                
+                // Also reset the workflow steps section
+                this.resetTopWorkflowSteps();
+            }
+
+            resetTopWorkflowSteps() {
+                // Reset all workflow steps to default white background and hide checkmarks
+                for (let i = 1; i <= 3; i++) {
+                    const workflowStep = document.getElementById(`workflowStep${i}`);
+                    const checkmark = document.getElementById(`workflowCheckmark${i}`);
+                    if (workflowStep) {
+                        workflowStep.style.background = 'white';
+                    }
+                    if (checkmark) {
+                        checkmark.style.display = 'none';
+                    }
+                }
             }
 
             updateProgress(percentage, text) {
