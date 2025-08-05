@@ -441,16 +441,9 @@
             color: #721c24;
         }
 
-        /* Workflow Progress Animation Styles */
+        /* Workflow Progress Animation Styles - No background change for main section */
         .workflow-progress-active {
-            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%) !important;
-            border-left: 4px solid #ff6b35 !important;
-            transform: scale(1.02);
-            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
-        }
-
-        .workflow-progress-active h3 {
-            color: white !important;
+            /* Keep original styling - no background changes */
         }
 
         .workflow-step-active {
@@ -1723,20 +1716,12 @@ Generate complete test cases following the exact format above:`;
                 document.getElementById('progress').style.display = 'none';
             }
 
-            // New methods for WORKFLOW PROGRESS section animation
+            // Methods for individual step animation only
             activateWorkflowProgress() {
-                const workflowSection = document.querySelector('.description-section');
-                if (workflowSection) {
-                    workflowSection.classList.add('workflow-progress-active');
-                }
+                // No change to main section background - only individual steps will animate
             }
 
             deactivateWorkflowProgress() {
-                const workflowSection = document.querySelector('.description-section');
-                if (workflowSection) {
-                    workflowSection.classList.remove('workflow-progress-active');
-                }
-                
                 // Remove all active step animations
                 const activeSteps = document.querySelectorAll('.workflow-step-active');
                 activeSteps.forEach(step => {
@@ -1768,12 +1753,7 @@ Generate complete test cases following the exact format above:`;
             }
 
             resetWorkflowProgress() {
-                const workflowSection = document.querySelector('.description-section');
-                if (workflowSection) {
-                    workflowSection.classList.remove('workflow-progress-active');
-                }
-                
-                // Remove all active and completed states
+                // Remove all active and completed states from individual steps only
                 const allSteps = document.querySelectorAll('#descriptionContent > div');
                 allSteps.forEach(step => {
                     step.classList.remove('workflow-step-active', 'workflow-step-completed');
