@@ -450,9 +450,10 @@
         #descriptionContent > div {
             background: white !important;
             border-left: 4px solid #e0e0e0 !important;
-            padding: 10px;
+            padding: 12px;
             margin: 5px 0;
-            border-radius: 5px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
         }
 
         .workflow-step-active {
@@ -469,16 +470,20 @@
             text-shadow: 0 0 5px rgba(255, 221, 0, 0.8);
         }
 
+        .workflow-step-active span {
+            color: #996600 !important;
+        }
+
         .workflow-step-completed {
             position: relative;
-            background: rgba(40, 167, 69, 0.2) !important;
+            background: #90EE90 !important;
             border-left: 4px solid #28a745 !important;
         }
 
         .workflow-step-completed::after {
             content: '✓';
             position: absolute;
-            right: 10px;
+            right: 15px;
             top: 50%;
             transform: translateY(-50%);
             font-size: 24px;
@@ -491,14 +496,18 @@
             color: #28a745 !important;
         }
 
+        .workflow-step-completed span {
+            color: #155724 !important;
+        }
+
         @keyframes workflowStepBlink {
             0%, 50% {
                 opacity: 1;
-                background: #ffff00;
+                background: #ffff00 !important;
             }
             25%, 75% {
-                opacity: 0.8;
-                background: #ffdd00;
+                opacity: 0.9;
+                background: #ffdd00 !important;
             }
         }
 
