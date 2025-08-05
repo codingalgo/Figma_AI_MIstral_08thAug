@@ -759,16 +759,18 @@ Generate complete test cases following the exact format above:</textarea>
             </div>
         </div>
 
-        <!-- Generate Button and Reset Button -->
+        <!-- Generate Button -->
         <div style="margin-bottom: 30px; width: 100%;">
-            <div style="display: flex; gap: 15px; align-items: center;">
-                <button class="export-button unified-button" id="unifiedButtonFullWidth" style="background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%); font-size: 18px; font-weight: bold; padding: 20px 24px; transition: all 0.3s ease; flex: 3; border-radius: 12px; border: none; color: white; cursor: pointer; box-shadow: 0 6px 20px rgba(255, 193, 7, 0.3);" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 30px rgba(255, 193, 7, 0.4)'" onmouseout="this.style.transform='translateY(0px)'; this.style.boxShadow='0 6px 20px rgba(255, 193, 7, 0.3)'">🚀 Generate Test Cases with AI & Auto Execute using Test Executor</button>
-                <button class="export-button" id="resetButton" style="background: linear-gradient(135deg, #dc3545 0%, #c82333 100%); font-size: 14px; font-weight: bold; padding: 16px 20px; transition: all 0.3s ease; flex: 1; border-radius: 12px; border: none; color: white; cursor: pointer; box-shadow: 0 6px 20px rgba(220, 53, 69, 0.3);" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 30px rgba(220, 53, 69, 0.4)'" onmouseout="this.style.transform='translateY(0px)'; this.style.boxShadow='0 6px 20px rgba(220, 53, 69, 0.3)'">🔄 Reset/Clear All</button>
-            </div>
+            <button class="export-button unified-button" id="unifiedButtonFullWidth" style="background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%); font-size: 18px; font-weight: bold; padding: 20px 24px; transition: all 0.3s ease; width: 100%; border-radius: 12px; border: none; color: white; cursor: pointer; box-shadow: 0 6px 20px rgba(255, 193, 7, 0.3);" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 30px rgba(255, 193, 7, 0.4)'" onmouseout="this.style.transform='translateY(0px)'; this.style.boxShadow='0 6px 20px rgba(255, 193, 7, 0.3)'">🚀 Generate Test Cases with AI & Auto Execute using Test Executor</button>
+        </div>
+
+        <!-- Reset Button (small, positioned before WORKFLOW PROGRESS) -->
+        <div style="margin-bottom: 20px; text-align: right;">
+            <button class="export-button" id="resetButton" style="background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%); font-size: 12px; font-weight: 500; padding: 8px 16px; transition: all 0.3s ease; border-radius: 8px; border: none; color: white; cursor: pointer; box-shadow: 0 3px 10px rgba(108, 117, 125, 0.2);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 5px 15px rgba(108, 117, 125, 0.3)'" onmouseout="this.style.transform='translateY(0px)'; this.style.boxShadow='0 3px 10px rgba(108, 117, 125, 0.2)'">🔄 Reset/Clear All</button>
         </div>
 
         <!-- Progress Separator -->
-        <div style="margin: 40px 0; border-top: 2px solid #e9ecef; position: relative;">
+        <div style="margin: 20px 0; border-top: 2px solid #e9ecef; position: relative;">
             <div style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: white; padding: 0 20px; color: #6c757d; font-weight: 600; font-size: 14px;">WORKFLOW PROGRESS</div>
         </div>
 
@@ -1790,10 +1792,60 @@ Generate complete test cases following the exact format above:`;
             }
 
             showStatus(message, type = 'info') {
+                // Display status in the upper WORKFLOW PROGRESS section
+                this.addWorkflowProgressMessage(message, type);
+                
+                // Also keep the original status display for compatibility
                 const statusEl = document.getElementById('status');
                 statusEl.textContent = message;
                 statusEl.className = `status ${type}`;
                 statusEl.style.display = 'block';
+            }
+
+            addWorkflowProgressMessage(message, type = 'info') {
+                const descriptionContent = document.getElementById('descriptionContent');
+                if (!descriptionContent) return;
+
+                // Create a status message element
+                const statusDiv = document.createElement('div');
+                statusDiv.style.cssText = `
+                    margin: 8px 0; 
+                    padding: 8px 12px; 
+                    border-radius: 4px; 
+                    font-size: 13px; 
+                    font-weight: 500;
+                    border-left: 3px solid;
+                `;
+
+                // Set colors based on type
+                if (type === 'success') {
+                    statusDiv.style.backgroundColor = '#d4edda';
+                    statusDiv.style.color = '#155724';
+                    statusDiv.style.borderLeftColor = '#28a745';
+                    statusDiv.innerHTML = `✅ ${message}`;
+                } else if (type === 'error') {
+                    statusDiv.style.backgroundColor = '#f8d7da';
+                    statusDiv.style.color = '#721c24';
+                    statusDiv.style.borderLeftColor = '#dc3545';
+                    statusDiv.innerHTML = `❌ ${message}`;
+                } else {
+                    statusDiv.style.backgroundColor = '#cce7ff';
+                    statusDiv.style.color = '#0056b3';
+                    statusDiv.style.borderLeftColor = '#007bff';
+                    statusDiv.innerHTML = `ℹ️ ${message}`;
+                }
+
+                // Add to the workflow progress section
+                descriptionContent.appendChild(statusDiv);
+
+                // Auto-scroll to the bottom of the workflow progress
+                descriptionContent.scrollTop = descriptionContent.scrollHeight;
+
+                // Auto-remove old status messages if there are too many (keep last 10)
+                const statusMessages = descriptionContent.querySelectorAll('div[style*="border-left: 3px solid"]');
+                if (statusMessages.length > 15) {
+                    statusMessages[0].remove();
+                }
             }
 
             hideStatus() {
@@ -1959,6 +2011,9 @@ Generate complete test cases following the exact format above:`;
                 // Reset workflow progress
                 this.resetWorkflowProgress();
                 
+                // Clear workflow progress messages
+                this.clearWorkflowProgressMessages();
+                
                 // Hide and clear all sections
                 this.hideStatus();
                 this.hideProgress();
@@ -2013,6 +2068,18 @@ Generate complete test cases following the exact format above:`;
                 // Show success message
                 this.showStatus('✅ Application reset to initial state', 'success');
                 setTimeout(() => this.hideStatus(), 2000);
+            }
+
+            clearWorkflowProgressMessages() {
+                const descriptionContent = document.getElementById('descriptionContent');
+                if (!descriptionContent) return;
+
+                // Remove all status messages (keep only the original 5 step descriptions)
+                const statusMessages = descriptionContent.querySelectorAll('div[style*="border-left: 3px solid"]');
+                statusMessages.forEach(msg => msg.remove());
+
+                // Reset scroll position
+                descriptionContent.scrollTop = 0;
             }
 
             updateProgress(percentage, text) {
