@@ -445,18 +445,32 @@
         .workflow-progress-active {
             background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%) !important;
             border-left: 4px solid #ff6b35 !important;
-            animation: workflowBlink 1s infinite, workflowPulse 2s infinite;
             transform: scale(1.02);
             box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
         }
 
         .workflow-progress-active h3 {
             color: white !important;
-            animation: workflowGlow 2s ease-in-out infinite alternate;
+        }
+
+        .workflow-step-active {
+            animation: workflowStepBlink 1s infinite, workflowStepPulse 2s infinite;
+            background: rgba(255, 107, 53, 0.2) !important;
+            border-left: 4px solid #ff6b35 !important;
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.6);
+        }
+
+        .workflow-step-active strong {
+            color: #ff6b35 !important;
+            animation: workflowStepGlow 1.5s ease-in-out infinite alternate;
+            text-shadow: 0 0 5px rgba(255, 107, 53, 0.8);
         }
 
         .workflow-step-completed {
             position: relative;
+            background: rgba(40, 167, 69, 0.1) !important;
+            border-left: 4px solid #28a745 !important;
         }
 
         .workflow-step-completed::after {
@@ -471,35 +485,39 @@
             text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
         }
 
-        @keyframes workflowBlink {
+        .workflow-step-completed strong {
+            color: #28a745 !important;
+        }
+
+        @keyframes workflowStepBlink {
             0%, 50% {
                 opacity: 1;
-                background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+                background: rgba(255, 107, 53, 0.2);
             }
             25%, 75% {
                 opacity: 0.7;
-                background: linear-gradient(135deg, #f7931e 0%, #ff6b35 100%);
+                background: rgba(255, 107, 53, 0.4);
             }
         }
 
-        @keyframes workflowPulse {
+        @keyframes workflowStepPulse {
             0% {
                 box-shadow: 0 0 0 0 rgba(255, 107, 53, 0.7);
             }
             70% {
-                box-shadow: 0 0 0 15px rgba(255, 107, 53, 0);
+                box-shadow: 0 0 0 10px rgba(255, 107, 53, 0);
             }
             100% {
                 box-shadow: 0 0 0 0 rgba(255, 107, 53, 0);
             }
         }
 
-        @keyframes workflowGlow {
+        @keyframes workflowStepGlow {
             from {
-                text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+                text-shadow: 0 0 5px rgba(255, 107, 53, 0.8);
             }
             to {
-                text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 15px rgba(255, 255, 255, 0.8);
+                text-shadow: 0 0 10px rgba(255, 107, 53, 0.8), 0 0 15px rgba(255, 107, 53, 0.8);
             }
         }
     </style>
@@ -920,6 +938,7 @@ Generate complete test cases following the exact format above:</textarea>
                     this.showStatus('Starting unified process: Frames + Test Cases', 'info');
                     
                     // Step 1: Connect to Figma API
+                    this.markWorkflowStepActive(1); // Blink Figma Connect step
                     this.showStatus('Step 1/5: Connecting to Figma API...', 'info');
                     this.updateButtonProgress(1); // Update button color for step 1
                     const frames = await this.getFrames();
@@ -927,6 +946,7 @@ Generate complete test cases following the exact format above:</textarea>
                     await new Promise(resolve => setTimeout(resolve, 1500)); // Visual delay for step completion
                     
                     // Step 2: Extract design data
+                    this.markWorkflowStepActive(2); // Blink JSON Process step
                     this.showStatus('Step 2/5: Extracting design data and interactions...', 'info');
                     this.updateButtonProgress(2);
                     const fileData = await this.makeApiRequest(`/files/${this.fileId}?geometry=paths`);
@@ -934,6 +954,7 @@ Generate complete test cases following the exact format above:</textarea>
                     await new Promise(resolve => setTimeout(resolve, 1500)); // Visual delay for step completion
                     
                     // Step 3: AI Analysis with Prompt Display
+                    this.markWorkflowStepActive(3); // Blink AI Analysis step
                     this.showStatus('Step 3/5: Preparing AI analysis with AI models...', 'info');
                     this.updateButtonProgress(3);
                     
@@ -981,6 +1002,7 @@ Generate complete test cases following the exact format above:</textarea>
                     await new Promise(resolve => setTimeout(resolve, 1500)); // Visual delay for step completion
 
                     // Step 4: Generate test cases
+                    this.markWorkflowStepActive(4); // Blink Test Generate step
                     this.showStatus('Step 4/5: Generating test cases...', 'info');
                     this.updateButtonProgress(4);
                     
@@ -1030,6 +1052,7 @@ Generate complete test cases following the exact format above:</textarea>
                     await new Promise(resolve => setTimeout(resolve, 1500)); // Visual delay for step completion
                     
                     // Step 5: Auto execute (desktop only)
+                    this.markWorkflowStepActive(5); // Blink Auto Execute step
                     this.showStatus('Step 5/5: Preparing auto execution...', 'info');
                     this.updateButtonProgress(5);
                     
@@ -1713,15 +1736,34 @@ Generate complete test cases following the exact format above:`;
                 if (workflowSection) {
                     workflowSection.classList.remove('workflow-progress-active');
                 }
+                
+                // Remove all active step animations
+                const activeSteps = document.querySelectorAll('.workflow-step-active');
+                activeSteps.forEach(step => {
+                    step.classList.remove('workflow-step-active');
+                });
+            }
+
+            markWorkflowStepActive(stepNumber) {
+                // Remove any previous active step animations
+                const activeSteps = document.querySelectorAll('.workflow-step-active');
+                activeSteps.forEach(step => {
+                    step.classList.remove('workflow-step-active');
+                });
+
+                // Find the specific step and make it active
+                const stepElements = document.querySelectorAll('#descriptionContent > div');
+                if (stepElements[stepNumber - 1]) {
+                    stepElements[stepNumber - 1].classList.add('workflow-step-active');
+                }
             }
 
             markWorkflowStepCompleted(stepNumber) {
-                const stepElements = document.querySelectorAll('.description-section .step-icon');
+                // Remove active animation and add completion state
+                const stepElements = document.querySelectorAll('#descriptionContent > div');
                 if (stepElements[stepNumber - 1]) {
-                    const stepDiv = stepElements[stepNumber - 1].closest('div');
-                    if (stepDiv) {
-                        stepDiv.classList.add('workflow-step-completed');
-                    }
+                    stepElements[stepNumber - 1].classList.remove('workflow-step-active');
+                    stepElements[stepNumber - 1].classList.add('workflow-step-completed');
                 }
             }
 
@@ -1731,10 +1773,10 @@ Generate complete test cases following the exact format above:`;
                     workflowSection.classList.remove('workflow-progress-active');
                 }
                 
-                // Remove all completed tick marks
-                const completedSteps = document.querySelectorAll('.workflow-step-completed');
-                completedSteps.forEach(step => {
-                    step.classList.remove('workflow-step-completed');
+                // Remove all active and completed states
+                const allSteps = document.querySelectorAll('#descriptionContent > div');
+                allSteps.forEach(step => {
+                    step.classList.remove('workflow-step-active', 'workflow-step-completed');
                 });
             }
 
