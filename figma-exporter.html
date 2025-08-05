@@ -440,6 +440,68 @@
             background: #f8d7da;
             color: #721c24;
         }
+
+        /* Workflow Progress Animation Styles */
+        .workflow-progress-active {
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%) !important;
+            border-left: 4px solid #ff6b35 !important;
+            animation: workflowBlink 1s infinite, workflowPulse 2s infinite;
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
+        }
+
+        .workflow-progress-active h3 {
+            color: white !important;
+            animation: workflowGlow 2s ease-in-out infinite alternate;
+        }
+
+        .workflow-step-completed {
+            position: relative;
+        }
+
+        .workflow-step-completed::after {
+            content: '✓';
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 24px;
+            font-weight: bold;
+            color: #28a745;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+        }
+
+        @keyframes workflowBlink {
+            0%, 50% {
+                opacity: 1;
+                background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+            }
+            25%, 75% {
+                opacity: 0.7;
+                background: linear-gradient(135deg, #f7931e 0%, #ff6b35 100%);
+            }
+        }
+
+        @keyframes workflowPulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(255, 107, 53, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 15px rgba(255, 107, 53, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(255, 107, 53, 0);
+            }
+        }
+
+        @keyframes workflowGlow {
+            from {
+                text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+            }
+            to {
+                text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 15px rgba(255, 255, 255, 0.8);
+            }
+        }
     </style>
 </head>
 <body>
@@ -455,7 +517,7 @@
             <div style="flex: 1; min-width: 0;">
                 <div class="description-section" style="background: #e8f4fd; border-radius: 8px; padding: 15px 20px; border-left: 4px solid #007bff;">
                     <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;" onclick="toggleDescription()">
-                        <h3 style="color: #0056b3; margin: 0; font-size: 18px;">How This Application Works</h3>
+                        <h3 style="color: #0056b3; margin: 0; font-size: 18px;">WORKFLOW PROGRESS</h3>
                         <span id="descriptionToggle" style="color: #007bff; font-size: 20px; font-weight: bold;">▼</span>
                     </div>
                     <div id="descriptionContent" style="display: block; margin-top: 15px; color: #495057; line-height: 1.6;">
@@ -851,30 +913,28 @@ Generate complete test cases following the exact format above:</textarea>
                 }
                 
                 this.hideStatus();
-                this.showProgress();
+                this.hideProgress(); // Hide the 5-step progress block
+                this.activateWorkflowProgress(); // Activate the WORKFLOW PROGRESS section
                 
                 try {
                     this.showStatus('Starting unified process: Frames + Test Cases', 'info');
                     
                     // Step 1: Connect to Figma API
-                    this.markStepProcessing(1);
-                    this.updateProgress(5, 'Connecting to Figma API...', 1);
+                    this.showStatus('Step 1/5: Connecting to Figma API...', 'info');
                     this.updateButtonProgress(1); // Update button color for step 1
                     const frames = await this.getFrames();
-                    this.markStepCompleted(1);
+                    this.markWorkflowStepCompleted(1);
                     await new Promise(resolve => setTimeout(resolve, 1500)); // Visual delay for step completion
                     
                     // Step 2: Extract design data
-                    this.markStepProcessing(2);
-                    this.updateProgress(20, 'Extracting design data and interactions...', 2);
+                    this.showStatus('Step 2/5: Extracting design data and interactions...', 'info');
                     this.updateButtonProgress(2);
                     const fileData = await this.makeApiRequest(`/files/${this.fileId}?geometry=paths`);
-                    this.markStepCompleted(2);
+                    this.markWorkflowStepCompleted(2);
                     await new Promise(resolve => setTimeout(resolve, 1500)); // Visual delay for step completion
                     
                     // Step 3: AI Analysis with Prompt Display
-                    this.markStepProcessing(3);
-                    this.updateProgress(35, 'Preparing AI analysis with AI models...', 3);
+                    this.showStatus('Step 3/5: Preparing AI analysis with AI models...', 'info');
                     this.updateButtonProgress(3);
                     
                     // Create and display the prompt being sent to Mistral
@@ -891,7 +951,7 @@ Generate complete test cases following the exact format above:</textarea>
                     if (window.electronAPI) {
                         // Desktop mode - make direct API call to Mistral
                         console.log('Using desktop mode for test case generation');
-                        this.updateProgress(40, 'Calling AI directly from desktop...', 3);
+                        this.showStatus('Step 3/5: Calling AI directly from desktop...', 'info');
                         testResult = await this.generateTestCasesDesktop(fileData);
                     } else {
                         // Web mode - use Express server
@@ -917,13 +977,12 @@ Generate complete test cases following the exact format above:</textarea>
                     if (!testResult.success || !testResult.testCases) {
                         throw new Error(testResult.message || 'Failed to generate test cases');
                     }
-                    this.markStepCompleted(3);
+                    this.markWorkflowStepCompleted(3);
                     await new Promise(resolve => setTimeout(resolve, 1500)); // Visual delay for step completion
 
                     // Step 4: Generate test cases
-                    this.markStepProcessing(4);
+                    this.showStatus('Step 4/5: Generating test cases...', 'info');
                     this.updateButtonProgress(4);
-                    this.updateProgress(60, 'Generating test cases...', 4);
                     
                     // Process frames in chunks and download
                     this.showFrameList();
@@ -967,29 +1026,25 @@ Generate complete test cases following the exact format above:</textarea>
                     } else {
                         this.saveTestCasesWeb();
                     }
-                    this.markStepCompleted(4);
+                    this.markWorkflowStepCompleted(4);
                     await new Promise(resolve => setTimeout(resolve, 1500)); // Visual delay for step completion
                     
                     // Step 5: Auto execute (desktop only)
-                    this.markStepProcessing(5);
+                    this.showStatus('Step 5/5: Preparing auto execution...', 'info');
                     this.updateButtonProgress(5);
-                    this.updateProgress(90, 'Preparing auto execution...', 5);
                     
                     // Run testexecutor.bat if on desktop
                     if (window.electronAPI) {
                         try {
                             await this.runTestExecutor();
-                            this.markStepCompleted(5);
-                            this.updateProgress(100, 'Complete! Test executor launched successfully', 5);
+                            this.markWorkflowStepCompleted(5);
                             this.showStatus(`✅ Success! Downloaded ${frames.length} frames, generated ${testResult.testCases.split('\n').filter(line => line.trim()).length} test cases, and launched test executor`, 'success');
                         } catch (error) {
-                            this.markStepCompleted(5);
-                            this.updateProgress(100, 'Complete! Files downloaded (Test executor failed)', 5);
+                            this.markWorkflowStepCompleted(5);
                             this.showStatus(`✅ Partial Success! Downloaded ${frames.length} frames and generated test cases, but test executor failed: ${error.message}`, 'info');
                         }
                     } else {
-                        this.markStepCompleted(5);
-                        this.updateProgress(100, 'Complete! All frames and test cases downloaded', 5);
+                        this.markWorkflowStepCompleted(5);
                         this.showStatus(`✅ Success! Downloaded ${frames.length} frames and generated ${testResult.testCases.split('\n').filter(line => line.trim()).length} test cases. Use desktop version for auto execution.`, 'success');
                     }
 
@@ -997,19 +1052,8 @@ Generate complete test cases following the exact format above:</textarea>
                     this.showStatus(`Error in unified process: ${error.message}`, 'error');
                     console.error('Unified process error:', error);
                 } finally {
-                    // Keep progress visible but stop animations
-                    const progressSteps = document.querySelectorAll('.progress-step');
-                    progressSteps.forEach(step => {
-                        step.classList.remove('active', 'processing');
-                        if (!step.classList.contains('completed')) {
-                            step.classList.add('completed');
-                        }
-                    });
-                    
-                    // Hide progress bar but keep steps visible
-                    document.getElementById('progressFill').style.display = 'none';
-                    document.getElementById('progressText').style.display = 'none';
-                    document.getElementById('progressPercentage').style.display = 'none';
+                    // Stop workflow progress animation and keep all tick marks visible
+                    this.deactivateWorkflowProgress();
                     
                     // Final green completion state
                     if (unifiedButtonFullWidth) {
@@ -1654,6 +1698,44 @@ Generate complete test cases following the exact format above:`;
 
             hideProgress() {
                 document.getElementById('progress').style.display = 'none';
+            }
+
+            // New methods for WORKFLOW PROGRESS section animation
+            activateWorkflowProgress() {
+                const workflowSection = document.querySelector('.description-section');
+                if (workflowSection) {
+                    workflowSection.classList.add('workflow-progress-active');
+                }
+            }
+
+            deactivateWorkflowProgress() {
+                const workflowSection = document.querySelector('.description-section');
+                if (workflowSection) {
+                    workflowSection.classList.remove('workflow-progress-active');
+                }
+            }
+
+            markWorkflowStepCompleted(stepNumber) {
+                const stepElements = document.querySelectorAll('.description-section .step-icon');
+                if (stepElements[stepNumber - 1]) {
+                    const stepDiv = stepElements[stepNumber - 1].closest('div');
+                    if (stepDiv) {
+                        stepDiv.classList.add('workflow-step-completed');
+                    }
+                }
+            }
+
+            resetWorkflowProgress() {
+                const workflowSection = document.querySelector('.description-section');
+                if (workflowSection) {
+                    workflowSection.classList.remove('workflow-progress-active');
+                }
+                
+                // Remove all completed tick marks
+                const completedSteps = document.querySelectorAll('.workflow-step-completed');
+                completedSteps.forEach(step => {
+                    step.classList.remove('workflow-step-completed');
+                });
             }
 
             updateProgress(percentage, text) {
