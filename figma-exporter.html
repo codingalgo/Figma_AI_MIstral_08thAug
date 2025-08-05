@@ -741,7 +741,7 @@ Generate complete test cases following the exact format above:</textarea>
                         </div>
 
                         <!-- Step 3: Figma GUI frame for test case -->
-                        <div id="workflowStep3" style="background: white; padding: 12px; border-radius: 6px; border-left: 4px solid #4caf50; cursor: pointer;" onclick="toggleWorkflowStep3()">
+                        <div id="workflowStep3" style="background: white; padding: 12px; border-radius: 6px; border-left: 4px solid #4caf50; margin-bottom: 15px; cursor: pointer;" onclick="toggleWorkflowStep3()">
                             <div style="display: flex; align-items: center; justify-content: space-between;">
                                 <div style="display: flex; align-items: center;">
                                     <span id="workflowCheckmark3" style="display: none; color: #28a745; font-weight: bold; margin-right: 8px;">✓</span>
@@ -751,6 +751,19 @@ Generate complete test cases following the exact format above:</textarea>
                             </div>
                             <div id="workflowStep3Content" style="display: none; margin-top: 10px;">
                                 <div id="workflowStep3FrameList" style="background: #f8f9fa; border-radius: 4px; border: 1px solid #4caf50; padding: 15px;"></div>
+                            </div>
+                        </div>
+
+                        <!-- Real-time Output Section -->
+                        <div id="workflowOutputSection" style="background: white; padding: 12px; border-radius: 6px; border-left: 4px solid #007bff; cursor: pointer;" onclick="toggleWorkflowOutput()">
+                            <div style="display: flex; align-items: center; justify-content: space-between;">
+                                <div style="display: flex; align-items: center;">
+                                    <strong style="color: #0056b3;">📋 Real-time Output</strong>
+                                </div>
+                                <span id="workflowOutputToggle" style="color: #0056b3; font-size: 16px; font-weight: bold;">▼</span>
+                            </div>
+                            <div id="workflowOutputContent" style="display: block; margin-top: 10px; max-height: 300px; overflow-y: auto; background: #f8f9fa; border-radius: 4px; border: 1px solid #007bff; padding: 15px;">
+                                <div style="color: #6c757d; font-size: 12px; font-style: italic;">Workflow messages will appear here...</div>
                             </div>
                         </div>
                     </div>
@@ -1801,14 +1814,20 @@ Generate complete test cases following the exact format above:`;
             }
 
             addWorkflowProgressMessage(message, type = 'info') {
-                const workflowStepsContent = document.getElementById('workflowStepsContent');
-                if (!workflowStepsContent) return;
+                const workflowOutputContent = document.getElementById('workflowOutputContent');
+                if (!workflowOutputContent) return;
+
+                // Clear the placeholder text on first message
+                const placeholder = workflowOutputContent.querySelector('div[style*="font-style: italic"]');
+                if (placeholder) {
+                    placeholder.remove();
+                }
 
                 // Create a status message element
                 const statusDiv = document.createElement('div');
                 statusDiv.style.cssText = `
-                    margin: 6px 0; 
-                    padding: 8px 12px; 
+                    margin: 4px 0; 
+                    padding: 6px 10px; 
                     border-radius: 4px; 
                     font-size: 12px; 
                     font-weight: 500;
@@ -1833,24 +1852,24 @@ Generate complete test cases following the exact format above:`;
                     statusDiv.innerHTML = `ℹ️ ${message}`;
                 }
 
-                // Add to the WorkflowOutput section content
-                workflowStepsContent.appendChild(statusDiv);
+                // Add to the Real-time Output section
+                workflowOutputContent.appendChild(statusDiv);
 
                 // Auto-scroll to the bottom
-                workflowStepsContent.scrollTop = workflowStepsContent.scrollHeight;
+                workflowOutputContent.scrollTop = workflowOutputContent.scrollHeight;
 
-                // Auto-remove old status messages if there are too many (keep last 15)
-                const statusMessages = workflowStepsContent.querySelectorAll('div[style*="border-left: 3px solid"]');
-                if (statusMessages.length > 20) {
+                // Auto-remove old status messages if there are too many (keep last 20)
+                const statusMessages = workflowOutputContent.querySelectorAll('div[style*="border-left: 3px solid"]');
+                if (statusMessages.length > 25) {
                     statusMessages[0].remove();
                 }
 
-                // Make sure WorkflowOutput section is expanded
-                const workflowStepsSection = document.getElementById('workflowStepsContent');
-                const workflowStepsToggle = document.getElementById('workflowStepsToggle');
-                if (workflowStepsSection && workflowStepsToggle) {
-                    workflowStepsSection.style.display = 'block';
-                    workflowStepsToggle.textContent = '▼';
+                // Make sure Real-time Output section is expanded
+                const workflowOutputSection = document.getElementById('workflowOutputContent');
+                const workflowOutputToggle = document.getElementById('workflowOutputToggle');
+                if (workflowOutputSection && workflowOutputToggle) {
+                    workflowOutputSection.style.display = 'block';
+                    workflowOutputToggle.textContent = '▼';
                 }
             }
 
@@ -2077,15 +2096,21 @@ Generate complete test cases following the exact format above:`;
             }
 
             clearWorkflowProgressMessages() {
-                const workflowStepsContent = document.getElementById('workflowStepsContent');
-                if (!workflowStepsContent) return;
+                const workflowOutputContent = document.getElementById('workflowOutputContent');
+                if (!workflowOutputContent) return;
 
-                // Remove all status messages from WorkflowOutput section
-                const statusMessages = workflowStepsContent.querySelectorAll('div[style*="border-left: 3px solid"]');
+                // Remove all status messages from Real-time Output section
+                const statusMessages = workflowOutputContent.querySelectorAll('div[style*="border-left: 3px solid"]');
                 statusMessages.forEach(msg => msg.remove());
 
+                // Add back placeholder text
+                const placeholder = document.createElement('div');
+                placeholder.style.cssText = 'color: #6c757d; font-size: 12px; font-style: italic;';
+                placeholder.textContent = 'Workflow messages will appear here...';
+                workflowOutputContent.appendChild(placeholder);
+
                 // Reset scroll position
-                workflowStepsContent.scrollTop = 0;
+                workflowOutputContent.scrollTop = 0;
             }
 
             updateProgress(percentage, text) {
@@ -2618,6 +2643,20 @@ Generate complete test cases following the exact format above:`;
         function toggleDownloadableImages() {
             const content = document.getElementById('downloadableContent');
             const toggle = document.getElementById('downloadableToggle');
+            
+            if (content.style.display === 'none') {
+                content.style.display = 'block';
+                toggle.textContent = '▼';
+            } else {
+                content.style.display = 'none';
+                toggle.textContent = '▶';
+            }
+        }
+
+        // Toggle Real-time Output functionality
+        function toggleWorkflowOutput() {
+            const content = document.getElementById('workflowOutputContent');
+            const toggle = document.getElementById('workflowOutputToggle');
             
             if (content.style.display === 'none') {
                 content.style.display = 'block';
