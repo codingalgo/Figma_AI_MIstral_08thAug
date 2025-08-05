@@ -457,7 +457,7 @@
 
         .workflow-step-active {
             animation: workflowStepBlink 1s infinite, workflowStepPulse 2s infinite;
-            background: rgba(255, 255, 0, 0.3) !important;
+            background: #ffff00 !important;
             border-left: 4px solid #ffdd00 !important;
             transform: scale(1.05);
             box-shadow: 0 4px 12px rgba(255, 221, 0, 0.6);
@@ -494,11 +494,11 @@
         @keyframes workflowStepBlink {
             0%, 50% {
                 opacity: 1;
-                background: rgba(255, 255, 0, 0.3);
+                background: #ffff00;
             }
             25%, 75% {
-                opacity: 0.7;
-                background: rgba(255, 255, 0, 0.5);
+                opacity: 0.8;
+                background: #ffdd00;
             }
         }
 
@@ -565,7 +565,7 @@
                         <div style="margin-bottom: 12px; padding: 12px; background: rgba(40,167,69,0.1); border-radius: 6px; border-left: 4px solid #28a745;">
                             <div style="display: flex; align-items: center; margin-bottom: 5px;">
                                 <span style="background: #28a745; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; margin-right: 10px;">4</span>
-                                <strong style="color: #28a745;">🧪 Test Generate</strong>
+                                <strong style="color: #28a745;">🧪 Generate test case</strong>
                             </div>
                             <span style="color: #6c757d; font-size: 12px; margin-left: 34px; display: block;">Create Scripts → Coordinates + Actions + Validation</span>
                         </div>
@@ -1004,7 +1004,7 @@ Generate complete test cases following the exact format above:</textarea>
                     await new Promise(resolve => setTimeout(resolve, 1500)); // Visual delay for step completion
 
                     // Step 4: Generate test cases
-                    this.markWorkflowStepActive(4); // Blink Test Generate step
+                    this.markWorkflowStepActive(4); // Blink Generate test case step
                     this.showStatus('Step 4/5: Generating test cases...', 'info');
                     this.updateButtonProgress(4);
                     
