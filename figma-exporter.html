@@ -446,7 +446,7 @@
             /* Keep original styling - no background changes */
         }
 
-        /* Default white background for workflow steps */
+        /* Default white background for workflow steps - Override existing styles */
         #descriptionContent > div {
             background: white !important;
             border-left: 4px solid #e0e0e0 !important;
@@ -456,12 +456,22 @@
             transition: all 0.3s ease;
         }
 
+        /* Force override any existing background styles */
+        #descriptionContent > div[style*="background"] {
+            background: white !important;
+        }
+
         .workflow-step-active {
             animation: workflowStepBlink 1s infinite, workflowStepPulse 2s infinite;
             background: #ffff00 !important;
             border-left: 4px solid #ffdd00 !important;
             transform: scale(1.05);
             box-shadow: 0 4px 12px rgba(255, 221, 0, 0.6);
+        }
+
+        /* Force override existing background for active state */
+        .workflow-step-active[style*="background"] {
+            background: #ffff00 !important;
         }
 
         .workflow-step-active strong {
@@ -478,6 +488,11 @@
             position: relative;
             background: #90EE90 !important;
             border-left: 4px solid #28a745 !important;
+        }
+
+        /* Force override existing background for completed state */
+        .workflow-step-completed[style*="background"] {
+            background: #90EE90 !important;
         }
 
         .workflow-step-completed::after {
@@ -560,7 +575,7 @@
                         <div style="margin-bottom: 12px; padding: 12px; background: rgba(220,53,69,0.1); border-radius: 6px; border-left: 4px solid #dc3545;">
                             <div style="display: flex; align-items: center; margin-bottom: 5px;">
                                 <span style="background: #dc3545; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; margin-right: 10px;">2</span>
-                                <strong style="color: #dc3545;">📊 JSON Process</strong>
+                                <strong style="color: #dc3545;">📊 Process Figma data</strong>
                             </div>
                             <span style="color: #6c757d; font-size: 12px; margin-left: 34px; display: block;">Parse Elements → Identify Clickable Areas & Navigation</span>
                         </div>
@@ -1752,12 +1767,28 @@ Generate complete test cases following the exact format above:`;
                 const activeSteps = document.querySelectorAll('.workflow-step-active');
                 activeSteps.forEach(step => {
                     step.classList.remove('workflow-step-active');
+                    // Reset to default background
+                    const originalStyle = step.getAttribute('data-original-style');
+                    if (originalStyle) {
+                        step.setAttribute('style', originalStyle);
+                    }
                 });
 
                 // Find the specific step and make it active
                 const stepElements = document.querySelectorAll('#descriptionContent > div');
                 if (stepElements[stepNumber - 1]) {
-                    stepElements[stepNumber - 1].classList.add('workflow-step-active');
+                    const stepDiv = stepElements[stepNumber - 1];
+                    
+                    // Store original style
+                    if (!stepDiv.getAttribute('data-original-style')) {
+                        stepDiv.setAttribute('data-original-style', stepDiv.getAttribute('style') || '');
+                    }
+                    
+                    // Force yellow background with inline style
+                    const currentStyle = stepDiv.getAttribute('style') || '';
+                    const newStyle = currentStyle.replace(/background:[^;]+;?/g, '') + 'background: #ffff00 !important;';
+                    stepDiv.setAttribute('style', newStyle);
+                    stepDiv.classList.add('workflow-step-active');
                 }
             }
 
@@ -1765,8 +1796,14 @@ Generate complete test cases following the exact format above:`;
                 // Remove active animation and add completion state
                 const stepElements = document.querySelectorAll('#descriptionContent > div');
                 if (stepElements[stepNumber - 1]) {
-                    stepElements[stepNumber - 1].classList.remove('workflow-step-active');
-                    stepElements[stepNumber - 1].classList.add('workflow-step-completed');
+                    const stepDiv = stepElements[stepNumber - 1];
+                    stepDiv.classList.remove('workflow-step-active');
+                    
+                    // Force green background with inline style
+                    const currentStyle = stepDiv.getAttribute('style') || '';
+                    const newStyle = currentStyle.replace(/background:[^;]+;?/g, '') + 'background: #90EE90 !important;';
+                    stepDiv.setAttribute('style', newStyle);
+                    stepDiv.classList.add('workflow-step-completed');
                 }
             }
 
@@ -1775,6 +1812,11 @@ Generate complete test cases following the exact format above:`;
                 const allSteps = document.querySelectorAll('#descriptionContent > div');
                 allSteps.forEach(step => {
                     step.classList.remove('workflow-step-active', 'workflow-step-completed');
+                    // Restore original background styles
+                    const originalStyle = step.getAttribute('data-original-style');
+                    if (originalStyle) {
+                        step.setAttribute('style', originalStyle);
+                    }
                 });
             }
 
