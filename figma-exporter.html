@@ -566,10 +566,10 @@
                             </div>
                             <span style="color: #6c757d; font-size: 12px; margin-left: 34px; display: block;">API Token → Extract Design Frames & Prototypes</span>
                         </div>
-                        <div style="margin-bottom: 12px; padding: 12px; background: rgba(220,53,69,0.1); border-radius: 6px; border-left: 4px solid #dc3545;">
+                        <div style="margin-bottom: 12px; padding: 12px; background: rgba(245,158,11,0.1); border-radius: 6px; border-left: 4px solid #f59e0b;">
                             <div style="display: flex; align-items: center; margin-bottom: 5px;">
-                                <span style="background: #dc3545; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; margin-right: 10px;">2</span>
-                                <strong style="color: #dc3545;">📊 Process Figma data</strong>
+                                <span style="background: #f59e0b; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; margin-right: 10px;">2</span>
+                                <strong style="color: #f59e0b;">📊 Process Figma data</strong>
                             </div>
                             <span style="color: #6c757d; font-size: 12px; margin-left: 34px; display: block;">Parse Elements → Identify Clickable Areas & Navigation</span>
                         </div>
@@ -702,10 +702,10 @@ Generate complete test cases following the exact format above:</textarea>
                 </div>
 
                 <!-- New Workflow Steps Section -->
-                <div class="workflow-steps-section" style="margin-bottom: 20px; background: #f0f8ff; border-radius: 8px; border: 1px solid #87ceeb;">
+                <div class="workflow-steps-section" style="margin-bottom: 20px; background: #f3f4f6; border-radius: 8px; border: 1px solid #a855f7;">
                     <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer; padding: 15px 20px;" onclick="toggleWorkflowSteps()">
-                        <h3 style="color: #4682b4; margin: 0; font-size: 16px;">🔄 Workflow Steps</h3>
-                        <span id="workflowStepsToggle" style="color: #4682b4; font-size: 20px; font-weight: bold;">▶</span>
+                        <h3 style="color: #6b46c1; margin: 0; font-size: 16px;">🔄 WorkflowOutput</h3>
+                        <span id="workflowStepsToggle" style="color: #6b46c1; font-size: 20px; font-weight: bold;">▶</span>
                     </div>
                     <div id="workflowStepsContent" style="display: none; padding: 0 20px 20px 20px;">
                         <!-- Step 1: Figma data sent to AI -->
@@ -2054,14 +2054,6 @@ Generate complete test cases following the exact format above:`;
                             }
                         }
                     }
-                }
-            }
-
-            updateFrameStatus(frameId, status, text) {
-                const statusEl = document.getElementById(`status-${frameId}`);
-                if (statusEl) {
-                    statusEl.textContent = text;
-                    statusEl.className = `frame-status ${status}`;
                 }
             }
 
