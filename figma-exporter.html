@@ -446,23 +446,32 @@
             /* Keep original styling - no background changes */
         }
 
+        /* Default white background for workflow steps */
+        #descriptionContent > div {
+            background: white !important;
+            border-left: 4px solid #e0e0e0 !important;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+        }
+
         .workflow-step-active {
             animation: workflowStepBlink 1s infinite, workflowStepPulse 2s infinite;
-            background: rgba(255, 107, 53, 0.2) !important;
-            border-left: 4px solid #ff6b35 !important;
+            background: rgba(255, 255, 0, 0.3) !important;
+            border-left: 4px solid #ffdd00 !important;
             transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.6);
+            box-shadow: 0 4px 12px rgba(255, 221, 0, 0.6);
         }
 
         .workflow-step-active strong {
-            color: #ff6b35 !important;
+            color: #cc8800 !important;
             animation: workflowStepGlow 1.5s ease-in-out infinite alternate;
-            text-shadow: 0 0 5px rgba(255, 107, 53, 0.8);
+            text-shadow: 0 0 5px rgba(255, 221, 0, 0.8);
         }
 
         .workflow-step-completed {
             position: relative;
-            background: rgba(40, 167, 69, 0.1) !important;
+            background: rgba(40, 167, 69, 0.2) !important;
             border-left: 4px solid #28a745 !important;
         }
 
@@ -485,32 +494,32 @@
         @keyframes workflowStepBlink {
             0%, 50% {
                 opacity: 1;
-                background: rgba(255, 107, 53, 0.2);
+                background: rgba(255, 255, 0, 0.3);
             }
             25%, 75% {
                 opacity: 0.7;
-                background: rgba(255, 107, 53, 0.4);
+                background: rgba(255, 255, 0, 0.5);
             }
         }
 
         @keyframes workflowStepPulse {
             0% {
-                box-shadow: 0 0 0 0 rgba(255, 107, 53, 0.7);
+                box-shadow: 0 0 0 0 rgba(255, 221, 0, 0.7);
             }
             70% {
-                box-shadow: 0 0 0 10px rgba(255, 107, 53, 0);
+                box-shadow: 0 0 0 10px rgba(255, 221, 0, 0);
             }
             100% {
-                box-shadow: 0 0 0 0 rgba(255, 107, 53, 0);
+                box-shadow: 0 0 0 0 rgba(255, 221, 0, 0);
             }
         }
 
         @keyframes workflowStepGlow {
             from {
-                text-shadow: 0 0 5px rgba(255, 107, 53, 0.8);
+                text-shadow: 0 0 5px rgba(255, 221, 0, 0.8);
             }
             to {
-                text-shadow: 0 0 10px rgba(255, 107, 53, 0.8), 0 0 15px rgba(255, 107, 53, 0.8);
+                text-shadow: 0 0 10px rgba(255, 221, 0, 0.8), 0 0 15px rgba(255, 221, 0, 0.8);
             }
         }
     </style>
