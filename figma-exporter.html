@@ -573,10 +573,10 @@
                             </div>
                             <span style="color: #6c757d; font-size: 12px; margin-left: 34px; display: block;">Parse Elements → Identify Clickable Areas & Navigation</span>
                         </div>
-                        <div style="margin-bottom: 12px; padding: 12px; background: rgba(255,193,7,0.1); border-radius: 6px; border-left: 4px solid #ffc107;">
+                        <div style="margin-bottom: 12px; padding: 12px; background: rgba(168,85,247,0.1); border-radius: 6px; border-left: 4px solid #a855f7;">
                             <div style="display: flex; align-items: center; margin-bottom: 5px;">
-                                <span style="background: #ffc107; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; margin-right: 10px;">3</span>
-                                <strong style="color: #ffc107;">🤖 AI Analysis</strong>
+                                <span style="background: #a855f7; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; margin-right: 10px;">3</span>
+                                <strong style="color: #a855f7;">🤖 AI Analysis</strong>
                             </div>
                             <span style="color: #6c757d; font-size: 12px; margin-left: 34px; display: block;">Send Data → AI Models → Intelligent Test Generation</span>
                         </div>
@@ -962,10 +962,8 @@ Generate complete test cases following the exact format above:</textarea>
                     });
                 }
 
-                // Prompt toggle event listener
-                document.getElementById('togglePrompt').addEventListener('click', () => {
-                    this.togglePromptDisplay();
-                });
+                // Note: Prompt toggle is handled by onclick="toggleMistralPrompt()" in the HTML
+                // No event listener needed here as it's handled inline
 
                 // Console window event listeners
                 document.getElementById('clearConsole').addEventListener('click', () => {
