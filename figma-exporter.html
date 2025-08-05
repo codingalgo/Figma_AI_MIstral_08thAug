@@ -759,14 +759,12 @@ Generate complete test cases following the exact format above:</textarea>
             </div>
         </div>
 
-        <!-- Professional Separator -->
-        <div style="margin: 30px 0; border-top: 2px solid #e9ecef; position: relative;">
-            <div style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: white; padding: 0 20px; color: #6c757d; font-weight: 600; font-size: 14px;">MAIN ACTION</div>
-        </div>
-
-        <!-- Full Width Generate Button -->
+        <!-- Generate Button and Reset Button -->
         <div style="margin-bottom: 30px; width: 100%;">
-            <button class="export-button unified-button" id="unifiedButtonFullWidth" style="background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%); font-size: 20px; font-weight: bold; padding: 24px 32px; transition: all 0.3s ease; width: 100%; border-radius: 12px; border: none; color: white; cursor: pointer; box-shadow: 0 6px 20px rgba(255, 193, 7, 0.3);" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 30px rgba(255, 193, 7, 0.4)'" onmouseout="this.style.transform='translateY(0px)'; this.style.boxShadow='0 6px 20px rgba(255, 193, 7, 0.3)'">🚀 Generate Test Cases with AI & Auto Execute using Test Executor</button>
+            <div style="display: flex; gap: 15px;">
+                <button class="export-button unified-button" id="unifiedButtonFullWidth" style="background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%); font-size: 18px; font-weight: bold; padding: 20px 24px; transition: all 0.3s ease; flex: 1; border-radius: 12px; border: none; color: white; cursor: pointer; box-shadow: 0 6px 20px rgba(255, 193, 7, 0.3);" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 30px rgba(255, 193, 7, 0.4)'" onmouseout="this.style.transform='translateY(0px)'; this.style.boxShadow='0 6px 20px rgba(255, 193, 7, 0.3)'">🚀 Generate Test Cases with AI & Auto Execute using Test Executor</button>
+                <button class="export-button" id="resetButton" style="background: linear-gradient(135deg, #dc3545 0%, #c82333 100%); font-size: 16px; font-weight: bold; padding: 20px 24px; transition: all 0.3s ease; border-radius: 12px; border: none; color: white; cursor: pointer; box-shadow: 0 6px 20px rgba(220, 53, 69, 0.3);" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 30px rgba(220, 53, 69, 0.4)'" onmouseout="this.style.transform='translateY(0px)'; this.style.boxShadow='0 6px 20px rgba(220, 53, 69, 0.3)'">🔄 Reset/Clear All</button>
+            </div>
         </div>
 
         <!-- Progress Separator -->
@@ -962,6 +960,14 @@ Generate complete test cases following the exact format above:</textarea>
                     });
                 }
 
+                // Reset button event listener
+                const resetButton = document.getElementById('resetButton');
+                if (resetButton) {
+                    resetButton.addEventListener('click', () => {
+                        this.resetApplication();
+                    });
+                }
+
                 // Note: Prompt toggle is handled by onclick="toggleMistralPrompt()" in the HTML
                 // No event listener needed here as it's handled inline
 
@@ -1151,20 +1157,14 @@ Generate complete test cases following the exact format above:</textarea>
                     // Stop workflow progress animation and keep all tick marks visible
                     this.deactivateWorkflowProgress();
                     
-                    // Final green completion state
+                    // Final green completion state - stays green until reset is clicked
                     if (unifiedButtonFullWidth) {
                         unifiedButtonFullWidth.style.background = 'linear-gradient(135deg, #28a745 0%, #20c997 100%)';
                         unifiedButtonFullWidth.innerHTML = '✅ Task Completed Successfully';
                         unifiedButtonFullWidth.disabled = false;
+                        unifiedButtonFullWidth.setAttribute('data-completed', 'true');
+                        unifiedButtonFullWidth.setAttribute('data-original-text', originalText);
                     }
-                    
-                    // Reset button after 3 seconds
-                    setTimeout(() => {
-                        if (unifiedButtonFullWidth) {
-                            unifiedButtonFullWidth.style.background = 'linear-gradient(135deg, #ffc107 0%, #fd7e14 100%)';
-                            unifiedButtonFullWidth.textContent = originalText;
-                        }
-                    }, 3000);
                 }
             }
 
@@ -1941,6 +1941,78 @@ Generate complete test cases following the exact format above:`;
                     if (content) content.style.display = 'none';
                     if (toggle) toggle.textContent = '▶';
                 });
+            }
+
+            // Reset application to initial state
+            resetApplication() {
+                // Reset the main button to original state
+                const unifiedButtonFullWidth = document.getElementById('unifiedButtonFullWidth');
+                if (unifiedButtonFullWidth) {
+                    const originalText = unifiedButtonFullWidth.getAttribute('data-original-text') || '🚀 Generate Test Cases with AI & Auto Execute using Test Executor';
+                    unifiedButtonFullWidth.style.background = 'linear-gradient(135deg, #ffc107 0%, #fd7e14 100%)';
+                    unifiedButtonFullWidth.innerHTML = originalText;
+                    unifiedButtonFullWidth.disabled = false;
+                    unifiedButtonFullWidth.removeAttribute('data-completed');
+                    unifiedButtonFullWidth.removeAttribute('data-original-text');
+                }
+
+                // Reset workflow progress
+                this.resetWorkflowProgress();
+                
+                // Hide and clear all sections
+                this.hideStatus();
+                this.hideProgress();
+                
+                // Clear all test case sections
+                const testCasesSection = document.getElementById('testCasesSection');
+                if (testCasesSection) {
+                    testCasesSection.style.display = 'none';
+                    const testCasesText = document.getElementById('testCasesText');
+                    if (testCasesText) testCasesText.value = '';
+                }
+                
+                // Clear Mistral JSON section
+                const mistralJsonSection = document.getElementById('mistralJsonSection');
+                if (mistralJsonSection) {
+                    mistralJsonSection.style.display = 'none';
+                    const mistralJsonText = document.getElementById('mistralJsonText');
+                    if (mistralJsonText) mistralJsonText.value = '';
+                }
+                
+                // Clear downloadable images section
+                const downloadableImagesSection = document.getElementById('downloadableImagesSection');
+                if (downloadableImagesSection) {
+                    downloadableImagesSection.style.display = 'none';
+                    const frameList = document.getElementById('frameList');
+                    if (frameList) frameList.innerHTML = '';
+                }
+                
+                // Hide console window
+                const consoleWindow = document.getElementById('consoleWindow');
+                if (consoleWindow) {
+                    consoleWindow.style.display = 'none';
+                    const consoleOutput = document.getElementById('consoleOutput');
+                    if (consoleOutput) consoleOutput.innerHTML = '<div style="color: #888;">Test Executor Console - Ready</div>';
+                }
+                
+                // Clear all input values
+                const inputs = ['figmaUrl', 'figmaToken', 'aiApiKey', 'aiApiUrl', 'aiModel'];
+                inputs.forEach(inputId => {
+                    const input = document.getElementById(inputId);
+                    if (input) input.value = '';
+                });
+
+                // Clear prompt section data
+                const mistralPromptText = document.getElementById('mistralPromptText');
+                if (mistralPromptText) mistralPromptText.value = '';
+                
+                // Reset any processed data
+                this.exportedCount = 0;
+                this.figmaData = null;
+                
+                // Show success message
+                this.showStatus('✅ Application reset to initial state', 'success');
+                setTimeout(() => this.hideStatus(), 2000);
             }
 
             updateProgress(percentage, text) {
