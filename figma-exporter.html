@@ -580,10 +580,10 @@
                             </div>
                             <span style="color: #6c757d; font-size: 12px; margin-left: 34px; display: block;">Send Data → AI Models → Intelligent Test Generation</span>
                         </div>
-                        <div style="margin-bottom: 12px; padding: 12px; background: rgba(40,167,69,0.1); border-radius: 6px; border-left: 4px solid #28a745;">
+                        <div style="margin-bottom: 12px; padding: 12px; background: rgba(138,43,226,0.1); border-radius: 6px; border-left: 4px solid #8a2be2;">
                             <div style="display: flex; align-items: center; margin-bottom: 5px;">
-                                <span style="background: #28a745; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; margin-right: 10px;">4</span>
-                                <strong style="color: #28a745;">🧪 Generate test case</strong>
+                                <span style="background: #8a2be2; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; margin-right: 10px;">4</span>
+                                <strong style="color: #8a2be2;">🧪 Generate test case</strong>
                             </div>
                             <span style="color: #6c757d; font-size: 12px; margin-left: 34px; display: block;">Create Scripts → Coordinates + Actions + Validation</span>
                         </div>
@@ -697,6 +697,34 @@ CRITICAL REQUIREMENTS:
 Generate complete test cases following the exact format above:</textarea>
                         <div style="margin-top: 10px; font-size: 12px; color: #555;">
                             <strong>Note:</strong> This is the template sent to Mistral AI to generate test cases.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- New Workflow Steps Section -->
+                <div class="workflow-steps-section" style="margin-bottom: 20px; background: #f0f8ff; border-radius: 8px; border: 1px solid #87ceeb;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer; padding: 15px 20px;" onclick="toggleWorkflowSteps()">
+                        <h3 style="color: #4682b4; margin: 0; font-size: 16px;">🔄 Workflow Steps</h3>
+                        <span id="workflowStepsToggle" style="color: #4682b4; font-size: 20px; font-weight: bold;">▶</span>
+                    </div>
+                    <div id="workflowStepsContent" style="display: none; padding: 0 20px 20px 20px;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
+                            <div style="background: #e3f2fd; padding: 12px; border-radius: 6px; border-left: 4px solid #2196f3; flex: 1; margin-right: 10px;">
+                                <strong style="color: #1976d2;">📊 Figma data sent to AI</strong>
+                            </div>
+                            <div style="font-size: 24px; color: #666;">▶</div>
+                        </div>
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
+                            <div style="background: #f3e5f5; padding: 12px; border-radius: 6px; border-left: 4px solid #9c27b0; flex: 1; margin-right: 10px;">
+                                <strong style="color: #7b1fa2;">🧪 Generated Test Cases with AI</strong>
+                            </div>
+                            <div style="font-size: 24px; color: #666;">▶</div>
+                        </div>
+                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                            <div style="background: #e8f5e8; padding: 12px; border-radius: 6px; border-left: 4px solid #4caf50; flex: 1; margin-right: 10px;">
+                                <strong style="color: #388e3c;">📥 Figma GUI frame for test case</strong>
+                            </div>
+                            <div style="font-size: 24px; color: #666;">▶</div>
                         </div>
                     </div>
                 </div>
@@ -2081,6 +2109,20 @@ Generate complete test cases following the exact format above:`;
         function toggleDescription() {
             const content = document.getElementById('descriptionContent');
             const toggle = document.getElementById('descriptionToggle');
+            
+            if (content.style.display === 'none') {
+                content.style.display = 'block';
+                toggle.textContent = '▼';
+            } else {
+                content.style.display = 'none';
+                toggle.textContent = '▶';
+            }
+        }
+
+        // Toggle workflow steps functionality
+        function toggleWorkflowSteps() {
+            const content = document.getElementById('workflowStepsContent');
+            const toggle = document.getElementById('workflowStepsToggle');
             
             if (content.style.display === 'none') {
                 content.style.display = 'block';
