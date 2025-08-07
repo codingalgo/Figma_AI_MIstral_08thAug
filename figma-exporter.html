@@ -924,13 +924,29 @@ Generate complete test cases following the exact format above:</textarea>
     <script>
         class FigmaExporter {
             constructor() {
-                this.apiToken = document.getElementById('apiToken').value;
-                this.fileId = document.getElementById('fileId').value;
                 this.baseUrl = 'https://api.figma.com/v1';
                 this.frames = [];
                 this.exportedCount = 0;
                 
                 this.initializeEventListeners();
+            }
+
+            // Get current Figma credentials from UI (always fresh values)
+            getFigmaCredentials() {
+                const apiToken = document.getElementById('apiToken').value.trim();
+                const fileId = document.getElementById('fileId').value.trim();
+                
+                if (!apiToken) {
+                    throw new Error('Figma API Token is required. Please enter a valid token.');
+                }
+                if (!fileId) {
+                    throw new Error('Figma File ID is required. Please enter a valid file ID.');
+                }
+                
+                return {
+                    apiToken: apiToken,
+                    fileId: fileId
+                };
             }
 
             // Get current AI configuration from UI
@@ -1041,7 +1057,8 @@ Generate complete test cases following the exact format above:</textarea>
                     this.markWorkflowStepActive(2); // Blink JSON Process step
                     this.showStatus('Step 2/5: Extracting design data and interactions...', 'info');
                     this.updateButtonProgress(2);
-                    const fileData = await this.makeApiRequest(`/files/${this.fileId}?geometry=paths`);
+                    const credentials = this.getFigmaCredentials();
+                    const fileData = await this.makeApiRequest(`/files/${credentials.fileId}?geometry=paths`, credentials.apiToken);
                     this.markWorkflowStepCompleted(2);
                     await new Promise(resolve => setTimeout(resolve, 1500)); // Visual delay for step completion
                     
@@ -1586,7 +1603,8 @@ Generate complete test cases following the exact format above:`;
 
                 try {
                     // Step 1: Get the full Figma file data including prototypes
-                    const fileData = await this.makeApiRequest(`/files/${this.fileId}?geometry=paths`);
+                    const credentials = this.getFigmaCredentials();
+                    const fileData = await this.makeApiRequest(`/files/${credentials.fileId}?geometry=paths`, credentials.apiToken);
                     this.updateProgress(30, 'Analyzing prototype interactions...');
 
                     // Step 2: Create and display the prompt
@@ -2225,10 +2243,11 @@ Generate complete test cases following the exact format above:`;
                 }
             }
 
-            async makeApiRequest(endpoint) {
+            async makeApiRequest(endpoint, apiToken = null) {
+                const token = apiToken || this.getFigmaCredentials().apiToken;
                 const response = await fetch(`${this.baseUrl}${endpoint}`, {
                     headers: {
-                        'X-Figma-Token': this.apiToken
+                        'X-Figma-Token': token
                     }
                 });
 
@@ -2245,7 +2264,8 @@ Generate complete test cases following the exact format above:`;
                 this.updateProgress(10, 'Loading file data...');
 
                 try {
-                    const fileData = await this.makeApiRequest(`/files/${this.fileId}`);
+                    const credentials = this.getFigmaCredentials();
+                    const fileData = await this.makeApiRequest(`/files/${credentials.fileId}`, credentials.apiToken);
                     const frames = [];
 
                     // Traverse the document tree to find all frames
@@ -2296,7 +2316,8 @@ Generate complete test cases following the exact format above:`;
                         scale: '2'
                     });
 
-                    const exportData = await this.makeApiRequest(`/images/${this.fileId}?${params}`);
+                    const credentials = this.getFigmaCredentials();
+                    const exportData = await this.makeApiRequest(`/images/${credentials.fileId}?${params}`, credentials.apiToken);
                     
                     if (!exportData.images || Object.keys(exportData.images).length === 0) {
                         throw new Error('No export URLs received from Figma API');
