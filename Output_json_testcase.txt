@@ -1,3 +1,5 @@
+https://replit.com/@sotece7575/FigmaAIVerifier-1
+
 1. check with two/three apps 
 2. upload code in git
 3. share the prompt  sample json
